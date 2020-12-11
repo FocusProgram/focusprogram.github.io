@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/Mr.Kong.jpg">
+  <link rel="icon" type="image/png" href="/img/Mr.Kong.jpg">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="May you experience the pain and happiness in your life">
+  <meta name="author" content="Mr.Kong">
+  <meta name="keywords" content="">
+  <title>Consul - Mr.Kong Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/dark.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script  src="/js/utils.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Mr.Kong</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-bookmark-fill"></i>
+                开源地址
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="https://blog.csdn.net/qq_41112063" target="_blank" rel="noopener">
+                    
+                    CSDN
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="https://gitee.com/FocusProgram/" target="_blank" rel="noopener">
+                    
+                    Gitee
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="https://github.com/FocusProgram/" target="_blank" rel="noopener">
+                    
+                    GitHub
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/neight.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2020-07-11 01:52">
+      2020年7月11日 凌晨
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      28
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：5 个月前
+                
+              </p>
+            
+            <article class="markdown-body">
+              <p><strong>Consul</strong></p>
+<hr>
+<h1 id="1-什么是Consul"><a href="#1-什么是Consul" class="headerlink" title="1.什么是Consul?"></a>1.什么是Consul?</h1><blockquote>
+<p><a href="https://github.com/hashicorp/consul" target="_blank" rel="noopener">Consul</a> 是一个服务网格解决方案，提供了一个全功能的控制平面，具有服务发现、配置和分割功能。 这些特性中的每一个都可以根据需要单独使用，或者可以一起使用来构建一个完整的服务网格。 consul需要一个数据平面，并且支持代理和本地集成模型。 执政带有一个简单的内置代理，这样一切都可以开箱即用，而且还支持第三方代理集成。</p>
+</blockquote>
+<h1 id="2-安装Consul"><a href="#2-安装Consul" class="headerlink" title="2.安装Consul"></a>2.安装Consul</h1><ul>
+<li><strong>安装方式</strong><ul>
+<li>Precompiled Binaries 预编译二进制文件</li>
+<li>Compiling from Source 从源头编译</li>
+<li>Docker</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-1-二进制文件安装-下载地址"><a href="#2-1-二进制文件安装-下载地址" class="headerlink" title="2.1 二进制文件安装 下载地址"></a>2.1 二进制文件安装 <a href="https://www.consul.io/downloads.html" target="_blank" rel="noopener">下载地址</a></h2><h2 id="2-2-源码编译"><a href="#2-2-源码编译" class="headerlink" title="2.2 源码编译"></a>2.2 源码编译</h2><div class="hljs"><pre><code class="hljs linux">$ mkdir -p $GOPATH&#x2F;src&#x2F;github.com&#x2F;hashicorp &amp;&amp; cd !$
+
+$ git clone https:&#x2F;&#x2F;github.com&#x2F;hashicorp&#x2F;consul.git
+
+$ cd consul
+
+$ make tools
+
+$ make dev
+
+$ consul -v 验证安装是否成功</code></pre></div>
+
+<h2 id="2-3-Docker安装"><a href="#2-3-Docker安装" class="headerlink" title="2.3 Docker安装"></a>2.3 Docker安装</h2><h3 id="2-3-1-拉取镜像"><a href="#2-3-1-拉取镜像" class="headerlink" title="2.3.1 拉取镜像"></a>2.3.1 拉取镜像</h3><div class="hljs"><pre><code class="hljs elixir"><span class="hljs-variable">$ </span>docker pull <span class="hljs-symbol">consul:</span>latest</code></pre></div>
+
+<h3 id="2-3-2-consul-参数详解"><a href="#2-3-2-consul-参数详解" class="headerlink" title="2.3.2 consul 参数详解"></a>2.3.2 consul 参数详解</h3><blockquote>
+<ul>
+<li>–net=host docker参数, 使得docker容器越过了net namespace的隔离，免去手动指定端口映射的步骤</li>
+<li>-server consul支持以server或client的模式运行, server是服务发现模块的核心, client主要用于转发请求</li>
+<li>-advertise 将本机私有IP传递到consul</li>
+<li>-retry-join 指定要加入的consul节点地址，失败后会重试, 可多次指定不同的地址</li>
+<li>-client 指定consul绑定在哪个client地址上，这个地址可提供HTTP、DNS、RPC等服务，默认是&gt;127.0.0.1</li>
+<li>-bind 绑定服务器的ip地址；该地址用来在集群内部的通讯，集群内的所有节点到地址必须是可达的，&gt;默认是0.0.0.0</li>
+</ul>
+<p>allow_stale 设置为true则表明可从consul集群的任一server节点获取dns信息, false则表明每次请求都会&gt;经过consul的server leader</p>
+<ul>
+<li>-bootstrap-expect 数据中心中预期的服务器数。指定后，Consul将等待指定数量的服务器可用，然后&gt;启动群集。允许自动选举leader，但不能与传统-bootstrap标志一起使用, 需要在server模式下运行。</li>
+<li>-data-dir 数据存放的位置，用于持久化保存集群状态</li>
+<li>-node 群集中此节点的名称，这在群集中必须是唯一的，默认情况下是节点的主机名。</li>
+<li>-config-dir 指定配置文件，当这个目录下有 .json 结尾的文件就会被加载，详细可参考<a href="https://www.consul.io/docs/agent/options.html#configuration_files" target="_blank" rel="noopener">https://www.consul.io/docs/agent/options.html#configuration_files</a></li>
+<li>-enable-script-checks 检查服务是否处于活动状态，类似开启心跳</li>
+<li>-datacenter 数据中心名称</li>
+<li>-ui 开启ui界面</li>
+<li>-join 指定ip, 加入到已有的集群中</li>
+</ul>
+</blockquote>
+<h3 id="2-3-3-consul-端口详解"><a href="#2-3-3-consul-端口详解" class="headerlink" title="2.3.3 consul 端口详解"></a>2.3.3 consul 端口详解</h3><blockquote>
+<ul>
+<li>8500 : http 端口，用于 http 接口和 web ui访问；</li>
+<li>8300 : server rpc 端口，同一数据中心 consul server 之间通过该端口通信；</li>
+<li>8301 : serf lan 端口，同一数据中心 consul client 通过该端口通信; 用于处理当前datacenter中LAN的gossip通信；</li>
+<li>8302 : serf wan 端口，不同数据中心 consul server 通过该端口通信; agent Server使用，处理与其他datacenter的gossip通信；</li>
+<li>8600 : dns 端口，用于已注册的服务发现；</li>
+</ul>
+</blockquote>
+<h3 id="2-3-4-consul-集群启动Consul"><a href="#2-3-4-consul-集群启动Consul" class="headerlink" title="2.3.4 consul 集群启动Consul"></a>2.3.4 consul 集群启动Consul</h3><p><strong>创建挂载目录</strong></p>
+<div class="hljs"><pre><code class="hljs haskell">$ mkdir -p /<span class="hljs-class"><span class="hljs-keyword">data</span>/consul-one/&#123;<span class="hljs-title">conf</span>,<span class="hljs-title">data</span>&#125;</span>
+
+$ mkdir -p /<span class="hljs-class"><span class="hljs-keyword">data</span>/consul-two/&#123;<span class="hljs-title">conf</span>,<span class="hljs-title">data</span>&#125;</span>
+
+$ mkdir -p /<span class="hljs-class"><span class="hljs-keyword">data</span>/consul-three/&#123;<span class="hljs-title">conf</span>,<span class="hljs-title">data</span>&#125;</span></code></pre></div>
+
+<p><strong>创建consul的网段</strong></p>
+<div class="hljs"><pre><code class="hljs routeros">$ docker<span class="hljs-built_in"> network </span>create <span class="hljs-attribute">--driver</span>=bridge <span class="hljs-attribute">--subnet</span>=172.20.0.0/16 consul_network</code></pre></div>
+
+<p><strong>启动第一个Consul节点（consul-one）</strong></p>
+<div class="hljs"><pre><code class="hljs angelscript">$ docker run --name consul-one \
+-d -p <span class="hljs-number">8500</span>:<span class="hljs-number">8500</span> -p <span class="hljs-number">8300</span>:<span class="hljs-number">8300</span> \
+-p <span class="hljs-number">8301</span>:<span class="hljs-number">8301</span> -p <span class="hljs-number">8302</span>:<span class="hljs-number">8302</span> -p <span class="hljs-number">8600</span>:<span class="hljs-number">8600</span> \
+--restart=always \
+-v /data/consul-one/conf/:/consul/conf/ \
+-v /data/consul-one/data/:/consul/data/ \
+--net consul_network --ip <span class="hljs-number">172.20</span><span class="hljs-number">.0</span><span class="hljs-number">.2</span> consul \
+agent -server -bootstrap-expect <span class="hljs-number">2</span> -ui -bind=<span class="hljs-number">0.0</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span> -client=<span class="hljs-number">0.0</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span></code></pre></div>
+
+<p><strong>查看consul-one的ip地址</strong></p>
+<div class="hljs"><pre><code class="hljs accesslog">$ docker inspect --format='&#123;&#123;.NetworkSettings.IPAddress&#125;&#125;' consul-one
+
+<span class="hljs-number">172.17.0.2</span></code></pre></div>
+
+<p><strong>启动第二个Consul节点（consul-two）加入到consul-one</strong></p>
+<div class="hljs"><pre><code class="hljs haml">$ docker run --name consul-two \
+-<span class="ruby">d -p <span class="hljs-number">8501</span><span class="hljs-symbol">:</span><span class="hljs-number">8500</span> \</span>
+<span class="ruby">--restart=always \</span>
+<span class="ruby">-v /data/consul-two/conf/<span class="hljs-symbol">:/consul/conf/</span> \</span>
+<span class="ruby">-v /data/consul-two/data/<span class="hljs-symbol">:/consul/data/</span> \</span>
+<span class="ruby">--net consul_network --ip <span class="hljs-number">172.20</span>.<span class="hljs-number">0</span>.<span class="hljs-number">3</span> consul \</span>
+<span class="ruby">agent -server -ui -bind=<span class="hljs-number">0</span>.<span class="hljs-number">0</span>.<span class="hljs-number">0</span>.<span class="hljs-number">0</span> -client=<span class="hljs-number">0</span>.<span class="hljs-number">0</span>.<span class="hljs-number">0</span>.<span class="hljs-number">0</span> -join <span class="hljs-number">172.20</span>.<span class="hljs-number">0</span>.<span class="hljs-number">2</span></span></code></pre></div>
+
+<p><strong>启动第二个Consul节点（consul-three）加入到consul-one</strong></p>
+<div class="hljs"><pre><code class="hljs haml">$ docker run --name consul-three \
+-<span class="ruby">d -p <span class="hljs-number">8502</span><span class="hljs-symbol">:</span><span class="hljs-number">8500</span> \</span>
+<span class="ruby">--restart=always \</span>
+<span class="ruby">-v /data/consul-three/conf/<span class="hljs-symbol">:/consul/conf/</span> \</span>
+<span class="ruby">-v /data/consul-three/data/<span class="hljs-symbol">:/consul/data/</span> \</span>
+<span class="ruby">--net consul_network --ip <span class="hljs-number">172.20</span>.<span class="hljs-number">0</span>.<span class="hljs-number">4</span> consul \</span>
+<span class="ruby">agent -server -ui -bind=<span class="hljs-number">0</span>.<span class="hljs-number">0</span>.<span class="hljs-number">0</span>.<span class="hljs-number">0</span> -client=<span class="hljs-number">0</span>.<span class="hljs-number">0</span>.<span class="hljs-number">0</span>.<span class="hljs-number">0</span> -join <span class="hljs-number">172.20</span>.<span class="hljs-number">0</span>.<span class="hljs-number">2</span></span></code></pre></div>
+
+<p><strong>查看consul集群信息</strong></p>
+<div class="hljs"><pre><code class="hljs livecodeserver">docker exec -<span class="hljs-keyword">it</span> consul-<span class="hljs-literal">one</span> consul members</code></pre></div>
+
+<p><img src="https://gitee.com/FocusProgram/PicGo/raw/master/20200307154109.png" srcset="/img/loading.gif" alt=""></p>
+<p>访问 <a href="http://192.168.80.128:8500" target="_blank" rel="noopener">http://192.168.80.128:8500</a></p>
+<p><img src="https://gitee.com/FocusProgram/PicGo/raw/master/20200307154346.png" srcset="/img/loading.gif" alt=""></p>
+<h1 id="3-客户端集成Consul"><a href="#3-客户端集成Consul" class="headerlink" title="3. 客户端集成Consul"></a>3. 客户端集成Consul</h1><h2 id="3-1-引入maven依赖"><a href="#3-1-引入maven依赖" class="headerlink" title="3.1 引入maven依赖"></a>3.1 引入maven依赖</h2><div class="hljs"><pre><code class="hljs java">&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-cloud-starter-consul-discovery&lt;/artifactId&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-cloud-starter-consul-config&lt;/artifactId&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre></div>
+
+<h2 id="3-2-项目结构"><a href="#3-2-项目结构" class="headerlink" title="3.2 项目结构"></a>3.2 项目结构</h2><p><img src="https://gitee.com/FocusProgram/PicGo/raw/master/20200307231701.png" srcset="/img/loading.gif" alt=""></p>
+<h2 id="3-3-环境依赖"><a href="#3-3-环境依赖" class="headerlink" title="3.3 环境依赖"></a>3.3 环境依赖</h2><table>
+<thead>
+<tr>
+<th>依赖</th>
+<th>版本</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>JDK</td>
+<td>1.8</td>
+<td></td>
+</tr>
+<tr>
+<td>Consul</td>
+<td>2.0.0.RELEASE</td>
+<td></td>
+</tr>
+<tr>
+<td>SpringCloud</td>
+<td>Finchley.RELEASE</td>
+<td></td>
+</tr>
+<tr>
+<td>SpringBoot</td>
+<td>2.0.4.RELEASE</td>
+<td></td>
+</tr>
+</tbody></table>
+<h2 id="3-4-配置文件"><a href="#3-4-配置文件" class="headerlink" title="3.4 配置文件"></a>3.4 配置文件</h2><h3 id="3-4-1-application-yml"><a href="#3-4-1-application-yml" class="headerlink" title="3.4.1 application.yml"></a>3.4.1 application.yml</h3><div class="hljs"><pre><code class="hljs yaml"><span class="hljs-comment"># 端口</span>
+<span class="hljs-attr">server:</span>
+  <span class="hljs-attr">port:</span> <span class="hljs-number">8090</span>
+
+<span class="hljs-comment"># 演示数据key-value</span>
+<span class="hljs-attr">company:</span>
+  <span class="hljs-attr">pay:</span>
+    <span class="hljs-attr">money:</span> <span class="hljs-number">1000</span></code></pre></div>
+
+<h3 id="3-4-2-bootstrap-yml"><a href="#3-4-2-bootstrap-yml" class="headerlink" title="3.4.2 bootstrap.yml"></a>3.4.2 bootstrap.yml</h3><div class="hljs"><pre><code class="hljs java"># 服务名
+spring:
+  application:
+    name: waiter-service
+
+  profiles:
+    active: prd
+
+# 是否重载本地配置
+  cloud:
+    config:
+      override-system-properties: <span class="hljs-keyword">false</span>
+    consul:
+      # 指定consul的ip地址和端口
+      host: <span class="hljs-number">192.168</span><span class="hljs-number">.80</span><span class="hljs-number">.130</span>
+      port: <span class="hljs-number">8500</span>
+      config:
+        # 指定consul配置文件目录后缀结束为consul
+        data-key: consul
+        # consul配置中心功能，默认true
+        enabled: <span class="hljs-keyword">true</span>
+        # consul配置中心值的格式
+        format: yaml
+        # 指定consul配置文件目录前缀为config
+        prefix: config
+      discovery:
+        # 指定服务版本信息
+        tags: version=<span class="hljs-number">1.0</span>,auth=Mr.Kong
+        # 是否需要注册到consul，默认为true
+        register: <span class="hljs-keyword">true</span>
+        # 注册的实例ID (唯一标志)
+        instance-id: $&#123;spring.application.name&#125;:$&#123;spring.cloud.client.ip-address&#125;
+        # 服务名称
+        service-name: $&#123;spring.application.name&#125;
+        # 服务请求端口
+        port: $&#123;server.port&#125;
+        # 指定开启ip地址注册
+        prefer-ip-address: <span class="hljs-keyword">true</span>
+        # 当前服务请求ip
+        ip-address: $&#123;spring.cloud.client.ip-address&#125;
+        # 指定consul心跳检测地址
+        health-check-url: http:<span class="hljs-comment">//$&#123;spring.cloud.client.ip-address&#125;:$&#123;server.port&#125;/actuator/health</span>
+        # 指定consul心跳检测间隔
+        health-check-interval: <span class="hljs-number">15</span>s
+
+# consul配置中心的目录为 $&#123;spring.cloud.consul.config.prefix&#125;/$&#123;spring.application.name&#125;,$&#123;spring.profiles.active&#125;/$&#123;spring.cloud.consul.config.data-key&#125;</code></pre></div>
+
+<blockquote>
+<p>注：关于consul的配置文件一定要放置在bootstrap.yml中才可以生效</p>
+</blockquote>
+<h3 id="3-4-3-动态参数接收类"><a href="#3-4-3-动态参数接收类" class="headerlink" title="3.4.3 动态参数接收类"></a>3.4.3 动态参数接收类</h3><div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@ConfigurationProperties</span>(<span class="hljs-string">"company.pay"</span>)
+<span class="hljs-meta">@RefreshScope</span>
+<span class="hljs-meta">@Data</span>
+<span class="hljs-meta">@Component</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PayMoneyProperties</span> </span>&#123;
+
+    Integer money;
+
+&#125;</code></pre></div>
+<blockquote>
+<p>@ConfigurationProperties 表示这个类关联动态配置，“company.pay”表示key的前缀部分。</p>
+<p>@RefreshScope 表示动态刷新config server 值</p>
+<p>@Component 表示将该类加载到IOC容器中<br>在实战中尝试用@Value的方式获取动态，只能实现服务重启后获取动态的config server 的值,最终找到解决方案在相应的取值类上加@RefreshScope注解，完美解决。</p>
+</blockquote>
+<h3 id="3-4-4-controller接口"><a href="#3-4-4-controller接口" class="headerlink" title="3.4.4 controller接口"></a>3.4.4 controller接口</h3><div class="hljs"><pre><code class="hljs kotlin"><span class="hljs-meta">@RestController</span>
+<span class="hljs-meta">@RequestMapping(<span class="hljs-meta-string">"consul"</span>)</span>
+<span class="hljs-meta">@RefreshScope</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ConsulConfigController</span> </span>&#123;
+
+    <span class="hljs-comment">//第一种注入值的方法</span>
+    <span class="hljs-meta">@Value(<span class="hljs-meta-string">"<span class="hljs-subst">$&#123;company.pay.money&#125;</span>"</span>)</span>
+    <span class="hljs-keyword">private</span> String money;
+
+    <span class="hljs-comment">//第二种注入值的方法</span>
+    <span class="hljs-meta">@Autowired</span>
+    <span class="hljs-keyword">private</span> PayMoneyProperties payMoneyProperties;
+
+    <span class="hljs-meta">@RequestMapping(<span class="hljs-meta-string">"/pay/money"</span>)</span>
+    <span class="hljs-keyword">public</span> Object getConfig() &#123;
+        String result = <span class="hljs-string">"第一种注入值获取的值为："</span> + money + <span class="hljs-string">",第二种注入值获取的值为："</span> + payMoneyProperties.getMoney();
+        <span class="hljs-keyword">return</span> result;
+    &#125;
+&#125;</code></pre></div>
+
+<blockquote>
+<p>提供了两种注入值的方法，均可，第一种采用@Value进行注入，第二种采用ConfigurationProperties进行注入</p>
+</blockquote>
+<h2 id="3-5-consul中创建节点数据"><a href="#3-5-consul中创建节点数据" class="headerlink" title="3.5 consul中创建节点数据"></a>3.5 consul中创建节点数据</h2><p><img src="https://gitee.com/FocusProgram/PicGo/raw/master/20200307233617.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://gitee.com/FocusProgram/PicGo/raw/master/20200307233630.png" srcset="/img/loading.gif" alt=""></p>
+<blockquote>
+<p>节点的目录分别为：</p>
+<p>config/waiter-service,dev/consul</p>
+<p>config/waiter-service,prd/consul</p>
+</blockquote>
+<h2 id="3-6-验证从consul中获取的配置文件"><a href="#3-6-验证从consul中获取的配置文件" class="headerlink" title="3.6 验证从consul中获取的配置文件"></a>3.6 验证从consul中获取的配置文件</h2><p>访问 <a href="http://localhost:8090/consul/pay/money" target="_blank" rel="noopener">http://localhost:8090/consul/pay/money</a></p>
+<p><img src="https://gitee.com/FocusProgram/PicGo/raw/master/20200307234114.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://gitee.com/FocusProgram/PicGo/raw/master/20200307234217.png" srcset="/img/loading.gif" alt=""></p>
+<h1 id="4-注意事项"><a href="#4-注意事项" class="headerlink" title="4. 注意事项"></a>4. 注意事项</h1><blockquote>
+<p>consul出现Critical Checks错误</p>
+</blockquote>
+<p><img src="http://image.focusprogram.top/20200514140255.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="http://image.focusprogram.top/20200514141020.png" srcset="/img/loading.gif" alt=""></p>
+<div class="hljs"><pre><code class="hljs awk">$ curl http:<span class="hljs-regexp">//</span><span class="hljs-number">192.168</span>.<span class="hljs-number">247.1</span>:<span class="hljs-number">8090</span><span class="hljs-regexp">/actuator/</span>health
+
+&#123;<span class="hljs-string">"timestamp"</span>:<span class="hljs-string">"2020-05-14T06:07:04.905+0000"</span>,<span class="hljs-string">"status"</span>:<span class="hljs-number">404</span>,<span class="hljs-string">"error"</span>:<span class="hljs-string">"Not Found"</span>,<span class="hljs-string">"message"</span>:<span class="hljs-string">"No message available"</span>,<span class="hljs-string">"path"</span>:<span class="hljs-string">"/actuator/health"</span>&#125;</code></pre></div>
+
+<p>解决措施：引入maven依赖spring-boot-starter-actuator</p>
+<p>再次访问</p>
+<div class="hljs"><pre><code class="hljs awk">$ curl http:<span class="hljs-regexp">//</span><span class="hljs-number">192.168</span>.<span class="hljs-number">247.1</span>:<span class="hljs-number">8090</span><span class="hljs-regexp">/actuator/</span>health
+
+&#123;<span class="hljs-string">"status"</span>:<span class="hljs-string">"UP"</span>&#125;</code></pre></div>
+
+<p>注：consul部署在虚拟机，所以本地网络可以和虚拟机宿主机互通，如果采用云服务器，则服务正常进行健康检查，必须将服务部署在和consul同网段下的云服务器上才可以正常通讯，健康检查才可以通过，该服务才可以正常调用。</p>
+<blockquote>
+<p>引入spring-boot-starter-actuator版本依赖错误</p>
+</blockquote>
+<p><img src="http://image.focusprogram.top/20200514135934.png" srcset="/img/loading.gif" alt=""></p>
+<p>解决措施：spring-boot版本为2.0.4.RELEASE，spring-cloud版本为Finchley.RELEASE</p>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">微服务</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/SpringCloud/">SpringCloud</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">微服务</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/07/11/Eureka/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Eureka</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2020/07/11/Apollo/">
+                        <span class="hidden-mobile">Apollo</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <div id="vcomments"></div>
+  <script type="text/javascript">
+    function loadValine() {
+      addScript('https://cdn.staticfile.org/valine/1.4.14/Valine.min.js', function () {
+        new Valine({
+          el: "#vcomments",
+          app_id: "XjjXuhrzyfTeHFAzz4XEQWeA-gzGzoHsz",
+          app_key: "VOV2U2qRAhtqyuBiioUEvrNV",
+          placeholder: "留下您想说的话吧(*^▽^*)",
+          path: window.location.pathname,
+          avatar: "wavatar",
+          meta: ["nick","mail"],
+          pageSize: "10",
+          lang: "zh-CN",
+          highlight: true,
+          recordIP: true,
+          serverURLs: "",
+        });
+      });
+    }
+    createObserver(loadValine, 'vcomments');
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" target="_blank" rel="nofollow noopener noopener">comments
+      powered by Valine.</a></noscript>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!--
+<script src="https://utteranc.es/client.js"
+        repo="FocusProgram/focusprogram.github.io"
+        issue-term="title"
+        label="utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+-->
+
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+    <!-- APlayer 音乐播放器 -->
+    <div id="aplayer"></div>
+    <script defer src="https://cdn.staticfile.org/aplayer/1.10.1/APlayer.min.js" ></script>
+<link  rel="stylesheet" href="https://cdn.staticfile.org/aplayer/1.10.1/APlayer.min.css" />
+<script type="text/javascript">
+  var oldLoadAp = window.onload;
+  window.onload = function () {
+    oldLoadAp && oldLoadAp();
+
+    new APlayer({
+      container: document.getElementById('aplayer'),
+      fixed: true,
+      autoplay: 'false' === 'true',
+      loop: 'all',
+      order: 'list',
+      theme: '#181a1b',
+      preload: 'none',
+      audio: [{"name":"海阔天空","artist":"Beyond","url":"/music/Beyond - 海阔天空.mp3","cover":"/music/Beyond.png"},{"name":"谁伴我闯荡","artist":"Beyond","url":"/music/Beyond - 谁伴我闯荡.mp3","cover":"/music/Beyond.png"}]
+    });
+  }
+</script>
+
+  
+
+  
+
+  <footer class="mt-5">
+<div id="dark-div">
+  <a id="dark" onclick="switchDarkMode()"></a>
+</div>
+<script>
+  var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7;
+  if( matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
+    if(!(isNight&&localStorage.getItem('noDark') === '1')) {
+      document.body.classList.add('dark');
+    }
+  }
+  document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark")?"🌙":"🌞";
+</script>
+  <div class="text-center py-3">
+    <div>
+      <a rel="nofollow noopener"><span>永远执着&nbsp;&nbsp;</span></a>
+      <i class="iconfont icon-love"></i>
+      <a rel="nofollow noopener">
+        <span>&nbsp;&nbsp;永远热爱</span></a>
+    </div>
+    
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+    
+  <!-- 备案信息 -->
+  <div class="beian">
+    <img src="http://image.focusprogram.top/icp_beian.png" srcset="/img/loading.gif" style="margin-top:-5px">
+    <a href="http://beian.miit.gov.cn/" target="_blank"
+       rel="nofollow noopener">苏ICP备19063834号-1</a>
+    
+      <a
+        href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=44030602004695"
+        rel="nofollow noopener"
+        class="beian-police"
+        target="_blank"
+      >
+        <span class="beian-police-sep">&nbsp;|&nbsp;</span>
+        
+          <img src="/img/police_beian.png" srcset="/img/loading.gif" alt="police-icon" />
+        
+        <span>苏公安网备44030602004695号</span>
+      </a>
+     
+  </div>
+
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: 'article.markdown-body',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "Consul&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+  <script>(function (i, s, o, g, r, a, m) {
+      i['DaoVoiceObject'] = r;
+      i[r] = i[r] ||
+        function () {
+          (i[r].q = i[r].q || []).push(arguments);
+        };
+      i[r].l = 1 * new Date();
+      a = s.createElement(o);
+      m = s.getElementsByTagName(o)[0];
+      a.async = 1;
+      a.src = g;
+      a.charset = 'utf-8';
+      m.parentNode.insertBefore(a, m);
+    })(window, document, 'script', ('https:' === document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/98eb4efd.js", 'daovoice');
+    daovoice('init', {
+      app_id: "98eb4efd",
+    });
+    daovoice('update');
+  </script>
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+</body>
+</html>

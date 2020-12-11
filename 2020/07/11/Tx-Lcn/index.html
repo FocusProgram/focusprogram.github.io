@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/Mr.Kong.jpg">
+  <link rel="icon" type="image/png" href="/img/Mr.Kong.jpg">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="May you experience the pain and happiness in your life">
+  <meta name="author" content="Mr.Kong">
+  <meta name="keywords" content="">
+  <title>Tx-Lcn - Mr.Kong Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/dark.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script  src="/js/utils.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Mr.Kong</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-bookmark-fill"></i>
+                开源地址
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="https://blog.csdn.net/qq_41112063" target="_blank" rel="noopener">
+                    
+                    CSDN
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="https://gitee.com/FocusProgram/" target="_blank" rel="noopener">
+                    
+                    Gitee
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="https://github.com/FocusProgram/" target="_blank" rel="noopener">
+                    
+                    GitHub
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/neight.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2020-07-11 16:34">
+      2020年7月11日 下午
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.3k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      20
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：5 个月前
+                
+              </p>
+            
+            <article class="markdown-body">
+              <p><strong>Tx-lcn</strong></p>
+<hr>
+<h1 id="1-TX-LCN是什么？"><a href="#1-TX-LCN是什么？" class="headerlink" title="1. TX-LCN是什么？"></a>1. TX-LCN是什么？</h1><blockquote>
+<p><a href="https://github.com/codingapi/tx-lcn" target="_blank" rel="noopener">TX-LCN</a> 框架在2017年6月份发布第一个版本，从开始的1.0，已经发展到了5.0版本。<br>LCN名称是由早期版本的LCN框架命名，在设计框架之初的1.0 ~ 2.0的版本时框架设计的步骤是如下,各取其首字母得来的LCN命名。</p>
+<p>锁定事务单元（lock）<br>确认事务模块状态(confirm)<br>通知事务(notify)</p>
+<p>5.0以后由于框架兼容了LCN、TCC、TXC三种事务模式，为了避免区分LCN模式，特此将LCN分布式事务改名为TX-LCN分布式事务框架。</p>
+</blockquote>
+<h1 id="2-框架定位"><a href="#2-框架定位" class="headerlink" title="2. 框架定位"></a>2. 框架定位</h1><blockquote>
+<p>LCN并不生产事务，LCN只是本地事务的协调工</p>
+<p>TX-LCN定位于一款事务协调性框架，框架其本身并不操作事务，而是基于对事务的协调从而达到事务一致性的效果。</p>
+</blockquote>
+<h1 id="3-解决方案"><a href="#3-解决方案" class="headerlink" title="3. 解决方案"></a>3. 解决方案</h1><blockquote>
+<p>在一个分布式系统下存在多个模块协调来完成一次业务。那么就存在一次业务事务下可能横跨多种数据源节点的可能。TX-LCN将可以解决这样的问题。</p>
+<p>例如存在服务模块A 、B、 C。A模块是mysql作为数据源的服务，B模块是基于redis作为数据源的服务，C模块是基于mongo作为数据源的服务。若需要解决他们的事务一致性就需要针对不同的节点采用不同的方案，并且统一协调完成分布式事务的处理。</p>
+</blockquote>
+<p><img src="https://gitee.com/FocusProgram/PicGo/raw/master/lcn.png" srcset="/img/loading.gif" alt=""></p>
+<blockquote>
+<p>方案：</p>
+<p>   若采用TX-LCN分布式事务框架，则可以将A模块采用LCN模式、B/C采用TCC模式就能完美解决。</p>
+</blockquote>
+<h1 id="4-SpringCloud集成TX-LCN"><a href="#4-SpringCloud集成TX-LCN" class="headerlink" title="4. SpringCloud集成TX-LCN"></a>4. SpringCloud集成TX-LCN</h1><h2 id="4-1-TX-LCN模块说明"><a href="#4-1-TX-LCN模块说明" class="headerlink" title="4.1 TX-LCN模块说明"></a>4.1 TX-LCN模块说明</h2><blockquote>
+<p>Tx-Client(TC) Tx-Manager(TM). TC作为微服务下的依赖，TM是独立的服务</p>
+</blockquote>
+<h2 id="4-2-TM-配置与启动"><a href="#4-2-TM-配置与启动" class="headerlink" title="4.2 TM 配置与启动"></a>4.2 TM 配置与启动</h2><h3 id="4-2-1-所需配置"><a href="#4-2-1-所需配置" class="headerlink" title="4.2.1 所需配置"></a>4.2.1 所需配置</h3><blockquote>
+<p>jdk1.8+</p>
+<p>mysql5.6+</p>
+<p>redis3.2+</p>
+</blockquote>
+<h3 id="4-2-2-导入数据库脚本"><a href="#4-2-2-导入数据库脚本" class="headerlink" title="4.2.2 导入数据库脚本"></a>4.2.2 导入数据库脚本</h3><div class="hljs"><pre><code class="hljs sql"><span class="hljs-comment">/*</span>
+<span class="hljs-comment"> Navicat Premium Data Transfer</span>
+<span class="hljs-comment"></span>
+<span class="hljs-comment"> Source Server         : local</span>
+<span class="hljs-comment"> Source Server Type    : MySQL</span>
+<span class="hljs-comment"> Source Server Version : 100309</span>
+<span class="hljs-comment"> Source Host           : localhost:3306</span>
+<span class="hljs-comment"> Source Schema         : tx-manager</span>
+<span class="hljs-comment"></span>
+<span class="hljs-comment"> Target Server Type    : MySQL</span>
+<span class="hljs-comment"> Target Server Version : 100309</span>
+<span class="hljs-comment"> File Encoding         : 65001</span>
+<span class="hljs-comment"></span>
+<span class="hljs-comment"> Date: 29/12/2018 18:35:59</span>
+<span class="hljs-comment">*/</span>
+<span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">DATABASE</span> <span class="hljs-keyword">IF</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">EXISTS</span>  <span class="hljs-string">`tx-manager`</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">CHARSET</span> utf8 <span class="hljs-keyword">COLLATE</span> utf8_general_ci;
+<span class="hljs-keyword">USE</span> <span class="hljs-string">`tx-manager`</span>;
+
+<span class="hljs-keyword">SET</span> <span class="hljs-keyword">NAMES</span> utf8mb4;
+<span class="hljs-keyword">SET</span> FOREIGN_KEY_CHECKS = <span class="hljs-number">0</span>;
+
+<span class="hljs-comment">-- ----------------------------</span>
+<span class="hljs-comment">-- Table structure for t_tx_exception</span>
+<span class="hljs-comment">-- ----------------------------</span>
+<span class="hljs-keyword">DROP</span> <span class="hljs-keyword">TABLE</span> <span class="hljs-keyword">IF</span> <span class="hljs-keyword">EXISTS</span> <span class="hljs-string">`t_tx_exception`</span>;
+<span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> <span class="hljs-string">`t_tx_exception`</span>  (
+  <span class="hljs-string">`id`</span> <span class="hljs-built_in">bigint</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> AUTO_INCREMENT,
+  <span class="hljs-string">`group_id`</span> <span class="hljs-built_in">varchar</span>(<span class="hljs-number">64</span>) <span class="hljs-built_in">CHARACTER</span> <span class="hljs-keyword">SET</span> utf8mb4 <span class="hljs-keyword">COLLATE</span> utf8mb4_general_ci <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span>,
+  <span class="hljs-string">`unit_id`</span> <span class="hljs-built_in">varchar</span>(<span class="hljs-number">32</span>) <span class="hljs-built_in">CHARACTER</span> <span class="hljs-keyword">SET</span> utf8mb4 <span class="hljs-keyword">COLLATE</span> utf8mb4_general_ci <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span>,
+  <span class="hljs-string">`mod_id`</span> <span class="hljs-built_in">varchar</span>(<span class="hljs-number">128</span>) <span class="hljs-built_in">CHARACTER</span> <span class="hljs-keyword">SET</span> utf8mb4 <span class="hljs-keyword">COLLATE</span> utf8mb4_general_ci <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span>,
+  <span class="hljs-string">`transaction_state`</span> <span class="hljs-built_in">tinyint</span>(<span class="hljs-number">4</span>) <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span>,
+  <span class="hljs-string">`registrar`</span> <span class="hljs-built_in">tinyint</span>(<span class="hljs-number">4</span>) <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span>,
+  <span class="hljs-string">`ex_state`</span> <span class="hljs-built_in">tinyint</span>(<span class="hljs-number">4</span>) <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">'0 待处理 1已处理'</span>,
+  <span class="hljs-string">`remark`</span> <span class="hljs-built_in">varchar</span>(<span class="hljs-number">10240</span>) <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">'备注'</span>,
+  <span class="hljs-string">`create_time`</span> datetime(<span class="hljs-number">0</span>) <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span>,
+  PRIMARY <span class="hljs-keyword">KEY</span> (<span class="hljs-string">`id`</span>) <span class="hljs-keyword">USING</span> BTREE
+) <span class="hljs-keyword">ENGINE</span> = <span class="hljs-keyword">InnoDB</span> AUTO_INCREMENT = <span class="hljs-number">967</span> <span class="hljs-built_in">CHARACTER</span> <span class="hljs-keyword">SET</span> = utf8mb4 <span class="hljs-keyword">COLLATE</span> = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+<span class="hljs-keyword">SET</span> FOREIGN_KEY_CHECKS = <span class="hljs-number">1</span>;</code></pre></div>
+
+<h3 id="4-2-3-TM版本下载"><a href="#4-2-3-TM版本下载" class="headerlink" title="4.2.3 TM版本下载"></a>4.2.3 TM版本下载</h3><p><a href="https://github.com/codingapi/tx-lcn/releases" target="_blank" rel="noopener">https://github.com/codingapi/tx-lcn/releases</a></p>
+<h3 id="4-2-4-源码编译"><a href="#4-2-4-源码编译" class="headerlink" title="4.2.4 源码编译"></a>4.2.4 源码编译</h3><p>编辑配置文件/tx-lcn/txlcn-tm/src/main/resources/application.properties如下：</p>
+<div class="hljs"><pre><code class="hljs ini"><span class="hljs-attr">spring.application.name</span>=TransactionManager
+<span class="hljs-attr">server.port</span>=<span class="hljs-number">7970</span>
+<span class="hljs-attr">spring.datasource.driver-class-name</span>=com.mysql.jdbc.Driver
+<span class="hljs-attr">spring.datasource.url</span>=jdbc:mysql://<span class="hljs-number">114.55</span>.<span class="hljs-number">34.44</span>:<span class="hljs-number">3306</span>/tx-manager?characterEncoding=UTF-<span class="hljs-number">8</span>
+<span class="hljs-attr">spring.datasource.username</span>=root
+<span class="hljs-attr">spring.datasource.password</span>=root
+
+<span class="hljs-comment">#spring.jpa.database-platform=org.hibernate.dialect.MySQL5InnoDBDialect</span>
+<span class="hljs-comment">#spring.jpa.hibernate.ddl-auto=update</span>
+
+
+<span class="hljs-attr">mybatis.configuration.map-underscore-to-camel-case</span>=<span class="hljs-literal">true</span>
+<span class="hljs-attr">mybatis.configuration.use-generated-keys</span>=<span class="hljs-literal">true</span>
+
+<span class="hljs-comment">#tx-lcn.logger.enabled=true</span>
+<span class="hljs-comment"># TxManager Host Ip</span>
+<span class="hljs-comment">#tx-lcn.manager.host=127.0.0.1</span>
+<span class="hljs-comment"># TxClient连接请求端口</span>
+<span class="hljs-comment">#tx-lcn.manager.port=8070</span>
+<span class="hljs-comment"># 心跳检测时间(ms)</span>
+<span class="hljs-comment">#tx-lcn.manager.heart-time=15000</span>
+<span class="hljs-comment"># 分布式事务执行总时间</span>
+<span class="hljs-comment">#tx-lcn.manager.dtx-time=30000</span>
+<span class="hljs-comment">#参数延迟删除时间单位ms</span>
+<span class="hljs-comment">#tx-lcn.message.netty.attr-delay-time=10000</span>
+<span class="hljs-comment">#tx-lcn.manager.concurrent-level=128</span>
+<span class="hljs-comment"># 开启日志</span>
+<span class="hljs-comment">#tx-lcn.logger.enabled=true</span>
+<span class="hljs-comment">#logging.level.com.codingapi=debug</span>
+<span class="hljs-comment">#redis 主机</span>
+<span class="hljs-attr">spring.redis.host</span>=<span class="hljs-number">114.55</span>.<span class="hljs-number">34.44</span>
+<span class="hljs-comment">#redis 端口</span>
+<span class="hljs-attr">spring.redis.port</span>=<span class="hljs-number">6379</span>
+<span class="hljs-comment">#redis 密码</span>
+<span class="hljs-attr">spring.redis.password</span>=root</code></pre></div>
+
+<p>注意：pom.xml文件中添加如下配置，否则无法正常运行</p>
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">build</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">plugins</span>&gt;</span>
+  	<span class="hljs-tag">&lt;<span class="hljs-name">plugin</span>&gt;</span>
+  		<span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+ 		<span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-maven-plugin<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+  	<span class="hljs-tag">&lt;/<span class="hljs-name">plugin</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">plugins</span>&gt;</span>
+ <span class="hljs-tag">&lt;/<span class="hljs-name">build</span>&gt;</span></code></pre></div>
+
+<p>编译：</p>
+<div class="hljs"><pre><code class="hljs reasonml">mvn clean  package -<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Dmaven</span>.</span></span>test.skip=<span class="hljs-literal">true</span></code></pre></div>
+
+<p>编译成功显示如下：</p>
+<p><img src="https://gitee.com/FocusProgram/PicGo/raw/master/20200313201811.png" srcset="/img/loading.gif" alt=""></p>
+<h3 id="4-2-4-启动"><a href="#4-2-4-启动" class="headerlink" title="4.2.4 启动"></a>4.2.4 启动</h3><div class="hljs"><pre><code class="hljs css"><span class="hljs-selector-tag">java</span> <span class="hljs-selector-tag">-jar</span> <span class="hljs-selector-tag">txlcn-tm-5</span><span class="hljs-selector-class">.0</span><span class="hljs-selector-class">.2</span><span class="hljs-selector-class">.RELEASE</span><span class="hljs-selector-class">.jar</span></code></pre></div>
+
+<p>成功启动，访问 <a href="http://127.0.0.1:7970/admin/index.html#/login" target="_blank" rel="noopener">http://127.0.0.1:7970/admin/index.html#/login</a> 默认密码 codingapi</p>
+<p><img src="https://gitee.com/FocusProgram/PicGo/raw/master/20200313212742.jpg" srcset="/img/loading.gif" alt=""></p>
+<h2 id="4-3-TC-微服务模块"><a href="#4-3-TC-微服务模块" class="headerlink" title="4.3 TC 微服务模块"></a>4.3 TC 微服务模块</h2><h3 id="4-3-1-微服务模块"><a href="#4-3-1-微服务模块" class="headerlink" title="4.3.1 微服务模块"></a>4.3.1 微服务模块</h3><p><img src="https://gitee.com/FocusProgram/PicGo/raw/master/quick_arch.png" srcset="/img/loading.gif" alt=""></p>
+<blockquote>
+<p>服务A作为DTX发起方，远程调用服务B</p>
+</blockquote>
+<h3 id="4-3-2-引入maven依赖"><a href="#4-3-2-引入maven依赖" class="headerlink" title="4.3.2 引入maven依赖"></a>4.3.2 引入maven依赖</h3><div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.codingapi.txlcn<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>txlcn-tc<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>5.0.2.RELEASE<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.codingapi.txlcn<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>txlcn-txmsg-netty<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>5.0.2.RELEASE<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></code></pre></div>
+
+<h3 id="4-3-3-TC开启分布式事务注解"><a href="#4-3-3-TC开启分布式事务注解" class="headerlink" title="4.3.3 TC开启分布式事务注解"></a>4.3.3 TC开启分布式事务注解</h3><p>在主类上使用@EnableDistributedTransaction</p>
+<div class="hljs"><pre><code class="hljs less"><span class="hljs-variable">@SpringBootApplication</span>
+<span class="hljs-variable">@EnableDistributedTransaction</span>
+public class DemoAApplication &#123;
+
+    <span class="hljs-selector-tag">public</span> <span class="hljs-selector-tag">static</span> <span class="hljs-selector-tag">void</span> <span class="hljs-selector-tag">main</span>(String[] args) &#123;
+        <span class="hljs-selector-tag">SpringApplication</span><span class="hljs-selector-class">.run</span>(DemoDubboClientApplication.class, args);
+    &#125;
+
+&#125;</code></pre></div>
+
+
+<p>TC微服务A业务方法配置</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Service</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ServiceA</span> </span>&#123;
+    
+    <span class="hljs-meta">@Autowired</span>
+    <span class="hljs-keyword">private</span> ValueDao valueDao; <span class="hljs-comment">//本地db操作</span>
+    
+    <span class="hljs-meta">@Autowired</span>
+    <span class="hljs-keyword">private</span> ServiceB serviceB;<span class="hljs-comment">//远程B模块业务</span>
+    
+    <span class="hljs-meta">@LcnTransaction</span> <span class="hljs-comment">//分布式事务注解</span>
+    <span class="hljs-meta">@Transactional</span> <span class="hljs-comment">//本地事务注解</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">execute</span><span class="hljs-params">(String value)</span> <span class="hljs-keyword">throws</span> BusinessException </span>&#123;
+        <span class="hljs-comment">// step1. call remote service B</span>
+        String result = serviceB.rpc(value);  <span class="hljs-comment">// (1)</span>
+        <span class="hljs-comment">// step2. local store operate. DTX commit if save success, rollback if not.</span>
+        valueDao.save(value);  <span class="hljs-comment">// (2)</span>
+        valueDao.saveBackup(value);  <span class="hljs-comment">// (3)</span>
+        <span class="hljs-keyword">return</span> result + <span class="hljs-string">" &gt; "</span> + <span class="hljs-string">"ok-A"</span>;
+    &#125;
+&#125;</code></pre></div>
+
+<p>TC微服务B业务方法配置</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Service</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ServiceB</span> </span>&#123;
+    
+    <span class="hljs-meta">@Autowired</span>
+    <span class="hljs-keyword">private</span> ValueDao valueDao; <span class="hljs-comment">//本地db操作</span>
+    
+    <span class="hljs-meta">@LcnTransaction</span> <span class="hljs-comment">//分布式事务注解</span>
+    <span class="hljs-meta">@Transactional</span>  <span class="hljs-comment">//本地事务注解</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">rpc</span><span class="hljs-params">(String value)</span> <span class="hljs-keyword">throws</span> BusinessException </span>&#123;
+        valueDao.save(value);  <span class="hljs-comment">// (4)</span>
+        valueDao.saveBackup(value);  <span class="hljs-comment">// (5)</span>
+        <span class="hljs-keyword">return</span> <span class="hljs-string">"ok-B"</span>;
+    &#125;
+&#125;</code></pre></div>
+
+<p>TC配置信息说明<br>默认之配置为TM的本机默认端口</p>
+<blockquote>
+<p>tx-lcn.client.manager-address=127.0.0.1:8070 </p>
+</blockquote>
+<h2 id="4-4-springcloud集成tx-lcn源码"><a href="#4-4-springcloud集成tx-lcn源码" class="headerlink" title="4.4 springcloud集成tx-lcn源码"></a>4.4 <a href="https://github.com/FocusProgram/springcloud-txlcn.git" target="_blank" rel="noopener">springcloud集成tx-lcn源码</a></h2>
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">微服务</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/SpringCloud/">SpringCloud</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">微服务</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/07/11/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81-%E5%9F%BA%E4%BA%8ERedis%E5%AE%9E%E7%8E%B0/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">分布式锁-基于Redis实现</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2020/07/11/Seata/">
+                        <span class="hidden-mobile">Seata</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <div id="vcomments"></div>
+  <script type="text/javascript">
+    function loadValine() {
+      addScript('https://cdn.staticfile.org/valine/1.4.14/Valine.min.js', function () {
+        new Valine({
+          el: "#vcomments",
+          app_id: "XjjXuhrzyfTeHFAzz4XEQWeA-gzGzoHsz",
+          app_key: "VOV2U2qRAhtqyuBiioUEvrNV",
+          placeholder: "留下您想说的话吧(*^▽^*)",
+          path: window.location.pathname,
+          avatar: "wavatar",
+          meta: ["nick","mail"],
+          pageSize: "10",
+          lang: "zh-CN",
+          highlight: true,
+          recordIP: true,
+          serverURLs: "",
+        });
+      });
+    }
+    createObserver(loadValine, 'vcomments');
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" target="_blank" rel="nofollow noopener noopener">comments
+      powered by Valine.</a></noscript>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!--
+<script src="https://utteranc.es/client.js"
+        repo="FocusProgram/focusprogram.github.io"
+        issue-term="title"
+        label="utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+-->
+
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+    <!-- APlayer 音乐播放器 -->
+    <div id="aplayer"></div>
+    <script defer src="https://cdn.staticfile.org/aplayer/1.10.1/APlayer.min.js" ></script>
+<link  rel="stylesheet" href="https://cdn.staticfile.org/aplayer/1.10.1/APlayer.min.css" />
+<script type="text/javascript">
+  var oldLoadAp = window.onload;
+  window.onload = function () {
+    oldLoadAp && oldLoadAp();
+
+    new APlayer({
+      container: document.getElementById('aplayer'),
+      fixed: true,
+      autoplay: 'false' === 'true',
+      loop: 'all',
+      order: 'list',
+      theme: '#181a1b',
+      preload: 'none',
+      audio: [{"name":"海阔天空","artist":"Beyond","url":"/music/Beyond - 海阔天空.mp3","cover":"/music/Beyond.png"},{"name":"谁伴我闯荡","artist":"Beyond","url":"/music/Beyond - 谁伴我闯荡.mp3","cover":"/music/Beyond.png"}]
+    });
+  }
+</script>
+
+  
+
+  
+
+  <footer class="mt-5">
+<div id="dark-div">
+  <a id="dark" onclick="switchDarkMode()"></a>
+</div>
+<script>
+  var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7;
+  if( matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
+    if(!(isNight&&localStorage.getItem('noDark') === '1')) {
+      document.body.classList.add('dark');
+    }
+  }
+  document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark")?"🌙":"🌞";
+</script>
+  <div class="text-center py-3">
+    <div>
+      <a rel="nofollow noopener"><span>永远执着&nbsp;&nbsp;</span></a>
+      <i class="iconfont icon-love"></i>
+      <a rel="nofollow noopener">
+        <span>&nbsp;&nbsp;永远热爱</span></a>
+    </div>
+    
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+    
+  <!-- 备案信息 -->
+  <div class="beian">
+    <img src="http://image.focusprogram.top/icp_beian.png" srcset="/img/loading.gif" style="margin-top:-5px">
+    <a href="http://beian.miit.gov.cn/" target="_blank"
+       rel="nofollow noopener">苏ICP备19063834号-1</a>
+    
+      <a
+        href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=44030602004695"
+        rel="nofollow noopener"
+        class="beian-police"
+        target="_blank"
+      >
+        <span class="beian-police-sep">&nbsp;|&nbsp;</span>
+        
+          <img src="/img/police_beian.png" srcset="/img/loading.gif" alt="police-icon" />
+        
+        <span>苏公安网备44030602004695号</span>
+      </a>
+     
+  </div>
+
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: 'article.markdown-body',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "Tx-Lcn&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+  <script>(function (i, s, o, g, r, a, m) {
+      i['DaoVoiceObject'] = r;
+      i[r] = i[r] ||
+        function () {
+          (i[r].q = i[r].q || []).push(arguments);
+        };
+      i[r].l = 1 * new Date();
+      a = s.createElement(o);
+      m = s.getElementsByTagName(o)[0];
+      a.async = 1;
+      a.src = g;
+      a.charset = 'utf-8';
+      m.parentNode.insertBefore(a, m);
+    })(window, document, 'script', ('https:' === document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/98eb4efd.js", 'daovoice');
+    daovoice('init', {
+      app_id: "98eb4efd",
+    });
+    daovoice('update');
+  </script>
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+</body>
+</html>
