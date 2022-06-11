@@ -1,0 +1,1631 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/Mr.Kong.jpg">
+  <link rel="icon" type="image/png" href="/img/Mr.Kong.jpg">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="May you experience the pain and happiness in your life">
+  <meta name="author" content="Mr.Kong">
+  <meta name="keywords" content="">
+  <title>分布式锁-基于Redis实现 - Mr.Kong Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/dark.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script  src="/js/utils.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Mr.Kong</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-bookmark-fill"></i>
+                开源地址
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="https://gitee.com/FocusProgram/" target="_blank" rel="noopener">
+                    
+                    Gitee
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="https://github.com/FocusProgram/" target="_blank" rel="noopener">
+                    
+                    GitHub
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/neight.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2020-07-11 16:37">
+      2020年7月11日 下午
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      5.9k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      81
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：35 分钟前
+                
+              </p>
+            
+            <article class="markdown-body">
+              <p><strong>分布式锁-基于Redis实现</strong></p>
+<hr>
+<h1 id="1-高可用分布式锁特性"><a href="#1-高可用分布式锁特性" class="headerlink" title="1. 高可用分布式锁特性"></a>1. 高可用分布式锁特性</h1><blockquote>
+<ul>
+<li><p>互斥性：作为锁，需要保证任何时刻只能有一个客户端(用户)持有锁</p>
+</li>
+<li><p>可重入： 同一个客户端在获得锁后，可以再次进行加锁</p>
+</li>
+<li><p>高可用：获取锁和释放锁的效率较高，不会出现单点故障</p>
+</li>
+<li><p>自动重试机制：当客户端加锁失败时，能够提供一种机制让客户端自动重试</p>
+</li>
+</ul>
+</blockquote>
+<h1 id="2-实现原理"><a href="#2-实现原理" class="headerlink" title="2. 实现原理"></a>2. 实现原理</h1><h2 id="2-1-常用命令解析"><a href="#2-1-常用命令解析" class="headerlink" title="2.1 常用命令解析"></a>2.1 常用命令解析</h2><blockquote>
+<ul>
+<li><p>setnx 是『SET if Not eXists』(如果不存在，则 SET)的简写。 命令格式：SETNX key value；使用：只在键 key 不存在的情况下，将键 key 的值设置为 value 。若键 key 已经存在， 则 SETNX 命令不做任何动作。返回值：命令在设置成功时返回 1 ，设置失败时返回 0 。</p>
+</li>
+<li><p>getset 命令格式：GETSET key value，将键 key 的值设为 value ，并返回键 key 在被设置之前的旧的value。返回值：如果键 key 没有旧值， 也即是说， 键 key 在被设置之前并不存在， 那么命令返回 nil 。当键 key 存在但不是字符串类型时，命令返回一个错误。</p>
+</li>
+<li><p>expire 命令格式：EXPIRE key seconds，使用：为给定 key 设置生存时间，当 key 过期时(生存时间为 0 )，它会被自动删除。返回值：设置成功返回 1 。 当 key 不存在或者不能为 key 设置生存时间时(比如在低于 2.1.3 版本的 Redis 中你尝试更新 key 的生存时间)，返回 0 。</p>
+</li>
+<li><p>del 命令格式：DEL key [key …]，使用：删除给定的一个或多个 key ，不存在的 key 会被忽略。返回值：被删除 key 的数量。</p>
+</li>
+</ul>
+</blockquote>
+<h2 id="2-2-原理解析"><a href="#2-2-原理解析" class="headerlink" title="2.2 原理解析"></a>2.2 原理解析</h2><p><strong>实现原理一：</strong></p>
+<p><img src="https://image.focusprogram.top/redis-lock.png" srcset="/img/loading.gif" alt=""></p>
+<p><strong>过程分析</strong>：</p>
+<ul>
+<li>1.客户端获取锁，通过setnx(lockkey,currenttime+timeout)命令，将key为lockkey的value设置为当前时间+锁超时时间</li>
+<li>2.如果setnx(lockkey,currenttime+timeout)设置后返回值为1时，获取锁成功，说明redis中不存在lockkey，也不存在别的客户端拥有这个锁</li>
+<li>3.获取锁后首先使用expire(lockkey)命令设置lockkey的过期时间，目的是为了防止死锁的发生，因为不设置lockKey的过期时间，lockkey就会一直存在于redis中，当别的客户端使用setnx(lockkey,currenttime+timeout)命令时返回的结果一直未0，造成死锁</li>
+<li>4.执行相关业务逻辑</li>
+<li>5.释放锁，执行业务逻辑完成后，使用del(lockkey)命令删除lockKey，为了别的客户端可以及时获取到锁，减少等待时间</li>
+</ul>
+<p><strong>缺陷：</strong></p>
+<blockquote>
+<p>如果客户端A，在获取锁以后，也就是在执行setnx(lockkey,currenttime+timeout)命令成功以后，redis宕机或者程序异常终止，未执行expire(lockkey)命令，那么锁就一直存在，别的客户端就一直获取不到锁，造成阻塞。</p>
+</blockquote>
+<p><strong>解决方法：</strong></p>
+<blockquote>
+<p>关闭Tomcat有两种方式，一种通过温柔的执行shutdown关闭，一种通过kill杀死进程关闭</p>
+</blockquote>
+<div class="hljs"><pre><code class="hljs aspectj"><span class="hljs-comment">//通过温柔的执行shutdown关闭时，以下的方法会在关闭前执行，即可以释放锁，而对于通过kill杀死进程关闭时，以下方法不会执行，即不会释放锁</span>
+<span class="hljs-comment">//这种方式释放锁的缺点在于，如果关闭的锁过多，将造成关闭服务器耗时过长</span>
+<span class="hljs-meta">@PreDestroy</span>
+<span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">delLock</span><span class="hljs-params">()</span> </span>&#123;
+    RedisShardedPoolUtil.del(Const.REDIS_LOCK.CLOSE_ORDER_TASK_LOCK);
+&#125;</code></pre></div>
+
+<blockquote>
+<p>为解决以上设计存在的弊端，优化设计，采用双重防死锁解决死锁问题</p>
+</blockquote>
+<p><strong>实现原理二：</strong></p>
+<p><img src="https://image.focusprogram.top/redis-lock-2.png" srcset="/img/loading.gif" alt=""></p>
+<p><strong>过程分析：</strong></p>
+<ul>
+<li>1.当A通过setnx(lockkey,currenttime+timeout)命令能成功设置lockkey时，即返回值为1，过程与原理1一致；</li>
+<li>2.当A通过setnx(lockkey,currenttime+timeout)命令不能成功设置lockkey时，这是不能直接断定获取锁失败；因为我们在设置锁时，设置了锁的超时时间timeout，当当前时间大于redis中存储键值为lockkey的value值时，可以认为上一任的拥有者对锁的使用权已经失效了，A就可以强行拥有该锁；具体判定过程如下；</li>
+<li>3.A通过get(lockkey)，获取redis中的存储键值为lockkey的value值，即获取锁的相对时间lockvalueA</li>
+<li>4.lockvalueA!=null &amp;&amp; currenttime&gt;lockvalue，A通过当前的时间与锁设置的时间做比较，如果当前时间已经大于锁设置的时间临界，即可以进一步判断是否可以获取锁，否则说明该锁还在被占用，A就还不能获取该锁，结束，获取锁失败；</li>
+<li>5.步骤4返回结果为true后，通过getSet设置新的超时时间，并返回旧值lockvalueB，以作判断，因为在分布式环境，在进入这里时可能另外的进程获取到锁并对值进行了修改，只有旧值与返回的值一致才能说明中间未被其他进程获取到这个锁；</li>
+<li>6.lockvalueB == null || lockvalueA==lockvalueB，判断：若果lockvalueB为null，说明该锁已经被释放了，此时该进程可以获取锁；旧值与返回的lockvalueB一致说明中间未被其他进程获取该锁，可以获取锁；否则不能获取锁，结束，获取锁失败。</li>
+</ul>
+<p><strong>优化点：</strong></p>
+<blockquote>
+<p>加入了超时时间判断锁是否超时了，及时A在成功设置了锁之后，服务器就立即出现宕机或是重启，也不会出现死锁问题；因为B在尝试获取锁的时候，如果不能setnx成功，会去获取redis中锁的超时时间与当前的系统时间做比较，如果当前的系统时间已经大于锁超时时间，说明A已经对锁的使用权失效，B能继续判断能否获取锁，解决了redis分布式锁的死锁问题。</p>
+</blockquote>
+<h2 id="2-3-问题总结"><a href="#2-3-问题总结" class="headerlink" title="2.3 问题总结"></a>2.3 问题总结</h2><ul>
+<li><strong>问题一：时间戳的问题</strong></li>
+</ul>
+<blockquote>
+<p>我们看到lockkey的value值为时间戳，所以要在多客户端情况下，保证锁有效，一定要同步各服务器的时间，如果各服务器间，时间有差异。时间不一致的客户端，在判断锁超时，就会出现偏差，从而产生竞争条件。<br>锁的超时与否，严格依赖时间戳，时间戳本身也是有精度限制，假如我们的时间精度为秒，从加锁到执行操作再到解锁，一般操作肯定都能在一秒内完成。这样的话，我们上面的CASE，就很容易出现。所以，最好把时间精度提升到毫秒级。这样的话，可以保证毫秒级别的锁是安全的。</p>
+<p>分布式锁，多客户端的时间戳不能保证严格意义的一致性，所以在某些特定因素下，有可能存在锁串的情况。要适度的机制，可以承受小概率的事件产生。</p>
+</blockquote>
+<ul>
+<li><strong>问题二：死锁</strong></li>
+</ul>
+<blockquote>
+<p>必要的超时机制：获取锁的客户端一旦崩溃，一定要有过期机制，否则其他客户端都降无法获取锁，造成死锁问题。</p>
+</blockquote>
+<ul>
+<li><strong>问题三：阻塞</strong></li>
+</ul>
+<blockquote>
+<p>只对关键处理节点加锁，良好的习惯是，把相关的资源准备好，比如连接数据库后，调用加锁机制获取锁，直接进行操作，然后释放，尽量减少持有锁的时间。</p>
+<p>在持有锁期间要不要CHECK锁，如果需要严格依赖锁的状态，最好在关键步骤中做锁的CHECK检查机制，但是根据我们的测试发现，在大并发时，每一次CHECK锁操作，都要消耗掉几个毫秒，而我们的整个持锁处理逻辑才不到10毫秒，玩客没有选择做锁的检查。</p>
+<p>为了减少对Redis的压力，获取锁尝试时，循环之间一定要做sleep操作。但是sleep时间是多少是门学问。需要根据自己的Redis的QPS，加上持锁处理时间等进行合理计算。</p>
+</blockquote>
+<h1 id="3-具体实现"><a href="#3-具体实现" class="headerlink" title="3. 具体实现"></a>3. 具体实现</h1><h2 id="3-1-引入依赖"><a href="#3-1-引入依赖" class="headerlink" title="3.1 引入依赖"></a>3.1 引入依赖</h2><blockquote>
+<p>pom.xml</p>
+</blockquote>
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-data-redis<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>redis.clients<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>jedis<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></code></pre></div>
+
+<h2 id="3-2-编辑配置文件"><a href="#3-2-编辑配置文件" class="headerlink" title="3.2 编辑配置文件"></a>3.2 编辑配置文件</h2><blockquote>
+<p>application.yml</p>
+</blockquote>
+<div class="hljs"><pre><code class="hljs yaml"><span class="hljs-attr">server:</span>
+  <span class="hljs-attr">port:</span> <span class="hljs-number">8000</span>
+<span class="hljs-attr">spring:</span>
+  <span class="hljs-attr">redis:</span>
+    <span class="hljs-attr">database:</span> <span class="hljs-number">5</span>
+    <span class="hljs-attr">host:</span> <span class="hljs-number">114.55</span><span class="hljs-number">.34</span><span class="hljs-number">.44</span>
+    <span class="hljs-attr">password:</span> <span class="hljs-string">root</span>
+    <span class="hljs-attr">port:</span> <span class="hljs-number">6379</span>
+    <span class="hljs-attr">timeout:</span> <span class="hljs-string">3000ms</span>
+    <span class="hljs-attr">jedis:</span>
+      <span class="hljs-attr">pool:</span>
+        <span class="hljs-attr">max-active:</span> <span class="hljs-number">2000</span>
+        <span class="hljs-attr">max-idle:</span> <span class="hljs-number">500</span>
+        <span class="hljs-attr">max-wait:</span> <span class="hljs-string">1000ms</span>
+        <span class="hljs-attr">min-idle:</span> <span class="hljs-number">50</span></code></pre></div>
+
+<blockquote>
+<p>lock.lua 获得分布式锁lua脚本</p>
+</blockquote>
+<div class="hljs"><pre><code class="hljs pgsql"><span class="hljs-comment">-- 获取参数</span>
+<span class="hljs-keyword">local</span> requestIDKey = KEYS[<span class="hljs-number">1</span>]
+<span class="hljs-keyword">local</span> currentRequestID = ARGV[<span class="hljs-number">1</span>]
+<span class="hljs-keyword">local</span> expireTimeTTL = ARGV[<span class="hljs-number">2</span>]
+
+<span class="hljs-comment">-- setnx 尝试加锁</span>
+<span class="hljs-keyword">local</span> lockSet = redis.<span class="hljs-keyword">call</span>(<span class="hljs-string">'hsetnx'</span>,KEYS[<span class="hljs-number">1</span>],<span class="hljs-string">'lockKey'</span>,currentRequestID)
+
+<span class="hljs-keyword">if</span> lockSet == <span class="hljs-number">1</span>
+<span class="hljs-keyword">then</span>
+    <span class="hljs-comment">-- 加锁成功 设置过期时间和重入次数=1</span>
+	redis.<span class="hljs-keyword">call</span>(<span class="hljs-string">'expire'</span>,KEYS[<span class="hljs-number">1</span>],expireTimeTTL)
+	redis.<span class="hljs-keyword">call</span>(<span class="hljs-string">'hset'</span>,KEYS[<span class="hljs-number">1</span>],<span class="hljs-string">'lockCount'</span>,<span class="hljs-number">1</span>)
+	<span class="hljs-keyword">return</span> <span class="hljs-number">1</span>
+<span class="hljs-keyword">else</span>
+    <span class="hljs-comment">-- 判断是否是重入加锁</span>
+	<span class="hljs-keyword">local</span> oldRequestID = redis.<span class="hljs-keyword">call</span>(<span class="hljs-string">'hget'</span>,KEYS[<span class="hljs-number">1</span>],<span class="hljs-string">'lockKey'</span>)
+	<span class="hljs-keyword">if</span> currentRequestID == oldRequestID
+	<span class="hljs-keyword">then</span>
+	    <span class="hljs-comment">-- 是重入加锁</span>
+		redis.<span class="hljs-keyword">call</span>(<span class="hljs-string">'hincrby'</span>,KEYS[<span class="hljs-number">1</span>],<span class="hljs-string">'lockCount'</span>,<span class="hljs-number">1</span>)
+		<span class="hljs-comment">-- 重置过期时间</span>
+		redis.<span class="hljs-keyword">call</span>(<span class="hljs-string">'expire'</span>,KEYS[<span class="hljs-number">1</span>],expireTimeTTL)
+		<span class="hljs-keyword">return</span> <span class="hljs-number">1</span>
+	<span class="hljs-keyword">else</span>
+	    <span class="hljs-comment">-- requestID不一致，加锁失败</span>
+	    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>
+	<span class="hljs-keyword">end</span>
+<span class="hljs-keyword">end</span></code></pre></div>
+
+<blockquote>
+<p>unlock.lua 释放分布式锁lua脚本</p>
+</blockquote>
+<div class="hljs"><pre><code class="hljs pgsql"><span class="hljs-comment">-- 获取参数</span>
+<span class="hljs-keyword">local</span> requestIDKey = KEYS[<span class="hljs-number">1</span>]
+<span class="hljs-keyword">local</span> currentRequestID = ARGV[<span class="hljs-number">1</span>]
+
+<span class="hljs-comment">-- 判断requestID一致性</span>
+<span class="hljs-keyword">if</span> redis.<span class="hljs-keyword">call</span>(<span class="hljs-string">'hget'</span>,KEYS[<span class="hljs-number">1</span>],<span class="hljs-string">'lockKey'</span>) == currentRequestID
+<span class="hljs-keyword">then</span>
+    <span class="hljs-comment">-- requestID相同，重入次数自减</span>
+	<span class="hljs-keyword">local</span> currentCount = redis.<span class="hljs-keyword">call</span>(<span class="hljs-string">'hincrby'</span>,KEYS[<span class="hljs-number">1</span>],<span class="hljs-string">'lockCount'</span>,<span class="hljs-number">-1</span>)
+	<span class="hljs-keyword">if</span> currentCount == <span class="hljs-number">0</span>
+	<span class="hljs-keyword">then</span>
+	    <span class="hljs-comment">-- 重入次数为0，删除锁</span>
+	    redis.<span class="hljs-keyword">call</span>(<span class="hljs-string">'del'</span>,KEYS[<span class="hljs-number">1</span>])
+	    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>
+	<span class="hljs-keyword">else</span>
+	    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span> <span class="hljs-keyword">end</span>
+<span class="hljs-keyword">else</span> 
+	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span> <span class="hljs-keyword">end</span></code></pre></div>
+
+<h2 id="3-3-初始化lua脚本"><a href="#3-3-初始化lua脚本" class="headerlink" title="3.3 初始化lua脚本"></a>3.3 初始化lua脚本</h2><blockquote>
+<p>LuaScript</p>
+<p>使用redis实现分布式锁时，加锁操作必须是原子操作，否则多客户端并发操作时会导致各种各样的问题</p>
+<p>由于我们实现的是可重入锁，加锁过程中需要判断客户端ID的正确与否。而redis原生的简单接口没法保证一系列逻辑的原子性执行，因此采用了lua脚本来实现加锁操作。lua脚本可以让redis在执行时将一连串的操作以原子化的方式执行。</p>
+</blockquote>
+<div class="hljs"><pre><code class="hljs processing"><span class="hljs-keyword">public</span> class LuaScript &#123;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 加锁脚本 lock.lua</span>
+<span class="hljs-comment">     * 1. 判断key是否存在</span>
+<span class="hljs-comment">     * 2. 如果存在，判断requestID是否相等</span>
+<span class="hljs-comment">     * 相等，则删除掉key重新创建新的key值，重置过期时间</span>
+<span class="hljs-comment">     * 不相等，说明已经被抢占，加锁失败，返回null</span>
+<span class="hljs-comment">     * 3. 如果不存在，说明恰好已经过期，重新生成key</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">String</span> LOCK_SCRIPT;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 解锁脚本 unlock.lua</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">String</span> UN_LOCK_SCRIPT;
+
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> initLockScript() <span class="hljs-keyword">throws</span> IOException &#123;
+        <span class="hljs-keyword">if</span> (StringUtils.isEmpty(LOCK_SCRIPT)) &#123;
+            InputStream inputStream = Objects.requireNonNull(
+                    LuaScript.class.getClassLoader().getResourceAsStream(<span class="hljs-string">"lock.lua"</span>));
+            LOCK_SCRIPT = readFile(inputStream);
+        &#125;
+    &#125;
+
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> initUnLockScript() <span class="hljs-keyword">throws</span> IOException &#123;
+        <span class="hljs-keyword">if</span> (StringUtils.isEmpty(UN_LOCK_SCRIPT)) &#123;
+            InputStream inputStream = Objects.requireNonNull(
+                    LuaScript.class.getClassLoader().getResourceAsStream(<span class="hljs-string">"unlock.lua"</span>));
+            UN_LOCK_SCRIPT = readFile(inputStream);
+        &#125;
+    &#125;
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">String</span> readFile(InputStream inputStream) <span class="hljs-keyword">throws</span> IOException &#123;
+        <span class="hljs-keyword">try</span> (
+                <span class="hljs-keyword">BufferedReader</span> br = <span class="hljs-keyword">new</span> <span class="hljs-keyword">BufferedReader</span>(<span class="hljs-keyword">new</span> InputStreamReader(inputStream))
+        ) &#123;
+            <span class="hljs-keyword">String</span> <span class="hljs-built_in">line</span>;
+            StringBuilder stringBuilder = <span class="hljs-keyword">new</span> StringBuilder();
+            <span class="hljs-keyword">while</span> ((<span class="hljs-built_in">line</span> = br.readLine()) != <span class="hljs-keyword">null</span>) &#123;
+                stringBuilder.<span class="hljs-built_in">append</span>(<span class="hljs-built_in">line</span>)
+                        .<span class="hljs-built_in">append</span>(System.lineSeparator());
+            &#125;
+
+            <span class="hljs-keyword">return</span> stringBuilder.toString();
+        &#125;
+    &#125;
+&#125;</code></pre></div>
+
+<h2 id="3-4-定义分布式锁接口"><a href="#3-4-定义分布式锁接口" class="headerlink" title="3.4 定义分布式锁接口"></a>3.4 定义分布式锁接口</h2><blockquote>
+<p>DistributeLock</p>
+</blockquote>
+<div class="hljs"><pre><code class="hljs dart"><span class="hljs-comment"><span class="markdown">/**</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet"> * </span>分布式锁 api接口</span></span>
+<span class="hljs-comment"><span class="markdown"> */</span></span>
+public <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">DistributeLock</span> </span>&#123;
+
+    <span class="hljs-comment"><span class="markdown">/**</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>尝试加锁</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-code">     *</span></span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>@param lockKey 锁的key</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>@return 加锁成功 返回uuid</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>加锁失败 返回null</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-code">     */</span></span></span>
+    <span class="hljs-built_in">String</span> lock(<span class="hljs-built_in">String</span> lockKey);
+
+    <span class="hljs-comment"><span class="markdown">/**</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>尝试加锁 (requestID相等 可重入)</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-code">     *</span></span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>@param lockKey    锁的key</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>@param expireTime 过期时间 单位：秒</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>@return 加锁成功 返回uuid</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>加锁失败 返回null</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-code">     */</span></span></span>
+    <span class="hljs-built_in">String</span> lock(<span class="hljs-built_in">String</span> lockKey, <span class="hljs-built_in">int</span> expireTime);
+
+    <span class="hljs-comment"><span class="markdown">/**</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>尝试加锁 (requestID相等 可重入)</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-code">     *</span></span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>@param lockKey   锁的key</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>@param requestID 用户ID</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>@return 加锁成功 返回uuid</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>加锁失败 返回null</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-code">     */</span></span></span>
+    <span class="hljs-built_in">String</span> lock(<span class="hljs-built_in">String</span> lockKey, <span class="hljs-built_in">String</span> requestID);
+
+    <span class="hljs-comment"><span class="markdown">/**</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>尝试加锁 (requestID相等 可重入)</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-code">     *</span></span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>@param lockKey    锁的key</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>@param requestID  用户ID</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>@param expireTime 过期时间 单位：秒</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>@return 加锁成功 返回uuid</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>加锁失败 返回null</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-code">     */</span></span></span>
+    <span class="hljs-built_in">String</span> lock(<span class="hljs-built_in">String</span> lockKey, <span class="hljs-built_in">String</span> requestID, <span class="hljs-built_in">int</span> expireTime);
+
+    <span class="hljs-comment"><span class="markdown">/**</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>尝试加锁，失败自动重试 会阻塞当前线程</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-code">     *</span></span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>@param lockKey 锁的key</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>@return 加锁成功 返回uuid</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>加锁失败 返回null</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-code">     */</span></span></span>
+    <span class="hljs-built_in">String</span> lockAndRetry(<span class="hljs-built_in">String</span> lockKey);
+
+    <span class="hljs-comment"><span class="markdown">/**</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>尝试加锁，失败自动重试 会阻塞当前线程 (requestID相等 可重入)</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-code">     *</span></span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>@param lockKey   锁的key</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>@param requestID 用户ID</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>@return 加锁成功 返回uuid</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>加锁失败 返回null</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-code">     */</span></span></span>
+    <span class="hljs-built_in">String</span> lockAndRetry(<span class="hljs-built_in">String</span> lockKey, <span class="hljs-built_in">String</span> requestID);
+
+    <span class="hljs-comment"><span class="markdown">/**</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>尝试加锁 (requestID相等 可重入)</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-code">     *</span></span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>@param lockKey    锁的key</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>@param expireTime 过期时间 单位：秒</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>@return 加锁成功 返回uuid</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>加锁失败 返回null</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-code">     */</span></span></span>
+    <span class="hljs-built_in">String</span> lockAndRetry(<span class="hljs-built_in">String</span> lockKey, <span class="hljs-built_in">int</span> expireTime);
+
+    <span class="hljs-comment"><span class="markdown">/**</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>尝试加锁 (requestID相等 可重入)</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-code">     *</span></span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>@param lockKey    锁的key</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>@param expireTime 过期时间 单位：秒</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>@param retryCount 重试次数</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>@return 加锁成功 返回uuid</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>加锁失败 返回null</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-code">     */</span></span></span>
+    <span class="hljs-built_in">String</span> lockAndRetry(<span class="hljs-built_in">String</span> lockKey, <span class="hljs-built_in">int</span> expireTime, <span class="hljs-built_in">int</span> retryCount);
+
+    <span class="hljs-comment"><span class="markdown">/**</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>尝试加锁 (requestID相等 可重入)</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-code">     *</span></span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>@param lockKey    锁的key</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>@param requestID  用户ID</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>@param expireTime 过期时间 单位：秒</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>@return 加锁成功 返回uuid</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>加锁失败 返回null</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-code">     */</span></span></span>
+    <span class="hljs-built_in">String</span> lockAndRetry(<span class="hljs-built_in">String</span> lockKey, <span class="hljs-built_in">String</span> requestID, <span class="hljs-built_in">int</span> expireTime);
+
+    <span class="hljs-comment"><span class="markdown">/**</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>尝试加锁 (requestID相等 可重入)</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-code">     *</span></span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>@param lockKey    锁的key</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>@param expireTime 过期时间 单位：秒</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>@param requestID  用户ID</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>@param retryCount 重试次数</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>@return 加锁成功 返回uuid</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>加锁失败 返回null</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-code">     */</span></span></span>
+    <span class="hljs-built_in">String</span> lockAndRetry(<span class="hljs-built_in">String</span> lockKey, <span class="hljs-built_in">String</span> requestID, <span class="hljs-built_in">int</span> expireTime, <span class="hljs-built_in">int</span> retryCount);
+
+    <span class="hljs-comment"><span class="markdown">/**</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>释放锁</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-code">     *</span></span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>@param lockKey   锁的key</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>@param requestID 用户ID</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>@return true     释放自己所持有的锁 成功</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>false    释放自己所持有的锁 失败</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-code">     */</span></span></span>
+    boolean unLock(<span class="hljs-built_in">String</span> lockKey, <span class="hljs-built_in">String</span> requestID);
+&#125;</code></pre></div>
+
+<blockquote>
+<p>RedisDistributeLock</p>
+<p>调用lockAndRetry方法进行加锁时，如果加锁失败，则当前客户端线程会短暂的休眠一段时间，并进行重试。在重试了一定的次数后，会终止重试加锁操作，从而加锁失败。</p>
+<p>需要注意的是，加锁失败之后的线程休眠时长是”固定值 + 随机值”，引入随机值的主要目的是防止高并发时大量的客户端在几乎同一时间被唤醒并进行加锁重试，给redis服务器带来周期性的、不必要的瞬时压力。</p>
+</blockquote>
+<div class="hljs"><pre><code class="hljs arduino">@Component(<span class="hljs-string">"distributeLock"</span>)
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">RedisDistributeLock</span> <span class="hljs-title">implements</span> <span class="hljs-title">DistributeLock</span> &#123;</span>
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> Logger LOGGER = LoggerFactory.getLogger(RedisDistributeLock.class);
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 无限重试</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> UN_LIMIT_RETRY_COUNT = <span class="hljs-number">-1</span>;
+
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">RedisDistributeLock</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">try</span> &#123;
+            LuaScript.initLockScript();
+            LuaScript.initUnLockScript();
+        &#125; <span class="hljs-keyword">catch</span> (IOException e) &#123;
+            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(<span class="hljs-string">"LuaScript init error!"</span>, e);
+        &#125;
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 持有锁 成功标识</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> Long ADD_LOCK_SUCCESS = <span class="hljs-number">1L</span>;
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 释放锁 失败标识</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> Long RELEASE_LOCK_SUCCESS = <span class="hljs-number">1L</span>;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 默认过期时间 单位：秒</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> DEFAULT_EXPIRE_TIME_SECOND = <span class="hljs-number">300</span>;
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 默认加锁重试时间 单位：毫秒</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> DEFAULT_RETRY_FIXED_TIME = <span class="hljs-number">100</span>;
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 默认的加锁浮动时间区间 单位：毫秒</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> DEFAULT_RETRY_TIME_RANGE = <span class="hljs-number">10</span>;
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 默认的加锁重试次数</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> DEFAULT_RETRY_COUNT = <span class="hljs-number">30</span>;
+
+    @Resource
+    <span class="hljs-keyword">private</span> RedisClient redisClient;
+
+    <span class="hljs-comment">//===========================================api=======================================</span>
+
+    @Override
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">String</span> <span class="hljs-title">lock</span><span class="hljs-params">(<span class="hljs-keyword">String</span> lockKey)</span> </span>&#123;
+        <span class="hljs-keyword">String</span> uuid = UUID.randomUUID().toString();
+
+        <span class="hljs-keyword">return</span> lock(lockKey, uuid);
+    &#125;
+
+    @Override
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">String</span> <span class="hljs-title">lock</span><span class="hljs-params">(<span class="hljs-keyword">String</span> lockKey, <span class="hljs-keyword">int</span> expireTime)</span> </span>&#123;
+        <span class="hljs-keyword">String</span> uuid = UUID.randomUUID().toString();
+
+        <span class="hljs-keyword">return</span> lock(lockKey, uuid, expireTime);
+    &#125;
+
+    @Override
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">String</span> <span class="hljs-title">lock</span><span class="hljs-params">(<span class="hljs-keyword">String</span> lockKey, <span class="hljs-keyword">String</span> requestID)</span> </span>&#123;
+        <span class="hljs-keyword">return</span> lock(lockKey, requestID, DEFAULT_EXPIRE_TIME_SECOND);
+    &#125;
+
+    @Override
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">String</span> <span class="hljs-title">lock</span><span class="hljs-params">(<span class="hljs-keyword">String</span> lockKey, <span class="hljs-keyword">String</span> requestID, <span class="hljs-keyword">int</span> expireTime)</span> </span>&#123;
+        List&lt;<span class="hljs-keyword">String</span>&gt; keyList = Collections.singletonList(lockKey);
+
+        List&lt;<span class="hljs-keyword">String</span>&gt; argsList = Arrays.asList(
+                requestID,
+                expireTime + <span class="hljs-string">""</span>
+        );
+        Long result = (Long) redisClient.eval(LuaScript.LOCK_SCRIPT, keyList, argsList);
+
+        <span class="hljs-keyword">if</span> (result.equals(ADD_LOCK_SUCCESS)) &#123;
+            <span class="hljs-keyword">return</span> requestID;
+        &#125; <span class="hljs-keyword">else</span> &#123;
+            <span class="hljs-keyword">return</span> null;
+        &#125;
+    &#125;
+
+    @Override
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">String</span> <span class="hljs-title">lockAndRetry</span><span class="hljs-params">(<span class="hljs-keyword">String</span> lockKey)</span> </span>&#123;
+        <span class="hljs-keyword">String</span> uuid = UUID.randomUUID().toString();
+
+        <span class="hljs-keyword">return</span> lockAndRetry(lockKey, uuid);
+    &#125;
+
+    @Override
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">String</span> <span class="hljs-title">lockAndRetry</span><span class="hljs-params">(<span class="hljs-keyword">String</span> lockKey, <span class="hljs-keyword">String</span> requestID)</span> </span>&#123;
+        <span class="hljs-keyword">return</span> lockAndRetry(lockKey, requestID, DEFAULT_EXPIRE_TIME_SECOND);
+    &#125;
+
+    @Override
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">String</span> <span class="hljs-title">lockAndRetry</span><span class="hljs-params">(<span class="hljs-keyword">String</span> lockKey, <span class="hljs-keyword">int</span> expireTime)</span> </span>&#123;
+        <span class="hljs-keyword">String</span> uuid = UUID.randomUUID().toString();
+
+        <span class="hljs-keyword">return</span> lockAndRetry(lockKey, uuid, expireTime);
+    &#125;
+
+    @Override
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">String</span> <span class="hljs-title">lockAndRetry</span><span class="hljs-params">(<span class="hljs-keyword">String</span> lockKey, <span class="hljs-keyword">int</span> expireTime, <span class="hljs-keyword">int</span> retryCount)</span> </span>&#123;
+        <span class="hljs-keyword">String</span> uuid = UUID.randomUUID().toString();
+
+        <span class="hljs-keyword">return</span> lockAndRetry(lockKey, uuid, expireTime, retryCount);
+    &#125;
+
+    @Override
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">String</span> <span class="hljs-title">lockAndRetry</span><span class="hljs-params">(<span class="hljs-keyword">String</span> lockKey, <span class="hljs-keyword">String</span> requestID, <span class="hljs-keyword">int</span> expireTime)</span> </span>&#123;
+        <span class="hljs-keyword">return</span> lockAndRetry(lockKey, requestID, expireTime, DEFAULT_RETRY_COUNT);
+    &#125;
+
+    @Override
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">String</span> <span class="hljs-title">lockAndRetry</span><span class="hljs-params">(<span class="hljs-keyword">String</span> lockKey, <span class="hljs-keyword">String</span> requestID, <span class="hljs-keyword">int</span> expireTime, <span class="hljs-keyword">int</span> retryCount)</span> </span>&#123;
+        <span class="hljs-keyword">if</span> (retryCount &lt;= <span class="hljs-number">0</span>) &#123;
+            <span class="hljs-comment">// retryCount小于等于0 无限循环，一直尝试加锁</span>
+            <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) &#123;
+                <span class="hljs-keyword">String</span> result = lock(lockKey, requestID, expireTime);
+                <span class="hljs-keyword">if</span> (result != null) &#123;
+                    <span class="hljs-keyword">return</span> result;
+                &#125;
+
+                LOGGER.info(<span class="hljs-string">"加锁失败，稍后重试：lockKey=&#123;&#125;,requestID=&#123;&#125;"</span>, lockKey, requestID);
+                redisClient.increment(<span class="hljs-string">"retryCount"</span>, <span class="hljs-number">1</span>);
+                <span class="hljs-comment">// 休眠一会</span>
+                sleepSomeTime();
+            &#125;
+        &#125; <span class="hljs-keyword">else</span> &#123;
+            <span class="hljs-comment">// retryCount大于0 尝试指定次数后，退出</span>
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; retryCount; i++) &#123;
+                <span class="hljs-keyword">String</span> result = lock(lockKey, requestID, expireTime);
+                <span class="hljs-keyword">if</span> (result != null) &#123;
+                    <span class="hljs-keyword">return</span> result;
+                &#125;
+                <span class="hljs-comment">// 休眠一会</span>
+                sleepSomeTime();
+            &#125;
+
+            <span class="hljs-keyword">return</span> null;
+        &#125;
+    &#125;
+
+    @Override
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">unLock</span><span class="hljs-params">(<span class="hljs-keyword">String</span> lockKey, <span class="hljs-keyword">String</span> requestID)</span> </span>&#123;
+        List&lt;<span class="hljs-keyword">String</span>&gt; keyList = Collections.singletonList(lockKey);
+
+        List&lt;<span class="hljs-keyword">String</span>&gt; argsList = Collections.singletonList(requestID);
+
+        Object result = redisClient.eval(LuaScript.UN_LOCK_SCRIPT, keyList, argsList);
+
+        <span class="hljs-comment">// 释放锁成功</span>
+        <span class="hljs-keyword">return</span> RELEASE_LOCK_SUCCESS.equals(result);
+    &#125;
+
+    <span class="hljs-comment">//==============================================私有方法========================================</span>
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 获得最终的获得锁的重试时间</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getFinallyGetLockRetryTime</span><span class="hljs-params">()</span> </span>&#123;
+        Random ra = <span class="hljs-keyword">new</span> Random();
+
+        <span class="hljs-comment">// 最终重试时间 = 固定时间 + 浮动时间</span>
+        <span class="hljs-keyword">return</span> DEFAULT_RETRY_FIXED_TIME + ra.nextInt(DEFAULT_RETRY_TIME_RANGE);
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 当前线程 休眠一段时间</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">sleepSomeTime</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-comment">// 重试时间 单位：毫秒</span>
+        <span class="hljs-keyword">int</span> retryTime = getFinallyGetLockRetryTime();
+        <span class="hljs-keyword">try</span> &#123;
+            Thread.sleep(retryTime);
+        &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;
+            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(<span class="hljs-string">"redis锁重试时，出现异常"</span>, e);
+        &#125;
+    &#125;
+&#125;</code></pre></div>
+
+<h2 id="3-5-redisclient工具类"><a href="#3-5-redisclient工具类" class="headerlink" title="3.5 redisclient工具类"></a>3.5 redisclient工具类</h2><div class="hljs"><pre><code class="hljs processing"><span class="hljs-keyword">public</span> interface RedisClient &#123;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 执行脚本</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">Object</span> eval(<span class="hljs-keyword">String</span> script, List&lt;<span class="hljs-keyword">String</span>&gt; keys, List&lt;<span class="hljs-keyword">String</span>&gt; args);
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * get</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">Object</span> <span class="hljs-built_in">get</span>(<span class="hljs-keyword">String</span> <span class="hljs-built_in">key</span>);
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * set</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">void</span> <span class="hljs-built_in">set</span>(<span class="hljs-keyword">String</span> <span class="hljs-built_in">key</span>, <span class="hljs-keyword">Object</span> value);
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * set</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">void</span> <span class="hljs-built_in">set</span>(<span class="hljs-keyword">String</span> <span class="hljs-built_in">key</span>, <span class="hljs-keyword">Object</span> value, <span class="hljs-keyword">long</span> expireTime, TimeUnit timeUnit);
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * setNX</span>
+<span class="hljs-comment">     */</span>
+    Boolean setNX(<span class="hljs-keyword">String</span> <span class="hljs-built_in">key</span>, <span class="hljs-keyword">Object</span> value);
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 设置过期时间</span>
+<span class="hljs-comment">     */</span>
+    Boolean expire(<span class="hljs-keyword">String</span> <span class="hljs-built_in">key</span>, <span class="hljs-keyword">long</span> time, TimeUnit type);
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 移除过期时间</span>
+<span class="hljs-comment">     */</span>
+    Boolean persist(<span class="hljs-keyword">String</span> <span class="hljs-built_in">key</span>);
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 增加</span>
+<span class="hljs-comment">     */</span>
+    Long increment(<span class="hljs-keyword">String</span> <span class="hljs-built_in">key</span>, <span class="hljs-keyword">long</span> number);
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 增加</span>
+<span class="hljs-comment">     */</span>
+    Double increment(<span class="hljs-keyword">String</span> <span class="hljs-built_in">key</span>, <span class="hljs-keyword">double</span> number);
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 删除</span>
+<span class="hljs-comment">     */</span>
+    Boolean delete(<span class="hljs-keyword">String</span> <span class="hljs-built_in">key</span>);
+
+    <span class="hljs-comment">// ==========================hash========================</span>
+
+    <span class="hljs-keyword">void</span> hset(<span class="hljs-keyword">String</span> <span class="hljs-built_in">key</span>, <span class="hljs-keyword">String</span> hashKey, <span class="hljs-keyword">Object</span> value);
+
+    <span class="hljs-keyword">void</span> hsetAll(<span class="hljs-keyword">String</span> <span class="hljs-built_in">key</span>, Map&lt;<span class="hljs-keyword">String</span>, <span class="hljs-keyword">Object</span>&gt; <span class="hljs-built_in">map</span>);
+
+    Boolean hsetNX(<span class="hljs-keyword">String</span> <span class="hljs-built_in">key</span>, <span class="hljs-keyword">String</span> hashKey, <span class="hljs-keyword">Object</span> value);
+
+    <span class="hljs-keyword">Object</span> hget(<span class="hljs-keyword">String</span> <span class="hljs-built_in">key</span>, <span class="hljs-keyword">String</span> hashKey);
+
+    Map hgetAll(<span class="hljs-keyword">String</span> <span class="hljs-built_in">key</span>);
+&#125;</code></pre></div>
+
+<div class="hljs"><pre><code class="hljs processing">@Component(<span class="hljs-string">"redisClient"</span>)
+<span class="hljs-keyword">public</span> class RedisClientImpl implements RedisClient &#123;
+
+    @Autowired
+    <span class="hljs-keyword">private</span> RedisTemplate&lt;<span class="hljs-keyword">String</span>, <span class="hljs-keyword">Object</span>&gt; redisTemplate;
+
+    @Override
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">Object</span> eval(<span class="hljs-keyword">String</span> script, List&lt;<span class="hljs-keyword">String</span>&gt; keys, List&lt;<span class="hljs-keyword">String</span>&gt; args) &#123;
+        DefaultRedisScript&lt;Integer&gt; redisScript = <span class="hljs-keyword">new</span> DefaultRedisScript&lt;&gt;();
+        redisScript.setScriptText(script);
+        redisScript.setResultType(Integer.class);
+
+        <span class="hljs-keyword">Object</span> result = redisTemplate.execute((RedisCallback&lt;<span class="hljs-keyword">Object</span>&gt;) redisConnection -&gt; &#123;
+            <span class="hljs-keyword">Object</span> nativeConnection = redisConnection.getNativeConnection();
+            <span class="hljs-comment">// 集群模式和单机模式虽然执行脚本的方法一样，但是没有共同的接口，所以只能分开执行</span>
+            <span class="hljs-comment">// 集群模式</span>
+            <span class="hljs-keyword">if</span> (nativeConnection <span class="hljs-keyword">instanceof</span> JedisCluster) &#123;
+                <span class="hljs-keyword">return</span> (Long) ((JedisCluster) nativeConnection).eval(script, keys, args);
+            &#125;
+
+            <span class="hljs-comment">// 单机模式</span>
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (nativeConnection <span class="hljs-keyword">instanceof</span> Jedis) &#123;
+                <span class="hljs-keyword">return</span> (Long) ((Jedis) nativeConnection).eval(script, keys, args);
+            &#125;
+            <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>L;
+        &#125;);
+        <span class="hljs-keyword">return</span> result;
+    &#125;
+
+    @Override
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">Object</span> <span class="hljs-built_in">get</span>(<span class="hljs-keyword">String</span> <span class="hljs-built_in">key</span>) &#123;
+        <span class="hljs-keyword">return</span> redisTemplate.opsForValue().<span class="hljs-built_in">get</span>(<span class="hljs-built_in">key</span>);
+    &#125;
+
+    @Override
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-built_in">set</span>(<span class="hljs-keyword">String</span> <span class="hljs-built_in">key</span>, <span class="hljs-keyword">Object</span> value) &#123;
+        redisTemplate.opsForValue().<span class="hljs-built_in">set</span>(<span class="hljs-built_in">key</span>, value);
+    &#125;
+
+    @Override
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-built_in">set</span>(<span class="hljs-keyword">String</span> <span class="hljs-built_in">key</span>, <span class="hljs-keyword">Object</span> value, <span class="hljs-keyword">long</span> expireTime, TimeUnit timeUnit) &#123;
+        redisTemplate.opsForValue().<span class="hljs-built_in">set</span>(<span class="hljs-built_in">key</span>, value, expireTime, timeUnit);
+    &#125;
+
+    @Override
+    <span class="hljs-keyword">public</span> Boolean setNX(<span class="hljs-keyword">String</span> <span class="hljs-built_in">key</span>, <span class="hljs-keyword">Object</span> value) &#123;
+        <span class="hljs-keyword">return</span> redisTemplate.opsForValue().setIfAbsent(<span class="hljs-built_in">key</span>, value);
+    &#125;
+
+    @Override
+    <span class="hljs-keyword">public</span> Boolean expire(<span class="hljs-keyword">String</span> <span class="hljs-built_in">key</span>, <span class="hljs-keyword">long</span> time, TimeUnit timeUnit) &#123;
+        <span class="hljs-keyword">return</span> redisTemplate.boundValueOps(<span class="hljs-built_in">key</span>).expire(time, timeUnit);
+    &#125;
+
+    @Override
+    <span class="hljs-keyword">public</span> Boolean persist(<span class="hljs-keyword">String</span> <span class="hljs-built_in">key</span>) &#123;
+        <span class="hljs-keyword">return</span> redisTemplate.boundValueOps(<span class="hljs-built_in">key</span>).persist();
+    &#125;
+
+    @Override
+    <span class="hljs-keyword">public</span> Long increment(<span class="hljs-keyword">String</span> <span class="hljs-built_in">key</span>, <span class="hljs-keyword">long</span> number) &#123;
+        <span class="hljs-keyword">return</span> redisTemplate.opsForValue().increment(<span class="hljs-built_in">key</span>, number);
+    &#125;
+
+    @Override
+    <span class="hljs-keyword">public</span> Double increment(<span class="hljs-keyword">String</span> <span class="hljs-built_in">key</span>, <span class="hljs-keyword">double</span> number) &#123;
+        <span class="hljs-keyword">return</span> redisTemplate.opsForValue().increment(<span class="hljs-built_in">key</span>, number);
+    &#125;
+
+    @Override
+    <span class="hljs-keyword">public</span> Boolean delete(<span class="hljs-keyword">String</span> <span class="hljs-built_in">key</span>) &#123;
+        <span class="hljs-keyword">return</span> redisTemplate.delete(<span class="hljs-built_in">key</span>);
+    &#125;
+
+    @Override
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> hset(<span class="hljs-keyword">String</span> <span class="hljs-built_in">key</span>, <span class="hljs-keyword">String</span> hashKey, <span class="hljs-keyword">Object</span> value) &#123;
+        redisTemplate.opsForHash().put(<span class="hljs-built_in">key</span>, hashKey, value);
+    &#125;
+
+    @Override
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> hsetAll(<span class="hljs-keyword">String</span> <span class="hljs-built_in">key</span>, Map&lt;<span class="hljs-keyword">String</span>, <span class="hljs-keyword">Object</span>&gt; <span class="hljs-built_in">map</span>) &#123;
+        redisTemplate.opsForHash().putAll(<span class="hljs-built_in">key</span>, <span class="hljs-built_in">map</span>);
+    &#125;
+
+    @Override
+    <span class="hljs-keyword">public</span> Boolean hsetNX(<span class="hljs-keyword">String</span> <span class="hljs-built_in">key</span>, <span class="hljs-keyword">String</span> hashKey, <span class="hljs-keyword">Object</span> value) &#123;
+        <span class="hljs-keyword">return</span> redisTemplate.opsForHash().putIfAbsent(<span class="hljs-built_in">key</span>, hashKey, value);
+    &#125;
+
+    @Override
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">Object</span> hget(<span class="hljs-keyword">String</span> <span class="hljs-built_in">key</span>, <span class="hljs-keyword">String</span> hashKey) &#123;
+        <span class="hljs-keyword">return</span> redisTemplate.opsForHash().<span class="hljs-built_in">get</span>(<span class="hljs-built_in">key</span>, hashKey);
+    &#125;
+
+    @Override
+    <span class="hljs-keyword">public</span> Map hgetAll(<span class="hljs-keyword">String</span> <span class="hljs-built_in">key</span>) &#123;
+        <span class="hljs-keyword">return</span> redisTemplate.opsForHash().entries(<span class="hljs-built_in">key</span>);
+    &#125;
+
+&#125;</code></pre></div>
+
+<h2 id="3-6-测试分布式锁"><a href="#3-6-测试分布式锁" class="headerlink" title="3.6 测试分布式锁"></a>3.6 测试分布式锁</h2><div class="hljs"><pre><code class="hljs livescript">@RestController
+@RequestMapping(<span class="hljs-string">"distributelock"</span>)
+public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DistributeLockController</span> &#123;</span>
+
+    private static final String TEST_REDIS_LOCK_KEY = <span class="hljs-string">"lock_key"</span>;
+
+    private static final int EXPIRE_TIME = <span class="hljs-number">100</span>;
+
+    @Autowired
+    private RedisDistributeLock redisDistributeLock;
+
+    @RequestMapping(<span class="hljs-string">"/getlock"</span>)
+    public String test() throws ExecutionException, InterruptedException &#123;
+        int threadNum = <span class="hljs-number">100</span>;
+        ThreadFactory namedThreadFactory = <span class="hljs-keyword">new</span> ThreadFactoryBuilder()
+                .setNameFormat(<span class="hljs-string">"demo-pool-%d"</span>).build();
+        ExecutorService executorService = <span class="hljs-keyword">new</span> ThreadPoolExecutor(<span class="hljs-number">1</span>, <span class="hljs-number">1</span>,
+                <span class="hljs-number">0</span>L, TimeUnit.MILLISECONDS,
+                <span class="hljs-keyword">new</span> LinkedBlockingQueue&lt;Runnable&gt;(<span class="hljs-number">1024</span>), namedThreadFactory, <span class="hljs-keyword">new</span> ThreadPoolExecutor.AbortPolicy());
+        List&lt;Future&gt; futureList = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
+        <span class="hljs-keyword">for</span> (int i = <span class="hljs-number">0</span>; i &lt;= threadNum; i++) &#123;
+            int currentThreadNum = i;
+            Future future = executorService.submit<span class="hljs-function"><span class="hljs-params">(() -&gt; &#123;</span></span>
+<span class="hljs-function"><span class="hljs-params">                System.out.println(<span class="hljs-string">"线程尝试获得锁 i="</span> + currentThreadNum);</span></span>
+<span class="hljs-function"><span class="hljs-params">                String requestID = redisDistributeLock.lockAndRetry(TEST_REDIS_LOCK_KEY, EXPIRE_TIME);</span></span>
+<span class="hljs-function"><span class="hljs-params"></span></span>
+<span class="hljs-function"><span class="hljs-params">                <span class="hljs-keyword">if</span> (!StringUtils.isEmpty(requestID)) &#123;</span></span>
+<span class="hljs-function"><span class="hljs-params">                    System.out.println(<span class="hljs-string">"获得锁，开始执行任务 requestID="</span> + requestID + <span class="hljs-string">"i="</span> + currentThreadNum);</span></span>
+<span class="hljs-function"><span class="hljs-params">                &#125;</span></span>
+<span class="hljs-function"><span class="hljs-params"></span></span>
+<span class="hljs-function"><span class="hljs-params">                <span class="hljs-regexp">// 模拟 宕机事件 不释放锁</span></span></span>
+<span class="hljs-function"><span class="hljs-params"><span class="hljs-regexp">               /* if (currentThreadNum == 1) &#123;</span></span></span>
+<span class="hljs-function"><span class="hljs-params"><span class="hljs-regexp">                    System.out.println("模拟 宕机事件 不释放锁，直接返回 currentThreadNum=" + currentThreadNum);</span></span></span>
+<span class="hljs-function"><span class="hljs-params"><span class="hljs-regexp">                    return;</span></span></span>
+<span class="hljs-function"><span class="hljs-params"><span class="hljs-regexp">                &#125;*/</span></span></span>
+<span class="hljs-function"><span class="hljs-params"><span class="hljs-regexp"></span></span></span>
+<span class="hljs-function"><span class="hljs-params"><span class="hljs-regexp">                try &#123;</span></span></span>
+<span class="hljs-function"><span class="hljs-params"><span class="hljs-regexp">                    //</span> 休眠完毕</span></span>
+<span class="hljs-function"><span class="hljs-params">                    Thread.sleep(<span class="hljs-number">3000</span>);</span></span>
+<span class="hljs-function"><span class="hljs-params">                &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;</span></span>
+<span class="hljs-function"><span class="hljs-params">                    e.printStackTrace();</span></span>
+<span class="hljs-function"><span class="hljs-params">                &#125;</span></span>
+<span class="hljs-function"><span class="hljs-params"></span></span>
+<span class="hljs-function"><span class="hljs-params">                System.out.println(<span class="hljs-string">"任务执行完毕"</span> + <span class="hljs-string">"i="</span> + currentThreadNum);</span></span>
+<span class="hljs-function"><span class="hljs-params">                redisDistributeLock.unLock(TEST_REDIS_LOCK_KEY, requestID);</span></span>
+<span class="hljs-function"><span class="hljs-params">                System.out.println(<span class="hljs-string">"释放锁完毕"</span>);</span></span>
+<span class="hljs-function"><span class="hljs-params">                redisDistributeLock.lockAndRetry(TEST_REDIS_LOCK_KEY, requestID, EXPIRE_TIME);</span></span>
+<span class="hljs-function"><span class="hljs-params">                System.out.println(<span class="hljs-string">"重入获得锁，开始执行任务 requestID="</span> + requestID + <span class="hljs-string">"i="</span> + currentThreadNum);</span></span>
+<span class="hljs-function"><span class="hljs-params">                redisDistributeLock.unLock(TEST_REDIS_LOCK_KEY, requestID);</span></span>
+<span class="hljs-function"><span class="hljs-params">                System.out.println(<span class="hljs-string">"释放重入锁完毕"</span>);</span></span>
+<span class="hljs-function"><span class="hljs-params">            &#125;)</span>;</span>
+<span class="hljs-function">            <span class="hljs-title">futureList</span>.<span class="hljs-title">add</span><span class="hljs-params">(future)</span>;</span>
+<span class="hljs-function">        &#125;</span>
+<span class="hljs-function">        <span class="hljs-title">for</span> <span class="hljs-params">(Future future : futureList)</span> &#123;</span>
+<span class="hljs-function">            <span class="hljs-title">future</span>.<span class="hljs-title">get</span><span class="hljs-params">()</span>;</span>
+<span class="hljs-function">        &#125;</span>
+<span class="hljs-function">        <span class="hljs-title">return</span> "<span class="hljs-title">ok</span>";</span>
+<span class="hljs-function">    &#125;</span>
+<span class="hljs-function">&#125;</span></code></pre></div>
+
+<h2 id="3-7-基于注解切面简化实现分布式锁"><a href="#3-7-基于注解切面简化实现分布式锁" class="headerlink" title="3.7 基于注解切面简化实现分布式锁"></a>3.7 基于注解切面简化实现分布式锁</h2><blockquote>
+<p>RedisLock</p>
+</blockquote>
+<div class="hljs"><pre><code class="hljs dart"><span class="hljs-meta">@Target</span>(ElementType.METHOD)
+<span class="hljs-meta">@Retention</span>(RetentionPolicy.RUNTIME)
+<span class="hljs-meta">@Documented</span>
+public <span class="hljs-meta">@interface</span> RedisLock &#123;
+    <span class="hljs-comment"><span class="markdown">/**</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>redis锁，重试次数-1代表无限重试</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-code">     */</span></span></span>
+    <span class="hljs-built_in">int</span> unLimitRetryCount = RedisDistributeLock.UN_LIMIT_RETRY_COUNT;
+
+    <span class="hljs-comment"><span class="markdown">/**</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>redis锁对应的key 会拼接此参数，用于进一步区分，避免redis的key被覆盖</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-code">     */</span></span></span>
+    <span class="hljs-built_in">String</span> lockKey() <span class="hljs-keyword">default</span> <span class="hljs-string">""</span>;
+
+    <span class="hljs-comment"><span class="markdown">/**</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>redis锁过期时间（单位：秒）</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-code">     */</span></span></span>
+    <span class="hljs-built_in">int</span> expireTime() <span class="hljs-keyword">default</span> <span class="hljs-number">10</span>;
+
+    <span class="hljs-comment"><span class="markdown">/**</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>redis锁，加锁失败重试次数 默认30次，大约3s</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>超过指定次数后，抛出加锁失败异常，可以由调用方自己补偿</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-code">     *</span></span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-bullet">     * </span>@see RedisLockFailException</span></span>
+<span class="hljs-comment"><span class="markdown"><span class="hljs-code">     */</span></span></span>
+    <span class="hljs-built_in">int</span> retryCount() <span class="hljs-keyword">default</span> <span class="hljs-number">30</span>;
+&#125;</code></pre></div>
+
+<blockquote>
+<p>RedisLockAspect</p>
+</blockquote>
+<div class="hljs"><pre><code class="hljs reasonml">@Component
+@Aspect
+public <span class="hljs-keyword">class</span> RedisLockAspect &#123;
+
+    <span class="hljs-keyword">private</span> static final Logger logger = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">LoggerFactory</span>.</span></span>get<span class="hljs-constructor">Logger(RedisLockAspect.<span class="hljs-params">class</span>)</span>;
+
+    <span class="hljs-keyword">private</span> final RequestIDMap REQUEST_ID_MAP = <span class="hljs-keyword">new</span> <span class="hljs-constructor">RequestIDMap()</span>;
+
+    @Autowired
+    <span class="hljs-keyword">private</span> Environment environment;
+
+    @Autowired
+    <span class="hljs-keyword">private</span> DistributeLock distributeLock;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 将ThreadLocal包装成一个对象方便使用</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">class</span> RequestIDMap &#123;
+        <span class="hljs-keyword">private</span> ThreadLocal&lt;Map&lt;String, String&gt;&gt; innerThreadLocal = <span class="hljs-keyword">new</span> ThreadLocal&lt;&gt;<span class="hljs-literal">()</span>;
+
+        <span class="hljs-keyword">private</span> void set<span class="hljs-constructor">RequestID(String <span class="hljs-params">redisLockKey</span>, String <span class="hljs-params">requestID</span>)</span> &#123;
+            Map&lt;String, String&gt; requestIDMap = innerThreadLocal.get<span class="hljs-literal">()</span>;
+            <span class="hljs-keyword">if</span> (requestIDMap<span class="hljs-operator"> == </span>null) &#123;
+                Map&lt;String, String&gt; newMap = <span class="hljs-keyword">new</span> HashMap&lt;&gt;<span class="hljs-literal">()</span>;
+                newMap.put(redisLockKey, requestID);
+                innerThreadLocal.set(newMap);
+            &#125; <span class="hljs-keyword">else</span> &#123;
+                requestIDMap.put(redisLockKey, requestID);
+            &#125;
+        &#125;
+
+        <span class="hljs-keyword">private</span> String get<span class="hljs-constructor">RequestID(String <span class="hljs-params">redisLockKey</span>)</span> &#123;
+            Map&lt;String, String&gt; requestIDMap = innerThreadLocal.get<span class="hljs-literal">()</span>;
+            <span class="hljs-keyword">if</span> (requestIDMap<span class="hljs-operator"> == </span>null) &#123;
+                return null;
+            &#125; <span class="hljs-keyword">else</span> &#123;
+                return requestIDMap.get(redisLockKey);
+            &#125;
+        &#125;
+
+        <span class="hljs-keyword">private</span> void remove<span class="hljs-constructor">RequestID(String <span class="hljs-params">redisLockKey</span>)</span> &#123;
+            Map&lt;String, String&gt; requestIDMap = innerThreadLocal.get<span class="hljs-literal">()</span>;
+            <span class="hljs-keyword">if</span> (requestIDMap != null) &#123;
+                requestIDMap.remove(redisLockKey);
+                <span class="hljs-comment">// 如果requestIDMap为空，说明当前重入锁 最外层已经解锁</span>
+                <span class="hljs-keyword">if</span> (requestIDMap.is<span class="hljs-constructor">Empty()</span>) &#123;
+                    <span class="hljs-comment">// 清空threadLocal避免内存泄露</span>
+                    innerThreadLocal.remove<span class="hljs-literal">()</span>;
+                &#125;
+            &#125;
+        &#125;
+    &#125;
+
+    @<span class="hljs-constructor">Pointcut(<span class="hljs-string">"@annotation(com.redis.annotation.RedisLock)"</span>)</span>
+    public void annotation<span class="hljs-constructor">Pointcut()</span> &#123;
+    &#125;
+
+    @<span class="hljs-constructor">Around(<span class="hljs-string">"annotationPointcut()"</span>)</span>
+    public Object around(ProceedingJoinPoint joinPoint) throws Throwable &#123;
+        MethodSignature methodSignature = (MethodSignature) joinPoint.get<span class="hljs-constructor">Signature()</span>;
+        Method <span class="hljs-keyword">method</span> = methodSignature.get<span class="hljs-constructor">Method()</span>;
+        RedisLock annotation = <span class="hljs-keyword">method</span>.get<span class="hljs-constructor">Annotation(RedisLock.<span class="hljs-params">class</span>)</span>;
+
+        <span class="hljs-comment">// 方法执行前，先尝试加锁</span>
+        boolean lockSuccess = lock(annotation, joinPoint);
+        <span class="hljs-comment">// 如果加锁成功</span>
+        <span class="hljs-keyword">if</span> (lockSuccess) &#123;
+            <span class="hljs-comment">// 执行方法</span>
+            Object result = joinPoint.proceed<span class="hljs-literal">()</span>;
+            <span class="hljs-comment">// 方法执行后，进行解锁</span>
+            unlock(annotation, joinPoint);
+            return result;
+        &#125; <span class="hljs-keyword">else</span> &#123;
+            throw <span class="hljs-keyword">new</span> <span class="hljs-constructor">RedisLockFailException(<span class="hljs-string">"redis分布式锁加锁失败，method= "</span> + <span class="hljs-params">method</span>.<span class="hljs-params">getName</span>()</span>);
+        &#125;
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 加锁</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">private</span> boolean lock(RedisLock annotation, ProceedingJoinPoint joinPoint) &#123;
+        <span class="hljs-built_in">int</span> retryCount = annotation.retry<span class="hljs-constructor">Count()</span>;
+
+        <span class="hljs-comment">// 拼接redisLock的key</span>
+        String redisLockKey = get<span class="hljs-constructor">FinallyKeyLock(<span class="hljs-params">annotation</span>, <span class="hljs-params">joinPoint</span>)</span>;
+        String requestID = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">REQUEST_ID_MAP</span>.</span></span>get<span class="hljs-constructor">RequestID(<span class="hljs-params">redisLockKey</span>)</span>;
+        <span class="hljs-keyword">if</span> (requestID != null) &#123;
+            <span class="hljs-comment">// 当前线程 已经存在requestID</span>
+            distributeLock.lock<span class="hljs-constructor">AndRetry(<span class="hljs-params">redisLockKey</span>, <span class="hljs-params">requestID</span>, <span class="hljs-params">annotation</span>.<span class="hljs-params">expireTime</span>()</span>, retryCount);
+            logger.info(<span class="hljs-string">"重入加锁成功 redisLockKey= "</span> + redisLockKey);
+
+            return <span class="hljs-literal">true</span>;
+        &#125; <span class="hljs-keyword">else</span> &#123;
+            <span class="hljs-comment">// 当前线程 不存在requestID</span>
+            String newRequestID = distributeLock.lock<span class="hljs-constructor">AndRetry(<span class="hljs-params">redisLockKey</span>, <span class="hljs-params">annotation</span>.<span class="hljs-params">expireTime</span>()</span>, retryCount);
+
+            <span class="hljs-keyword">if</span> (newRequestID != null) &#123;
+                <span class="hljs-comment">// 加锁成功，设置新的requestID</span>
+                <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">REQUEST_ID_MAP</span>.</span></span>set<span class="hljs-constructor">RequestID(<span class="hljs-params">redisLockKey</span>, <span class="hljs-params">newRequestID</span>)</span>;
+                logger.info(<span class="hljs-string">"加锁成功 redisLockKey= "</span> + redisLockKey);
+                return <span class="hljs-literal">true</span>;
+            &#125; <span class="hljs-keyword">else</span> &#123;
+                logger.info(<span class="hljs-string">"加锁失败，超过重试次数，直接返回 retryCount= &#123;&#125;"</span>, retryCount);
+                return <span class="hljs-literal">false</span>;
+            &#125;
+        &#125;
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 解锁</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">private</span> void unlock(RedisLock annotation, ProceedingJoinPoint joinPoint) &#123;
+        <span class="hljs-comment">// 拼接redisLock的key</span>
+        String redisLockKey = get<span class="hljs-constructor">FinallyKeyLock(<span class="hljs-params">annotation</span>, <span class="hljs-params">joinPoint</span>)</span>;
+        String requestID = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">REQUEST_ID_MAP</span>.</span></span>get<span class="hljs-constructor">RequestID(<span class="hljs-params">redisLockKey</span>)</span>;
+        <span class="hljs-keyword">if</span> (requestID != null) &#123;
+            <span class="hljs-comment">// 解锁成功</span>
+            boolean unLockSuccess = distributeLock.un<span class="hljs-constructor">Lock(<span class="hljs-params">redisLockKey</span>, <span class="hljs-params">requestID</span>)</span>;
+            <span class="hljs-keyword">if</span> (unLockSuccess) &#123;
+                <span class="hljs-comment">// 移除 ThreadLocal中的数据，防止内存泄漏</span>
+                <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">REQUEST_ID_MAP</span>.</span></span>remove<span class="hljs-constructor">RequestID(<span class="hljs-params">redisLockKey</span>)</span>;
+                logger.info(<span class="hljs-string">"解锁成功 redisLockKey= "</span> + redisLockKey);
+            &#125;
+        &#125; <span class="hljs-keyword">else</span> &#123;
+            logger.info(<span class="hljs-string">"解锁失败 redisLockKey= "</span> + redisLockKey);
+        &#125;
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 拼接redisLock的key</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">private</span> String get<span class="hljs-constructor">FinallyKeyLock(RedisLock <span class="hljs-params">annotation</span>, ProceedingJoinPoint <span class="hljs-params">joinPoint</span>)</span> &#123;
+        String applicationName = environment.get<span class="hljs-constructor">Property(<span class="hljs-string">"spring.application.name"</span>)</span>;
+        <span class="hljs-keyword">if</span> (applicationName<span class="hljs-operator"> == </span>null) &#123;
+            applicationName = <span class="hljs-string">""</span>;
+        &#125;
+
+        <span class="hljs-comment">// applicationName在前</span>
+        String finallyKey = applicationName + RedisConstants.KEY_SEPARATOR + <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">RedisLockKeyUtil</span>.</span></span>get<span class="hljs-constructor">FinallyLockKey(<span class="hljs-params">annotation</span>, <span class="hljs-params">joinPoint</span>)</span>;
+
+        <span class="hljs-keyword">if</span> (finallyKey.length<span class="hljs-literal">()</span> &gt; RedisConstants.FINALLY_KEY_LIMIT) &#123;
+            throw <span class="hljs-keyword">new</span> <span class="hljs-constructor">RuntimeException(<span class="hljs-string">"finallyLockKey is too long finallyKey="</span> + <span class="hljs-params">finallyKey</span>)</span>;
+        &#125; <span class="hljs-keyword">else</span> &#123;
+            return finallyKey;
+        &#125;
+    &#125;
+&#125;</code></pre></div>
+
+<h2 id="3-8-源码参考地址"><a href="#3-8-源码参考地址" class="headerlink" title="3.8 源码参考地址"></a>3.8 源码参考地址</h2><p><a href="https://github.com/FocusProgram/person-improve/tree/main/springcloud-redis-lock" target="_blank" rel="noopener">https://github.com/FocusProgram/person-improve/tree/main/springcloud-redis-lock</a></p>
+<h2 id="3-9-总结"><a href="#3-9-总结" class="headerlink" title="3.9 总结"></a>3.9 总结</h2><p><strong>主从同步可能导致锁的互斥性失效</strong></p>
+<ul>
+<li><p>在redis主从结构下，出于性能的考虑，redis采用的是主从异步复制的策略，这会导致短时间内主库和从库数据短暂的不一致。</p>
+</li>
+<li><p>试想，当某一客户端刚刚加锁完毕，redis主库还没有来得及和从库同步就挂了，之后从库中新选拔出的主库是没有对应锁记录的，这就可能导致多个客户端加锁成功，破坏了锁的互斥性。</p>
+</li>
+</ul>
+<p><strong>休眠并反复尝试加锁效率较低</strong></p>
+<ul>
+<li><p>lockAndRetry方法在客户端线程加锁失败后，会休眠一段时间之后再进行重试。当锁的持有者持有锁的时间很长时，其它客户端会有大量无效的重试操作，造成系统资源的浪费。</p>
+</li>
+<li><p>进一步优化时，可以使用发布订阅的方式。这时加锁失败的客户端会监听锁被释放的信号，在锁真正被释放时才会进行新的加锁操作，从而避免不必要的轮询操作，以提高效率。</p>
+</li>
+</ul>
+<p><strong>不是一个公平的锁</strong></p>
+<ul>
+<li><p>当前实现版本中，多个客户端同时对锁进行抢占时，是完全随机的，既不遵循先来后到的顺序，客户端之间也没有加锁的优先级区别。</p>
+</li>
+<li><p>后续优化时可以提供一个创建公平锁的接口，能指定加锁的优先级，内部使用一个优先级队列维护加锁客户端的顺序。公平锁虽然效率稍低，但在一些场景能更好的控制并发行为。</p>
+</li>
+</ul>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">微服务</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/SpringCloud/">SpringCloud</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">微服务</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/07/11/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81-%E5%9F%BA%E4%BA%8EZookeeper%E5%AE%9E%E7%8E%B0/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">分布式锁-基于Zookeeper实现</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2020/07/11/Tx-Lcn/">
+                        <span class="hidden-mobile">Tx-Lcn</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <div id="vcomments"></div>
+  <script type="text/javascript">
+    function loadValine() {
+      addScript('https://cdn.staticfile.org/valine/1.4.14/Valine.min.js', function () {
+        new Valine({
+          el: "#vcomments",
+          app_id: "XjjXuhrzyfTeHFAzz4XEQWeA-gzGzoHsz",
+          app_key: "VOV2U2qRAhtqyuBiioUEvrNV",
+          placeholder: "留下您想说的话吧(*^▽^*)",
+          path: window.location.pathname,
+          avatar: "wavatar",
+          meta: ["nick","mail"],
+          pageSize: "10",
+          lang: "zh-CN",
+          highlight: true,
+          recordIP: true,
+          serverURLs: "",
+        });
+      });
+    }
+    createObserver(loadValine, 'vcomments');
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" target="_blank" rel="nofollow noopener noopener">comments
+      powered by Valine.</a></noscript>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!--
+<script src="https://utteranc.es/client.js"
+        repo="FocusProgram/focusprogram.github.io"
+        issue-term="title"
+        label="utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+-->
+
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+<div id="dark-div">
+  <a id="dark" onclick="switchDarkMode()"></a>
+</div>
+<script>
+  var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7;
+  if( matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
+    if(!(isNight&&localStorage.getItem('noDark') === '1')) {
+      document.body.classList.add('dark');
+    }
+  }
+  document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark")?"🌙":"🌞";
+</script>
+  <div class="text-center py-3">
+    <div>
+      <a rel="nofollow noopener"><span>永远执着&nbsp;&nbsp;</span></a>
+      <i class="iconfont icon-love"></i>
+      <a rel="nofollow noopener">
+        <span>&nbsp;&nbsp;永远热爱</span></a>
+    </div>
+    
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+    
+  <!-- 备案信息 -->
+  <div class="beian">
+    <img src="https://image.focusprogram.top/icp_beian.png" srcset="/img/loading.gif" style="margin-top:-5px">
+    <a href="http://beian.miit.gov.cn/" target="_blank"
+       rel="nofollow noopener">苏ICP备19063834号-1</a>
+    
+      <a
+        href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=44030602004695"
+        rel="nofollow noopener"
+        class="beian-police"
+        target="_blank"
+      >
+        <span class="beian-police-sep">&nbsp;|&nbsp;</span>
+        
+          <img src="/img/police_beian.png" srcset="/img/loading.gif" alt="police-icon" />
+        
+        <span>苏公安网备44030602004695号</span>
+      </a>
+     
+  </div>
+
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: 'article.markdown-body',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "分布式锁-基于Redis实现&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+  <script>(function (i, s, o, g, r, a, m) {
+      i['DaoVoiceObject'] = r;
+      i[r] = i[r] ||
+        function () {
+          (i[r].q = i[r].q || []).push(arguments);
+        };
+      i[r].l = 1 * new Date();
+      a = s.createElement(o);
+      m = s.getElementsByTagName(o)[0];
+      a.async = 1;
+      a.src = g;
+      a.charset = 'utf-8';
+      m.parentNode.insertBefore(a, m);
+    })(window, document, 'script', ('https:' === document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/98eb4efd.js", 'daovoice');
+    daovoice('init', {
+      app_id: "98eb4efd",
+    });
+    daovoice('update');
+  </script>
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+</body>
+</html>

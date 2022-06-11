@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/Mr.Kong.jpg">
+  <link rel="icon" type="image/png" href="/img/Mr.Kong.jpg">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="May you experience the pain and happiness in your life">
+  <meta name="author" content="Mr.Kong">
+  <meta name="keywords" content="">
+  <title>Jenkins部署项目 - Mr.Kong Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/dark.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script  src="/js/utils.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Mr.Kong</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-bookmark-fill"></i>
+                开源地址
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="https://gitee.com/FocusProgram/" target="_blank" rel="noopener">
+                    
+                    Gitee
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="https://github.com/FocusProgram/" target="_blank" rel="noopener">
+                    
+                    GitHub
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/neight.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2020-07-11 16:44">
+      2020年7月11日 下午
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.1k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      15
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：22 分钟前
+                
+              </p>
+            
+            <article class="markdown-body">
+              <p><strong>Jenkins部署项目</strong></p>
+<hr>
+<blockquote>
+<p>新建任务</p>
+</blockquote>
+<p><img src="https://image.focusprogram.top/20190918161333.png" srcset="/img/loading.gif" alt=""></p>
+<blockquote>
+<p>配置任务</p>
+</blockquote>
+<p>1.General配置</p>
+<p><img src="https://image.focusprogram.top/20190918161450.png" srcset="/img/loading.gif" alt=""></p>
+<p>2.源码管理</p>
+<p><img src="https://image.focusprogram.top/20190918161708.png" srcset="/img/loading.gif" alt=""></p>
+<p>3.构建环境</p>
+<div class="hljs"><pre><code class="hljs routeros">1.Delete workspace before build starts：构建前清空工作空间
+
+2.Use<span class="hljs-built_in"> secret </span>text(s) <span class="hljs-keyword">or</span> file(s)：使用加密文件或文本
+
+3.Abort the build <span class="hljs-keyword">if</span> it’s stuck：构建出现问题，则终止构建
+
+4.<span class="hljs-builtin-name">Add</span> timestamps <span class="hljs-keyword">to</span> the<span class="hljs-built_in"> Console </span>Output：给控制台输出增加时间戳
+
+5.Inspect build log <span class="hljs-keyword">for</span> published Gradle build scans：检查已发布的Gradle构建扫描的构建日志
+
+6.With Ant：用 Ant</code></pre></div>
+
+<p>4.构建触发器</p>
+<p><img src="https://image.focusprogram.top/20190918171407.png" srcset="/img/loading.gif" alt=""></p>
+<p>==&lt;1&gt;.触发远程构建(例如脚本)==</p>
+<div class="hljs"><pre><code class="hljs livecodeserver">该触发方法是指通过调用jenkins接口触发构建任务(<span class="hljs-keyword">token</span>在任务中配置)
+
+curl <span class="hljs-keyword">http</span>://<span class="hljs-number">192.168</span><span class="hljs-number">.80</span><span class="hljs-number">.80</span>:<span class="hljs-number">8080</span>/job/springboot-quartz/build?<span class="hljs-keyword">token</span>=<span class="hljs-number">123456</span></code></pre></div>
+
+<p>==&lt;2&gt;.其他工程构建后触发==</p>
+<div class="hljs"><pre><code class="hljs plain">该触发方法可以选择在jenkins构建完某个项目时触发构建</code></pre></div>
+
+<p>==&lt;3&gt;.GitHub hook trigger for GITScm polling==</p>
+<div class="hljs"><pre><code class="hljs plain">该方法是通过向github提交代码时触发</code></pre></div>
+<p>系统管理 》 系统设置</p>
+<p>github中生成token</p>
+<p><img src="https://image.focusprogram.top/20190918163851.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20190918163359.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20190918164046.png" srcset="/img/loading.gif" alt=""></p>
+<p>jenkins系统设置中配置 Hook URL</p>
+<p><img src="https://image.focusprogram.top/20190918164248.png" srcset="/img/loading.gif" alt=""></p>
+<div class="hljs"><pre><code class="hljs xl"><span class="hljs-function"><span class="hljs-title">http</span>://p2g1055383.iask.<span class="hljs-built_in">in</span> --&gt;</span> http:<span class="hljs-comment">//192.168.80.80:8080 外网映射</span></code></pre></div>
+
+<p>github中配置Webhooks地址</p>
+<p><img src="https://image.focusprogram.top/20190918164425.png" srcset="/img/loading.gif" alt=""></p>
+<p>==&lt;4&gt;.定时构建==</p>
+<div class="hljs"><pre><code class="hljs plain">该构建是指在某个时刻定时去构建项目类似定时任务
+
+不管SVN或Git中数据有无变化，均执行定时化的构建任务</code></pre></div>
+
+<p>==&lt;5&gt;.轮训SCM==</p>
+<div class="hljs"><pre><code class="hljs plain">只要SVN或Git中数据有更新，则执行构建任务</code></pre></div>
+
+<div class="hljs"><pre><code class="hljs awk">日程表表达式可以参考https:<span class="hljs-regexp">//</span>blog.csdn.net<span class="hljs-regexp">/nklinsirui/</span>article<span class="hljs-regexp">/details/</span><span class="hljs-number">95338535</span></code></pre></div>
+
+<p>5.构建</p>
+<p>==&lt;1&gt;.Invoke Ant==</p>
+<p>==&lt;2&gt;.Invoke Gradle script==</p>
+<p>==&lt;3&gt;.Run with timeout==</p>
+<p>==&lt;4&gt;.Set Build status to “pending”  on GitHub commit==</p>
+<p>==&lt;5&gt;.执行Windows批处理命令==</p>
+<p>==&lt;6&gt;.执行Shell==</p>
+<p>==&lt;7&gt;.调用顶层Maven目标==</p>
+<p><img src="https://image.focusprogram.top/20190918165242.png" srcset="/img/loading.gif" alt=""></p>
+<blockquote>
+<p>shell脚本构建jar直接运行java -jar项目</p>
+</blockquote>
+<div class="hljs"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/bash</span>
+
+<span class="hljs-comment">#服务名称</span>
+SERVER_NAME=quartz
+
+<span class="hljs-comment"># 源jar路径,mvn打包完成之后，target目录下的jar包名称，也可选择成为war包，war包可移动到Tomcat的webapps目录下运行，这里使用jar包，用java -jar 命令执行  </span>
+JAR_NAME=quartz-0.0.1-SNAPSHOT
+
+<span class="hljs-comment"># 源jar路径  </span>
+<span class="hljs-comment">#/usr/local/jenkins_home/workspace---&gt;jenkins 工作目录</span>
+
+<span class="hljs-comment">#demo 项目目录</span>
+<span class="hljs-comment">#target 打包生成jar包的目录</span>
+JAR_PATH=/data/jenkins_home/workspace/quartz/target/
+
+<span class="hljs-comment"># 打包完成之后，把jar包移动到运行jar包的目录</span>
+JAR_WORK_PATH=/data/run
+
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"查询进程id--&gt;<span class="hljs-variable">$SERVER_NAME</span>"</span>
+PID=`ps -ef | grep <span class="hljs-string">"<span class="hljs-variable">$SERVER_NAME</span>"</span> | awk <span class="hljs-string">'&#123;print $2&#125;'</span>`
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"得到进程ID：<span class="hljs-variable">$PID</span>"</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"结束进程"</span>
+<span class="hljs-keyword">for</span> id <span class="hljs-keyword">in</span> <span class="hljs-variable">$PID</span>
+<span class="hljs-keyword">do</span>
+	<span class="hljs-built_in">kill</span> -9 <span class="hljs-variable">$id</span>  
+	<span class="hljs-built_in">echo</span> <span class="hljs-string">"killed <span class="hljs-variable">$id</span>"</span>  
+<span class="hljs-keyword">done</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"结束进程完成"</span>
+
+<span class="hljs-comment">#复制jar包到执行目录</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"复制jar包到执行目录:cp <span class="hljs-variable">$JAR_PATH</span>/<span class="hljs-variable">$JAR_NAME</span>.jar <span class="hljs-variable">$JAR_WORK_PATH</span>"</span>
+cp <span class="hljs-variable">$JAR_PATH</span>/<span class="hljs-variable">$JAR_NAME</span>.jar <span class="hljs-variable">$JAR_WORK_PATH</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"复制jar包完成"</span>
+<span class="hljs-built_in">cd</span> <span class="hljs-variable">$JAR_WORK_PATH</span>
+<span class="hljs-comment">#修改文件权限</span>
+chmod 755 <span class="hljs-variable">$JAR_NAME</span>.jar
+
+<span class="hljs-comment">#后台运行jar包</span>
+BUILD_ID=dontKillMe nohup java -jar  <span class="hljs-variable">$JAR_NAME</span>.jar  &amp;</code></pre></div>
+
+<blockquote>
+<p>shell脚本构建war部署tomcat项目</p>
+</blockquote>
+<div class="hljs"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/bash</span>
+
+<span class="hljs-comment">#防止tomcat和jenkins位于同一服务器上时tomcat启动失败</span>
+<span class="hljs-built_in">export</span> BUILD_ID=tomcat_build_id
+
+<span class="hljs-built_in">cd</span> /data/jenkins_home/workspace/qywk/开发源码/Work/qywk-idea
+
+mvn clean install
+
+<span class="hljs-comment">#tomcat位置</span>
+TOMCAT_PATH=/data/apache-tomcat-8.0.44
+
+<span class="hljs-comment">#服务名称</span>
+SERVER_NAME=qianYuWeiKe-0.0.1-SNAPSHOT
+<span class="hljs-comment"># 源jar路径,mvn打包完成之后，target目录下的jar包名称，也可选择成为war包，war包可移动到Tomcat的webapps目录下运行，这里使用jar包，用java -jar 命令执行  </span>
+JAR_NAME=qianYuWeiKe-0.0.1-SNAPSHOT
+JAR_NWE_NAME=qianYuWeiKe
+
+<span class="hljs-comment"># 源jar路径  </span>
+<span class="hljs-comment">#/usr/local/jenkins_home/workspace---&gt;jenkins 工作目录</span>
+<span class="hljs-comment">#demo 项目目录</span>
+<span class="hljs-comment">#target 打包生成jar包的目录</span>
+JAR_PATH=/data/jenkins_home/workspace/qywk/开发源码/Work/qywk-idea/qianYuWeiKe/target
+<span class="hljs-comment"># 打包完成之后，把jar包移动到运行jar包的目录---&gt;work_daemon，work_daemon这个目录需要自己提前创建</span>
+JAR_WORK_PATH=/data/run
+
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"查询进程id--&gt;<span class="hljs-variable">$SERVER_NAME</span>"</span>
+PID=`ps -ef | grep <span class="hljs-string">"<span class="hljs-variable">$SERVER_NAME</span>"</span> | awk <span class="hljs-string">'&#123;print $2&#125;'</span>`
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"得到进程ID：<span class="hljs-variable">$PID</span>"</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"结束进程"</span>
+<span class="hljs-keyword">for</span> id <span class="hljs-keyword">in</span> <span class="hljs-variable">$PID</span>
+<span class="hljs-keyword">do</span>
+	<span class="hljs-built_in">kill</span> -9 <span class="hljs-variable">$id</span>  
+	<span class="hljs-built_in">echo</span> <span class="hljs-string">"killed <span class="hljs-variable">$id</span>"</span>  
+<span class="hljs-keyword">done</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"结束进程完成"</span>
+
+<span class="hljs-comment">#复制jar包到执行目录</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"复制jar包到执行目录:cp <span class="hljs-variable">$JAR_PATH</span>/<span class="hljs-variable">$JAR_NAME</span>.war <span class="hljs-variable">$JAR_WORK_PATH</span>"</span>
+cp <span class="hljs-variable">$JAR_PATH</span>/<span class="hljs-variable">$JAR_NAME</span>.war <span class="hljs-variable">$JAR_WORK_PATH</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"复制jar包完成"</span>
+<span class="hljs-built_in">cd</span> <span class="hljs-variable">$JAR_WORK_PATH</span>
+<span class="hljs-comment">#修改文件权限</span>
+chmod 755 <span class="hljs-variable">$JAR_NAME</span>.war
+
+chmod +x <span class="hljs-variable">$TOMCAT_PATH</span>/bin/*.sh 
+
+cp <span class="hljs-variable">$JAR_WORK_PATH</span>/<span class="hljs-variable">$JAR_NAME</span>.war <span class="hljs-variable">$TOMCAT_PATH</span>/webapps
+
+mv <span class="hljs-variable">$TOMCAT_PATH</span>/webapps/<span class="hljs-variable">$JAR_NAME</span>.war <span class="hljs-variable">$TOMCAT_PATH</span>/webapps/<span class="hljs-variable">$JAR_NWE_NAME</span>.war
+ 
+<span class="hljs-comment">#tomcat进程的id并kill掉</span>
+ps -ef |grep tomcat  |awk &#123;<span class="hljs-string">'print $2'</span>&#125; | sed -e <span class="hljs-string">"s/^/kill -9 /g"</span> | sh -
+ 
+<span class="hljs-comment">#删除tomcat日志文件</span>
+rm  $<span class="hljs-variable">$TOMCAT_PATH</span>/logs/* -rf
+ 
+<span class="hljs-comment">#删除tomcat的临时目录</span>
+rm  $<span class="hljs-variable">$TOMCAT_PATH</span>/work/* -rf
+
+<span class="hljs-comment">#停止tomcat</span>
+<span class="hljs-variable">$TOMCAT_PATH</span>/bin/shutdown.sh
+ 
+<span class="hljs-comment">#启动tomcat</span>
+<span class="hljs-variable">$TOMCAT_PATH</span>/bin/startup.sh 
+ 
+<span class="hljs-comment">#看启动日志</span>
+tail -f <span class="hljs-variable">$TOMCAT_PATH</span>/logs/catalina.out</code></pre></div>
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Devops/">Devops</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Docker/">Docker</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Jenkins/">Jenkins</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/07/11/Kubernetes%E9%83%A8%E7%BD%B2/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Kubernetes部署</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2020/07/11/Lvs-Keepalived-Nginx-FastDFS%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E9%AB%98%E5%8F%AF%E7%94%A8%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/">
+                        <span class="hidden-mobile">Lvs+Keepalived+Nginx+FastDFS分布式文件系统高可用集群搭建</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <div id="vcomments"></div>
+  <script type="text/javascript">
+    function loadValine() {
+      addScript('https://cdn.staticfile.org/valine/1.4.14/Valine.min.js', function () {
+        new Valine({
+          el: "#vcomments",
+          app_id: "XjjXuhrzyfTeHFAzz4XEQWeA-gzGzoHsz",
+          app_key: "VOV2U2qRAhtqyuBiioUEvrNV",
+          placeholder: "留下您想说的话吧(*^▽^*)",
+          path: window.location.pathname,
+          avatar: "wavatar",
+          meta: ["nick","mail"],
+          pageSize: "10",
+          lang: "zh-CN",
+          highlight: true,
+          recordIP: true,
+          serverURLs: "",
+        });
+      });
+    }
+    createObserver(loadValine, 'vcomments');
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" target="_blank" rel="nofollow noopener noopener">comments
+      powered by Valine.</a></noscript>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!--
+<script src="https://utteranc.es/client.js"
+        repo="FocusProgram/focusprogram.github.io"
+        issue-term="title"
+        label="utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+-->
+
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+<div id="dark-div">
+  <a id="dark" onclick="switchDarkMode()"></a>
+</div>
+<script>
+  var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7;
+  if( matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
+    if(!(isNight&&localStorage.getItem('noDark') === '1')) {
+      document.body.classList.add('dark');
+    }
+  }
+  document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark")?"🌙":"🌞";
+</script>
+  <div class="text-center py-3">
+    <div>
+      <a rel="nofollow noopener"><span>永远执着&nbsp;&nbsp;</span></a>
+      <i class="iconfont icon-love"></i>
+      <a rel="nofollow noopener">
+        <span>&nbsp;&nbsp;永远热爱</span></a>
+    </div>
+    
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+    
+  <!-- 备案信息 -->
+  <div class="beian">
+    <img src="https://image.focusprogram.top/icp_beian.png" srcset="/img/loading.gif" style="margin-top:-5px">
+    <a href="http://beian.miit.gov.cn/" target="_blank"
+       rel="nofollow noopener">苏ICP备19063834号-1</a>
+    
+      <a
+        href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=44030602004695"
+        rel="nofollow noopener"
+        class="beian-police"
+        target="_blank"
+      >
+        <span class="beian-police-sep">&nbsp;|&nbsp;</span>
+        
+          <img src="/img/police_beian.png" srcset="/img/loading.gif" alt="police-icon" />
+        
+        <span>苏公安网备44030602004695号</span>
+      </a>
+     
+  </div>
+
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: 'article.markdown-body',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "Jenkins部署项目&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+  <script>(function (i, s, o, g, r, a, m) {
+      i['DaoVoiceObject'] = r;
+      i[r] = i[r] ||
+        function () {
+          (i[r].q = i[r].q || []).push(arguments);
+        };
+      i[r].l = 1 * new Date();
+      a = s.createElement(o);
+      m = s.getElementsByTagName(o)[0];
+      a.async = 1;
+      a.src = g;
+      a.charset = 'utf-8';
+      m.parentNode.insertBefore(a, m);
+    })(window, document, 'script', ('https:' === document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/98eb4efd.js", 'daovoice');
+    daovoice('init', {
+      app_id: "98eb4efd",
+    });
+    daovoice('update');
+  </script>
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+</body>
+</html>

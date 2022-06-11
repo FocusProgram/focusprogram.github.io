@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/Mr.Kong.jpg">
+  <link rel="icon" type="image/png" href="/img/Mr.Kong.jpg">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="May you experience the pain and happiness in your life">
+  <meta name="author" content="Mr.Kong">
+  <meta name="keywords" content="">
+  <title>分布式锁-基于Zookeeper实现 - Mr.Kong Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/dark.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script  src="/js/utils.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Mr.Kong</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-bookmark-fill"></i>
+                开源地址
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="https://gitee.com/FocusProgram/" target="_blank" rel="noopener">
+                    
+                    Gitee
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="https://github.com/FocusProgram/" target="_blank" rel="noopener">
+                    
+                    GitHub
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/neight.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2020-07-11 16:37">
+      2020年7月11日 下午
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      859 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      13
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：31 分钟前
+                
+              </p>
+            
+            <article class="markdown-body">
+              <p><strong>分布式锁-基于Zookeeper实现</strong></p>
+<hr>
+<h1 id="1-Zookeeper安装部署"><a href="#1-Zookeeper安装部署" class="headerlink" title="1. Zookeeper安装部署"></a>1. Zookeeper安装部署</h1><h2 id="1-1-安装部署参考文档"><a href="#1-1-安装部署参考文档" class="headerlink" title="1.1 安装部署参考文档"></a>1.1 安装部署参考文档</h2><p>分布式注册中心-Zookeeper： <a href="https://github.com/FocusProgram/person-improve/tree/main/springcloud-zookeeper" target="_blank" rel="noopener">https://github.com/FocusProgram/person-improve/tree/main/springcloud-zookeeper</a></p>
+<h2 id="1-2-Zookeeper客户端工具"><a href="#1-2-Zookeeper客户端工具" class="headerlink" title="1.2 Zookeeper客户端工具"></a>1.2 Zookeeper客户端工具</h2><p>下载地址：<a href="https://issues.apache.org/jira/secure/attachment/12436620/ZooInspector.zip" target="_blank" rel="noopener">https://issues.apache.org/jira/secure/attachment/12436620/ZooInspector.zip</a></p>
+<h1 id="2-实现原理"><a href="#2-实现原理" class="headerlink" title="2. 实现原理"></a>2. 实现原理</h1><ul>
+<li>多个JVM同时在根节点下创建临时节点（/lock）</li>
+<li>创建临时节点（/lock）成功,则获取锁成功，执行响应的逻辑代码</li>
+<li>创建临时节点（/lock）失败,则获取锁失败，通过订阅节点删除通知事件，如果节点删除则重新获取锁，否则就一直等待</li>
+<li>执行响应业务逻辑完成后关闭连接，临时节点删除，锁释放</li>
+</ul>
+<h1 id="3-具体实现"><a href="#3-具体实现" class="headerlink" title="3. 具体实现"></a>3. 具体实现</h1><h2 id="3-1-引入Gradle依赖"><a href="#3-1-引入Gradle依赖" class="headerlink" title="3.1 引入Gradle依赖"></a>3.1 引入Gradle依赖</h2><div class="hljs"><pre><code class="hljs gradle"><span class="hljs-keyword">dependencies</span> &#123;
+    <span class="hljs-keyword">compile</span> <span class="hljs-keyword">group</span>: <span class="hljs-string">'com.101tec'</span>, name: <span class="hljs-string">'zkclient'</span>, version: <span class="hljs-string">'0.11'</span>
+&#125;</code></pre></div>
+
+<h2 id="3-2-具体业务实现"><a href="#3-2-具体业务实现" class="headerlink" title="3.2 具体业务实现"></a>3.2 具体业务实现</h2><h3 id="3-2-1-创建CustomLock接口"><a href="#3-2-1-创建CustomLock接口" class="headerlink" title="3.2.1 创建CustomLock接口"></a>3.2.1 创建CustomLock接口</h3><div class="hljs"><pre><code class="hljs cs"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title">CustomLock</span> &#123;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 获取锁</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">getLock</span>(<span class="hljs-params"></span>)</span>;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 释放锁</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">unLock</span>(<span class="hljs-params"></span>)</span>;
+&#125;</code></pre></div>
+
+<h3 id="3-2-2-创建ZookeeperAbstractLock抽象类"><a href="#3-2-2-创建ZookeeperAbstractLock抽象类" class="headerlink" title="3.2.2 创建ZookeeperAbstractLock抽象类"></a>3.2.2 创建ZookeeperAbstractLock抽象类</h3><div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ZookeeperAbstractLock</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">CustomLock</span> </span>&#123;
+
+    <span class="hljs-comment">// zk连接地址</span>
+    <span class="hljs-keyword">private</span> String CONNECTSTRING = <span class="hljs-string">"114.55.34.44:2181"</span>;
+
+    <span class="hljs-comment">// 创建zk连接</span>
+    <span class="hljs-keyword">protected</span> ZkClient zkClient = <span class="hljs-keyword">new</span> ZkClient(CONNECTSTRING);
+
+    <span class="hljs-comment">// zk节点创建路径目录</span>
+    <span class="hljs-keyword">protected</span> String PATH = <span class="hljs-string">"/lock"</span>;
+
+    <span class="hljs-comment">// 通过定义计数器标识创建临时节点状态</span>
+    <span class="hljs-keyword">protected</span> CountDownLatch countDownLatch = <span class="hljs-keyword">new</span> CountDownLatch(<span class="hljs-number">1</span>);
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 获取锁</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">getLock</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">if</span> (tryLock()) &#123;
+            System.out.println(<span class="hljs-string">"获取lock锁的资源"</span>);
+        &#125; <span class="hljs-keyword">else</span> &#123;
+            <span class="hljs-comment">// 等待</span>
+            waitLock();
+            <span class="hljs-comment">// 重新获取锁资源</span>
+            getLock();
+        &#125;
+
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 释放锁</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">unLock</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">if</span> (zkClient != <span class="hljs-keyword">null</span>) &#123;
+            zkClient.close();
+            System.out.println(<span class="hljs-string">"释放lock锁资源"</span>);
+        &#125;
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">void</span> <span class="hljs-title">waitLock</span><span class="hljs-params">()</span></span>;
+
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">tryLock</span><span class="hljs-params">()</span></span>;
+&#125;</code></pre></div>
+
+<h3 id="3-2-3-创建ZookeeperDistrbuteLock抽象类"><a href="#3-2-3-创建ZookeeperDistrbuteLock抽象类" class="headerlink" title="3.2.3 创建ZookeeperDistrbuteLock抽象类"></a>3.2.3 创建ZookeeperDistrbuteLock抽象类</h3><div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ZookeeperDistrbuteLock</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ZookeeperAbstractLock</span> </span>&#123;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">waitLock</span><span class="hljs-params">()</span> </span>&#123;
+
+        IZkDataListener iZkDataListener = <span class="hljs-keyword">new</span> IZkDataListener() &#123;
+            <span class="hljs-comment">/**</span>
+<span class="hljs-comment">             * 节点发生改变时事件通知</span>
+<span class="hljs-comment">             * <span class="hljs-doctag">@param</span> dataPath</span>
+<span class="hljs-comment">             * <span class="hljs-doctag">@param</span> data</span>
+<span class="hljs-comment">             * <span class="hljs-doctag">@throws</span> Exception</span>
+<span class="hljs-comment">             */</span>
+            <span class="hljs-meta">@Override</span>
+            <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">handleDataChange</span><span class="hljs-params">(String dataPath, Object data)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+
+            &#125;
+
+            <span class="hljs-comment">/**</span>
+<span class="hljs-comment">             * 节点删除是事件通知</span>
+<span class="hljs-comment">             * <span class="hljs-doctag">@param</span> dataPath</span>
+<span class="hljs-comment">             * <span class="hljs-doctag">@throws</span> Exception</span>
+<span class="hljs-comment">             */</span>
+            <span class="hljs-meta">@Override</span>
+            <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">handleDataDeleted</span><span class="hljs-params">(String dataPath)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+                System.out.println(<span class="hljs-string">"删除的节点路径为"</span> + dataPath);
+                <span class="hljs-comment">// 唤醒等待的线程</span>
+                <span class="hljs-keyword">if</span> (countDownLatch != <span class="hljs-keyword">null</span>) &#123;
+                    countDownLatch.countDown();
+                &#125;
+            &#125;
+        &#125;;
+
+        <span class="hljs-comment">//注册监听事件</span>
+        zkClient.subscribeDataChanges(PATH, iZkDataListener);
+
+        <span class="hljs-keyword">if</span> (zkClient.exists(PATH)) &#123;
+            countDownLatch = <span class="hljs-keyword">new</span> CountDownLatch(<span class="hljs-number">1</span>);
+            <span class="hljs-keyword">try</span> &#123;
+                countDownLatch.await();
+            &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;
+                e.printStackTrace();
+            &#125;
+        &#125;
+
+        <span class="hljs-comment">//删除监听事件</span>
+        zkClient.unsubscribeDataChanges(PATH, iZkDataListener);
+
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">tryLock</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">try</span> &#123;
+            zkClient.createEphemeral(PATH);
+            System.out.println(<span class="hljs-string">"获取lock锁成功"</span>);
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;
+        &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;
+            System.out.println(<span class="hljs-string">"获取lock锁失败"</span>);
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+        &#125;
+    &#125;
+&#125;</code></pre></div>
+
+<h3 id="3-2-4-使用Zookeeper实现分布式锁"><a href="#3-2-4-使用Zookeeper实现分布式锁" class="headerlink" title="3.2.4 使用Zookeeper实现分布式锁"></a>3.2.4 使用Zookeeper实现分布式锁</h3><div class="hljs"><pre><code class="hljs arduino"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">NumberGenerator</span> &#123;</span>
+
+    <span class="hljs-comment">// 生成订单号规则</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> count = <span class="hljs-number">0</span>;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">String</span> <span class="hljs-title">getNumber</span><span class="hljs-params">()</span> </span>&#123;
+<span class="hljs-comment">//        try &#123;</span>
+<span class="hljs-comment">//            Thread.sleep(200);</span>
+<span class="hljs-comment">//        &#125; catch (Exception e) &#123;</span>
+<span class="hljs-comment">//            e.printStackTrace();</span>
+<span class="hljs-comment">//        &#125;</span>
+        SimpleDateFormat simpleDateFormat = <span class="hljs-keyword">new</span> SimpleDateFormat(<span class="hljs-string">"yyyy-MM-dd-HH-mm-ss"</span>);
+        <span class="hljs-keyword">return</span> simpleDateFormat.format(<span class="hljs-keyword">new</span> Date()) + <span class="hljs-string">"-"</span> + ++count;
+    &#125;
+&#125;</code></pre></div>
+
+<div class="hljs"><pre><code class="hljs reasonml">public <span class="hljs-keyword">class</span> OrderService implements Runnable &#123;
+
+    <span class="hljs-keyword">private</span> NumberGenerator numberGenerator = <span class="hljs-keyword">new</span> <span class="hljs-constructor">NumberGenerator()</span>;
+
+    <span class="hljs-keyword">private</span> CustomLock customLock = <span class="hljs-keyword">new</span> <span class="hljs-constructor">ZookeeperDistrbuteLock()</span>;
+
+    @Override
+    public void run<span class="hljs-literal">()</span> &#123;
+        get<span class="hljs-constructor">Number()</span>;
+    &#125;
+
+    public void get<span class="hljs-constructor">Number()</span> &#123;
+        <span class="hljs-keyword">try</span> &#123;
+            customLock.get<span class="hljs-constructor">Lock()</span>;
+            String number = numberGenerator.get<span class="hljs-constructor">Number()</span>;
+            <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">System</span>.</span></span>out.println(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Thread</span>.</span></span>current<span class="hljs-constructor">Thread()</span>.get<span class="hljs-constructor">Name()</span> + <span class="hljs-string">"生成订单号："</span> + number);
+        &#125; catch (Exception e) &#123;
+            e.print<span class="hljs-constructor">StackTrace()</span>;
+        &#125; finally &#123;
+            customLock.un<span class="hljs-constructor">Lock()</span>;
+        &#125;
+    &#125;
+&#125;</code></pre></div>
+
+<div class="hljs"><pre><code class="hljs arduino"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">LockTest</span> &#123;</span>
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 根据cpu的数量动态的配置核心线程数和最大线程数</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> CPU_COUNT = Runtime.getRuntime().availableProcessors();
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 核心线程数 = CPU核心数 + 1</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> CORE_POOL_SIZE = CPU_COUNT + <span class="hljs-number">1</span>;
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 线程池最大线程数 = CPU核心数 * 2 + 1</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> MAXIMUM_POOL_SIZE = CPU_COUNT * <span class="hljs-number">2</span> + <span class="hljs-number">1</span>;
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 非核心线程闲置时超时1s</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> KEEP_ALIVE = <span class="hljs-number">1</span>;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">String</span>[] args)</span> </span>&#123;
+
+        System.out.<span class="hljs-built_in">println</span>(<span class="hljs-string">"开始生成订单号......"</span>);
+        <span class="hljs-keyword">long</span> <span class="hljs-built_in">begin</span> = System.currentTimeMillis();
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; i++) &#123;
+            <span class="hljs-keyword">new</span> Thread(<span class="hljs-keyword">new</span> OrderService()).start();
+        &#125;
+        <span class="hljs-keyword">long</span> <span class="hljs-built_in">end</span> = System.currentTimeMillis();
+        <span class="hljs-keyword">long</span> result = <span class="hljs-built_in">end</span> - <span class="hljs-built_in">begin</span>;
+        System.out.<span class="hljs-built_in">println</span>(<span class="hljs-string">"执行消耗时长："</span> + result / <span class="hljs-number">1000</span> + <span class="hljs-string">"s"</span>);
+    &#125;
+&#125;</code></pre></div>
+
+<h3 id="3-2-5-源码参考地址"><a href="#3-2-5-源码参考地址" class="headerlink" title="3.2.5 源码参考地址"></a>3.2.5 源码参考地址</h3><p><a href="https://github.com/FocusProgram/person-improve/tree/main/springcloud-zookeeper-lock" target="_blank" rel="noopener">https://github.com/FocusProgram/person-improve/tree/main/springcloud-zookeeper-lock</a></p>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">微服务</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/SpringCloud/">SpringCloud</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">微服务</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/07/11/Docker-Nginx-FastDFS%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E6%90%AD%E5%BB%BA/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Docker+Nginx+FastDFS分布式文件系统搭建</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2020/07/11/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81-%E5%9F%BA%E4%BA%8ERedis%E5%AE%9E%E7%8E%B0/">
+                        <span class="hidden-mobile">分布式锁-基于Redis实现</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <div id="vcomments"></div>
+  <script type="text/javascript">
+    function loadValine() {
+      addScript('https://cdn.staticfile.org/valine/1.4.14/Valine.min.js', function () {
+        new Valine({
+          el: "#vcomments",
+          app_id: "XjjXuhrzyfTeHFAzz4XEQWeA-gzGzoHsz",
+          app_key: "VOV2U2qRAhtqyuBiioUEvrNV",
+          placeholder: "留下您想说的话吧(*^▽^*)",
+          path: window.location.pathname,
+          avatar: "wavatar",
+          meta: ["nick","mail"],
+          pageSize: "10",
+          lang: "zh-CN",
+          highlight: true,
+          recordIP: true,
+          serverURLs: "",
+        });
+      });
+    }
+    createObserver(loadValine, 'vcomments');
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" target="_blank" rel="nofollow noopener noopener">comments
+      powered by Valine.</a></noscript>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!--
+<script src="https://utteranc.es/client.js"
+        repo="FocusProgram/focusprogram.github.io"
+        issue-term="title"
+        label="utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+-->
+
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+<div id="dark-div">
+  <a id="dark" onclick="switchDarkMode()"></a>
+</div>
+<script>
+  var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7;
+  if( matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
+    if(!(isNight&&localStorage.getItem('noDark') === '1')) {
+      document.body.classList.add('dark');
+    }
+  }
+  document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark")?"🌙":"🌞";
+</script>
+  <div class="text-center py-3">
+    <div>
+      <a rel="nofollow noopener"><span>永远执着&nbsp;&nbsp;</span></a>
+      <i class="iconfont icon-love"></i>
+      <a rel="nofollow noopener">
+        <span>&nbsp;&nbsp;永远热爱</span></a>
+    </div>
+    
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+    
+  <!-- 备案信息 -->
+  <div class="beian">
+    <img src="https://image.focusprogram.top/icp_beian.png" srcset="/img/loading.gif" style="margin-top:-5px">
+    <a href="http://beian.miit.gov.cn/" target="_blank"
+       rel="nofollow noopener">苏ICP备19063834号-1</a>
+    
+      <a
+        href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=44030602004695"
+        rel="nofollow noopener"
+        class="beian-police"
+        target="_blank"
+      >
+        <span class="beian-police-sep">&nbsp;|&nbsp;</span>
+        
+          <img src="/img/police_beian.png" srcset="/img/loading.gif" alt="police-icon" />
+        
+        <span>苏公安网备44030602004695号</span>
+      </a>
+     
+  </div>
+
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: 'article.markdown-body',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "分布式锁-基于Zookeeper实现&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+  <script>(function (i, s, o, g, r, a, m) {
+      i['DaoVoiceObject'] = r;
+      i[r] = i[r] ||
+        function () {
+          (i[r].q = i[r].q || []).push(arguments);
+        };
+      i[r].l = 1 * new Date();
+      a = s.createElement(o);
+      m = s.getElementsByTagName(o)[0];
+      a.async = 1;
+      a.src = g;
+      a.charset = 'utf-8';
+      m.parentNode.insertBefore(a, m);
+    })(window, document, 'script', ('https:' === document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/98eb4efd.js", 'daovoice');
+    daovoice('init', {
+      app_id: "98eb4efd",
+    });
+    daovoice('update');
+  </script>
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+</body>
+</html>
