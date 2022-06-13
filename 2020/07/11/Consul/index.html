@@ -364,9 +364,9 @@ agent -server -bootstrap-expect <span class="hljs-number">2</span> -ui -bind=<sp
 <p><strong>查看consul集群信息</strong></p>
 <div class="hljs"><pre><code class="hljs livecodeserver">docker exec -<span class="hljs-keyword">it</span> consul-<span class="hljs-literal">one</span> consul members</code></pre></div>
 
-<p><img src="https://image.focusprogram.top/20200307154109.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20200307154109.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <p>访问 <a href="http://192.168.80.128:8500" target="_blank" rel="noopener">http://192.168.80.128:8500</a></p>
-<p><img src="https://image.focusprogram.top/20200307154346.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20200307154346.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <h1 id="3-客户端集成Consul"><a href="#3-客户端集成Consul" class="headerlink" title="3. 客户端集成Consul"></a>3. 客户端集成Consul</h1><h2 id="3-1-引入maven依赖"><a href="#3-1-引入maven依赖" class="headerlink" title="3.1 引入maven依赖"></a>3.1 引入maven依赖</h2><div class="hljs"><pre><code class="hljs java">&lt;dependency&gt;
     &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
     &lt;artifactId&gt;spring-cloud-starter-consul-discovery&lt;/artifactId&gt;
@@ -380,7 +380,7 @@ agent -server -bootstrap-expect <span class="hljs-number">2</span> -ui -bind=<sp
     &lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;
 &lt;/dependency&gt;</code></pre></div>
 
-<h2 id="3-2-项目结构"><a href="#3-2-项目结构" class="headerlink" title="3.2 项目结构"></a>3.2 项目结构</h2><p><img src="https://image.focusprogram.top/20200307231701.png" srcset="/img/loading.gif" alt=""></p>
+<h2 id="3-2-项目结构"><a href="#3-2-项目结构" class="headerlink" title="3.2 项目结构"></a>3.2 项目结构</h2><p><img src="https://image.focusprogram.top/20200307231701.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <h2 id="3-3-环境依赖"><a href="#3-3-环境依赖" class="headerlink" title="3.3 环境依赖"></a>3.3 环境依赖</h2><table>
 <thead>
 <tr>
@@ -506,21 +506,21 @@ spring:
 <blockquote>
 <p>提供了两种注入值的方法，均可，第一种采用@Value进行注入，第二种采用ConfigurationProperties进行注入</p>
 </blockquote>
-<h2 id="3-5-consul中创建节点数据"><a href="#3-5-consul中创建节点数据" class="headerlink" title="3.5 consul中创建节点数据"></a>3.5 consul中创建节点数据</h2><p><img src="https://image.focusprogram.top/20200307233617.png" srcset="/img/loading.gif" alt=""></p>
-<p><img src="https://image.focusprogram.top/20200307233630.png" srcset="/img/loading.gif" alt=""></p>
+<h2 id="3-5-consul中创建节点数据"><a href="#3-5-consul中创建节点数据" class="headerlink" title="3.5 consul中创建节点数据"></a>3.5 consul中创建节点数据</h2><p><img src="https://image.focusprogram.top/20200307233617.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20200307233630.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <blockquote>
 <p>节点的目录分别为：</p>
 <p>config/waiter-service,dev/consul</p>
 <p>config/waiter-service,prd/consul</p>
 </blockquote>
 <h2 id="3-6-验证从consul中获取的配置文件"><a href="#3-6-验证从consul中获取的配置文件" class="headerlink" title="3.6 验证从consul中获取的配置文件"></a>3.6 验证从consul中获取的配置文件</h2><p>访问 <a href="http://localhost:8090/consul/pay/money" target="_blank" rel="noopener">http://localhost:8090/consul/pay/money</a></p>
-<p><img src="https://image.focusprogram.top/20200307234114.png" srcset="/img/loading.gif" alt=""></p>
-<p><img src="https://image.focusprogram.top/20200307234217.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20200307234114.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20200307234217.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <h1 id="4-注意事项"><a href="#4-注意事项" class="headerlink" title="4. 注意事项"></a>4. 注意事项</h1><blockquote>
 <p>consul出现Critical Checks错误</p>
 </blockquote>
-<p><img src="http://image.focusprogram.top/20200514140255.png" srcset="/img/loading.gif" alt=""></p>
-<p><img src="http://image.focusprogram.top/20200514141020.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="http://image.focusprogram.top/20200514140255.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
+<p><img src="http://image.focusprogram.top/20200514141020.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <div class="hljs"><pre><code class="hljs awk">$ curl http:<span class="hljs-regexp">//</span><span class="hljs-number">192.168</span>.<span class="hljs-number">247.1</span>:<span class="hljs-number">8090</span><span class="hljs-regexp">/actuator/</span>health
 
 &#123;<span class="hljs-string">"timestamp"</span>:<span class="hljs-string">"2020-05-14T06:07:04.905+0000"</span>,<span class="hljs-string">"status"</span>:<span class="hljs-number">404</span>,<span class="hljs-string">"error"</span>:<span class="hljs-string">"Not Found"</span>,<span class="hljs-string">"message"</span>:<span class="hljs-string">"No message available"</span>,<span class="hljs-string">"path"</span>:<span class="hljs-string">"/actuator/health"</span>&#125;</code></pre></div>
@@ -535,7 +535,7 @@ spring:
 <blockquote>
 <p>引入spring-boot-starter-actuator版本依赖错误</p>
 </blockquote>
-<p><img src="http://image.focusprogram.top/20200514135934.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="http://image.focusprogram.top/20200514135934.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <p>解决措施：spring-boot版本为2.0.4.RELEASE，spring-cloud版本为Finchley.RELEASE</p>
 
             </article>

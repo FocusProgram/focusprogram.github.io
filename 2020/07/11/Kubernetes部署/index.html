@@ -455,7 +455,7 @@ EOF</code></pre></div>
 <h3 id="3-4-1-所有节点安装Docker"><a href="#3-4-1-所有节点安装Docker" class="headerlink" title="3.4.1 所有节点安装Docker"></a>3.4.1 所有节点安装Docker</h3><blockquote>
 <p>Kubernetes默认CRI（容器运行时）为Docker</p>
 </blockquote>
-<p><img src="https://image.focusprogram.top/k8s-docker.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/k8s-docker.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <h4 id="3-4-1-1-卸载Docker"><a href="#3-4-1-1-卸载Docker" class="headerlink" title="3.4.1.1 卸载Docker"></a>3.4.1.1 卸载Docker</h4><blockquote>
 <p>若之前安装过Docker，防止冲突，请卸载，若未安装，忽略此步</p>
 </blockquote>
@@ -565,7 +565,7 @@ k8s.gcr.io/pause:<span class="hljs-number">3.2</span>
 k8s.gcr.io/etcd:<span class="hljs-number">3.4</span><span class="hljs-number">.3</span><span class="hljs-number">-0</span>
 k8s.gcr.io/coredns:<span class="hljs-number">1.6</span><span class="hljs-number">.7</span></code></pre></div>
 
-<p><img src="https://image.focusprogram.top/20200401114021.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20200401114021.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <h5 id="3-4-4-2-1-第一种安装方式"><a href="#3-4-4-2-1-第一种安装方式" class="headerlink" title="3.4.4.2.1 第一种安装方式"></a>3.4.4.2.1 第一种安装方式</h5><p>编写安装脚本vim install.sh</p>
 <div class="hljs"><pre><code class="hljs vim">K8S_VERSION=v1.<span class="hljs-number">18.0</span>
 ETCD_VERSION=<span class="hljs-number">3.4</span>.<span class="hljs-number">3</span>-<span class="hljs-number">0</span>
@@ -601,7 +601,7 @@ $ docker images | grep registry.cn-hangzhou.aliyuncs.com/google_containers | awk
 #删除原始镜像
 $ docker images | grep registry.cn-hangzhou.aliyuncs.com/google_containers | awk '&#123;<span class="hljs-keyword">print</span> <span class="hljs-string">"docker rmi "</span><span class="hljs-string">""</span><span class="hljs-variable">$1</span><span class="hljs-string">""</span><span class="hljs-string">":"</span><span class="hljs-string">""</span><span class="hljs-variable">$2&#125;</span>' | <span class="hljs-keyword">sh</span> -x</code></pre></div>
 
-<p><img src="https://image.focusprogram.top/20200401131713.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20200401131713.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <h3 id="3-4-5-部署Kubernetes-Node"><a href="#3-4-5-部署Kubernetes-Node" class="headerlink" title="3.4.5 部署Kubernetes Node"></a>3.4.5 部署Kubernetes Node</h3><p>编写安装脚本vim install.sh</p>
 <div class="hljs"><pre><code class="hljs routeros"><span class="hljs-attribute">K8S_VERSION</span>=v1.18.0
 
@@ -622,7 +622,7 @@ docker tag registry.cn-hangzhou.aliyuncs.com/google_containers/pause:<span class
 docker rmi registry.cn-hangzhou.aliyuncs.com/google_containers/kube-proxy:<span class="hljs-variable">$K8S_VERSION</span>
 docker rmi registry.cn-hangzhou.aliyuncs.com/google_containers/pause:<span class="hljs-variable">$PAUSE_VERSION</span></code></pre></div>
 
-<p><img src="https://image.focusprogram.top/20200401122908.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20200401122908.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <h3 id="3-4-6-初始化Master"><a href="#3-4-6-初始化Master" class="headerlink" title="3.4.6 初始化Master"></a>3.4.6 初始化Master</h3><div class="hljs"><pre><code class="hljs angelscript">kubeadm init --pod-network-cidr <span class="hljs-number">10.244</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span>/<span class="hljs-number">16</span> --apiserver-advertise-address=<span class="hljs-number">192.168</span><span class="hljs-number">.80</span><span class="hljs-number">.128</span></code></pre></div>
 
 <p>无法拉取镜像的可使用此命令192.168.20.61（Master）执行 使用阿里云节点在线方式，节点会自动安装阿里云镜像</p>
@@ -637,7 +637,7 @@ docker rmi registry.cn-hangzhou.aliyuncs.com/google_containers/pause:<span class
 --pod-network-cidr=<span class="hljs-number">10.244</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span>/<span class="hljs-number">16</span></code></pre></div>
 
 <p>执行完毕保存kubeadm token，以便node节点加入<br>#每个机器创建的master以下部分都不同,需要自己保存好</p>
-<p><img src="https://image.focusprogram.top/20200401132225.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20200401132225.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <div class="hljs"><pre><code class="hljs angelscript">$ kubeadm join <span class="hljs-number">192.168</span><span class="hljs-number">.80</span><span class="hljs-number">.128</span>:<span class="hljs-number">6443</span> --token <span class="hljs-number">9</span>c963m.as0v97vbtdajyszd \
     --discovery-token-ca-cert-hash sha256:<span class="hljs-number">9e213498</span>e36fe6044c5022a39911989c417b649a667825239a536033c68e18cb</code></pre></div>
 
@@ -666,7 +666,7 @@ $ kubectl <span class="hljs-builtin-name">get</span> nodes</code></pre></div>
 <div class="hljs"><pre><code class="hljs angelscript">$ kubeadm join <span class="hljs-number">192.168</span><span class="hljs-number">.80</span><span class="hljs-number">.128</span>:<span class="hljs-number">6443</span> --token <span class="hljs-number">9</span>c963m.as0v97vbtdajyszd \
     --discovery-token-ca-cert-hash sha256:<span class="hljs-number">9e213498</span>e36fe6044c5022a39911989c417b649a667825239a536033c68e18cb</code></pre></div>
 
-<p><img src="https://image.focusprogram.top/20200401133645.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20200401133645.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <p>查看已经运行了的容器</p>
 <div class="hljs"><pre><code class="hljs gams"><span class="hljs-symbol">$</span> kubectl get pods -n kube-<span class="hljs-keyword">system</span>  查看运行空间为名称为kube-<span class="hljs-keyword">system</span>
 
@@ -678,7 +678,7 @@ $ kubectl <span class="hljs-builtin-name">get</span> nodes</code></pre></div>
 
 <span class="hljs-symbol">$</span> kubectl get svc -n kube-<span class="hljs-keyword">system</span> 查看服务信息</code></pre></div>
 <p>查看所有节点是否正常运行，显示如下，为全部正常运行：</p>
-<p><img src="https://image.focusprogram.top/20200401151922.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20200401151922.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <p>如果存在penging等状态，请使用如下命令查看问题：</p>
 <div class="hljs"><pre><code class="hljs excel">kubectl describe pod pod节点名 -<span class="hljs-built_in">n</span> 命名空间</code></pre></div>
 
@@ -690,7 +690,7 @@ $ kubectl expose deployment nginx <span class="hljs-attribute">--port</span>=80 
 $ kubectl <span class="hljs-builtin-name">get</span> pod,svc</code></pre></div>
 
 <p>使用master节点部署，显示如下错误： 1 node(s) had taints that the pod didn’t tolerate</p>
-<p><img src="https://image.focusprogram.top/20200401134920.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20200401134920.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <blockquote>
 <p>kubernetes增加污点，达到pod是否能在做节点运行</p>
 <p>master node参与工作负载 (只在主节点执行)<br>使用kubeadm初始化的集群，出于安全考虑Pod不会被调度到Master Node上，也就是说Master Node不参与工作负载。</p>
@@ -708,20 +708,20 @@ error: taint “<span class="hljs-keyword">node</span><span class="hljs-title">-
 <div class="hljs"><pre><code class="hljs crmsh">kubectl taint nodes k8s <span class="hljs-keyword">node</span><span class="hljs-title">-role</span>.kubernetes.io/<span class="hljs-attr">master=</span><span class="hljs-literal">true</span>:NoSchedule</code></pre></div>
 
 <p>通过命令查看服务端口 kubectl get pod,svc</p>
-<p><img src="https://image.focusprogram.top/20200401151107.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20200401151107.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <p>查看服务部署节点 kubectl get pods -A -o wide</p>
-<p><img src="https://image.focusprogram.top/20200401151922.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20200401151922.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <p>分别访问192.168.80.128/129/130节点上运行的Nginx</p>
 <p><a href="http://192.168.80.128:30482/" target="_blank" rel="noopener">http://192.168.80.128:30482/</a></p>
 <p><a href="http://192.168.80.129:30482/" target="_blank" rel="noopener">http://192.168.80.129:30482/</a></p>
 <p><a href="http://192.168.80.130:30482/" target="_blank" rel="noopener">http://192.168.80.130:30482/</a></p>
 <p>显示均为下，则运行正常：</p>
-<p><img src="https://image.focusprogram.top/20200401152349.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20200401152349.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <h2 id="3-6-部署-Dashboard"><a href="#3-6-部署-Dashboard" class="headerlink" title="3.6 部署 Dashboard"></a>3.6 部署 Dashboard</h2><h3 id="3-6-1-k8s为v1-16之前安装步骤-v1-10"><a href="#3-6-1-k8s为v1-16之前安装步骤-v1-10" class="headerlink" title="3.6.1 k8s为v1.16之前安装步骤(v1.10)"></a>3.6.1 k8s为v1.16之前安装步骤(v1.10)</h3><h4 id="3-6-1-1-安装kubernetes-dashboard"><a href="#3-6-1-1-安装kubernetes-dashboard" class="headerlink" title="3.6.1.1 安装kubernetes-dashboard"></a>3.6.1.1 安装kubernetes-dashboard</h4><div class="hljs"><pre><code class="hljs awk">$ kubectl apply -f https:<span class="hljs-regexp">//</span>raw.githubusercontent.com<span class="hljs-regexp">/kubernetes/</span>dashboard<span class="hljs-regexp">/v1.10.1/</span>src<span class="hljs-regexp">/deploy/</span>recommended<span class="hljs-regexp">/kubernetes-dashboard.yaml</span></code></pre></div>
 
 <h4 id="3-6-1-2-查看dashboard部署服务器"><a href="#3-6-1-2-查看dashboard部署服务器" class="headerlink" title="3.6.1.2 查看dashboard部署服务器"></a>3.6.1.2 查看dashboard部署服务器</h4><div class="hljs"><pre><code class="hljs routeros">$ kubectl <span class="hljs-builtin-name">get</span> pods -A -o wide</code></pre></div>
 
-<p><img src="https://image.focusprogram.top/97db9b8f-6c72-4fa6-9ff5-1297de4d4ca7.jpg" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/97db9b8f-6c72-4fa6-9ff5-1297de4d4ca7.jpg" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <p>从图中可以看出 pod在node1节点 其中节点IP为192.168.20.62，但是状态为ErrImagePull</p>
 <p>可使用命令查看具体原因</p>
 <div class="hljs"><pre><code class="hljs gams"><span class="hljs-symbol">$</span> kubectl describe pod kubernetes-dashboard -n kube-<span class="hljs-keyword">system</span></code></pre></div>
@@ -740,11 +740,11 @@ $ docker rmi registry.cn-hangzhou.aliyuncs.com/kuberneters/kubernetes-dashboard-
 <p>查看状态</p>
 <div class="hljs"><pre><code class="hljs routeros">$ kubectl <span class="hljs-builtin-name">get</span> pods -A -o wide</code></pre></div>
 
-<p><img src="https://image.focusprogram.top/5389ea55-a5cd-47b9-80f0-415ce404b2bd.jpg" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/5389ea55-a5cd-47b9-80f0-415ce404b2bd.jpg" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <p>查看服务详情</p>
 <div class="hljs"><pre><code class="hljs armasm">$ kubectl <span class="hljs-meta">get</span> <span class="hljs-keyword">svc </span>-n kube-system</code></pre></div>
 <p>默认Dashboard只能集群内部访问</p>
-<p><img src="https://image.focusprogram.top/75bcb537-4d4d-4e83-8932-8d6c9d464695.jpg" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/75bcb537-4d4d-4e83-8932-8d6c9d464695.jpg" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <p>修改Service为NodePort类型，暴露到外部：<br>修改node为NodePort模式</p>
 <div class="hljs"><pre><code class="hljs scilab">$ kubectl patch svc -n kube-<span class="hljs-built_in">system</span> kubernetes-dashboard -p <span class="hljs-string">'&#123;"</span>spec<span class="hljs-string">":&#123;"</span><span class="hljs-built_in">type</span><span class="hljs-string">":"</span>NodePort<span class="hljs-string">"&#125;&#125;'</span></code></pre></div>
 
@@ -753,9 +753,9 @@ $ docker rmi registry.cn-hangzhou.aliyuncs.com/kuberneters/kubernetes-dashboard-
 <p>查看暴露端口：</p>
 <div class="hljs"><pre><code class="hljs routeros">$ kubectl <span class="hljs-builtin-name">get</span><span class="hljs-built_in"> service </span><span class="hljs-attribute">--namespace</span>=kube-system</code></pre></div>
 
-<p><img src="https://image.focusprogram.top/95ba8de3-f3a8-489b-a352-17e7bf6e6089.jpg" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/95ba8de3-f3a8-489b-a352-17e7bf6e6089.jpg" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <p>访问地址为<a href="https://192.168.20.62:32146" target="_blank" rel="noopener">https://192.168.20.62:32146</a></p>
-<p><img src="https://image.focusprogram.top/f09af693-63f4-4e60-a617-a9754bc55657.jpg" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/f09af693-63f4-4e60-a617-a9754bc55657.jpg" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <h3 id="3-6-2-k8s为v1-16-安装步骤-v2-0"><a href="#3-6-2-k8s为v1-16-安装步骤-v2-0" class="headerlink" title="3.6.2 k8s为v1.16+安装步骤(v2.0)"></a>3.6.2 k8s为v1.16+安装步骤(v2.0)</h3><h4 id="3-6-2-1-下载recommended-yaml"><a href="#3-6-2-1-下载recommended-yaml" class="headerlink" title="3.6.2.1 下载recommended.yaml"></a>3.6.2.1 下载recommended.yaml</h4><div class="hljs"><pre><code class="hljs awk">$ mkdir <span class="hljs-regexp">/data &amp;&amp; cd /</span>data
 
 $ wget https:<span class="hljs-regexp">//</span>raw.githubusercontent.com<span class="hljs-regexp">/kubernetes/</span>dashboard<span class="hljs-regexp">/v2.0.0-beta4/</span>aio<span class="hljs-regexp">/deploy/</span>recommended.yaml</code></pre></div>
@@ -860,23 +860,23 @@ eyJhbGciOiJSUzI1NiIsImtpZCI6ImdEa1F3eU0yckVWTDhWSkFac1Uyc0RkcUF3VmlTTlA0ZEp6Uzdl
 <p>查看状态</p>
 <div class="hljs"><pre><code class="hljs routeros">$ kubectl <span class="hljs-builtin-name">get</span> pods -A -o wide</code></pre></div>
 
-<p><img src="https://image.focusprogram.top/20200401212246.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20200401212246.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <p>查看服务详情</p>
 <div class="hljs"><pre><code class="hljs armasm">$ kubectl <span class="hljs-meta">get</span> <span class="hljs-keyword">svc </span>-n kubernetes-dashboard</code></pre></div>
 
-<p><img src="https://image.focusprogram.top/20200401212316.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20200401212316.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <p>查看pod 与service是否运行正常</p>
 <div class="hljs"><pre><code class="hljs armasm">$ kubectl <span class="hljs-meta">get</span> pod,<span class="hljs-keyword">svc </span>-n kubernetes-dashboard -o wide</code></pre></div>
 
-<p><img src="https://image.focusprogram.top/20200401212338.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20200401212338.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <p>可根据需求查看kubernetes-dashboard-75d8b49cf6-7q8nk信息</p>
 <div class="hljs"><pre><code class="hljs angelscript">$ kubectl describe pod kubernetes-dashboard<span class="hljs-number">-649</span>b495f5d-c2f58 -n kubernetes-dashboard</code></pre></div>
 
-<p><img src="https://image.focusprogram.top/20200401212420.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20200401212420.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <h3 id="3-6-3-访问Dashboard"><a href="#3-6-3-访问Dashboard" class="headerlink" title="3.6.3 访问Dashboard"></a>3.6.3 访问Dashboard</h3><p>使用默认token登录 <a href="https://192.168.80.128:30001/#/login" target="_blank" rel="noopener">https://192.168.80.128:30001</a></p>
 <div class="hljs"><pre><code class="hljs smali">eyJhbGciOiJSUzI1NiIsImtpZCI6ImdEa1F3eU0yckVWTDhWSkFac1Uyc0RkcUF3VmlTTlA0ZEp6UzdlNmRpNm8ifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJrdWJlcm5ldGVzLWRhc2hib2FyZC10b2tlbi1ocnhwdiIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6IjhkMmI2MWNiLTY1OTEtNGRkYy1iYjFmLWVjNWZjODg0ZDg0ZCIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDprdWJlcm5ldGVzLWRhc2hib2FyZDprdWJlcm5ldGVzLWRhc2hib2FyZCJ9.i6oCoHDpKMt9b-yIXVULYf-QPdAnHQignKNvJTxCR7Bzw_GGKx3iSnBF366C0NaWVm5nWRXJSd61qp89Z-02OrVWAJbZw0FEiQ9cudM2ynE6J_sid1hat24q-M7thwr0rz_2E7uxmB1NBN9X1mw9KIMYwMeRvhdhLgMdD_t_o40pX05IMYhGKKEFf3GdEBrBQ4sIoY2FTbxgN2tWolAaU3gUaJtMw1iuMz7ePDEsw_exv5An-DNnfYeKcKhqN4FGmHCR-YNzYtsWXBEN3GxYmzX16U4eLC1ir9W32nVDaT5bisPaZ53Z_OJnSMJsEvXoz27_9_6lEAzuv022j0TFVQ</code></pre></div>
 
-<p><img src="https://image.focusprogram.top/20200401223006.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20200401223006.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <p>默认用户权限不足—授权管理员，创建service account并绑定默认cluster-admin管理员集群角色：</p>
 <div class="hljs"><pre><code class="hljs reasonml"># 创建service account
 $ kubectl create serviceaccount dashboard-admin -n kubernetes-dashboard
@@ -892,13 +892,13 @@ $ kubectl describe secrets  <span class="hljs-constructor">$(<span class="hljs-p
 <p>记录，以备不时之需或者获取token信息知晓管理员token</p>
 <div class="hljs"><pre><code class="hljs routeros">$ kubectl <span class="hljs-builtin-name">get</span><span class="hljs-built_in"> secret </span>-n kubernetes-dashboard |grep dashboard</code></pre></div>
 
-<p><img src="https://image.focusprogram.top/20200401224525.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20200401224525.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <p>获取token</p>
 <div class="hljs"><pre><code class="hljs stata">$ kubectl <span class="hljs-keyword">describe</span> secrets kubernetes-dashboard-<span class="hljs-keyword">token</span>-9tkf9 -<span class="hljs-keyword">n</span> kubernetes-dashboard</code></pre></div>
 
-<p><img src="https://image.focusprogram.top/20200401224620.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20200401224620.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <p>使用输出的token登录Dashboard <a href="https://192.168.80.129:30001/" target="_blank" rel="noopener">https://192.168.80.128:30001/</a></p>
-<p><img src="https://image.focusprogram.top/20200401224832.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20200401224832.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <p>至此，Kubernetes搭建完毕</p>
 <h2 id="3-7-Dashboard中文版本安装-扩展"><a href="#3-7-Dashboard中文版本安装-扩展" class="headerlink" title="3.7 Dashboard中文版本安装(扩展)"></a>3.7 Dashboard中文版本安装(扩展)</h2><h3 id="3-7-1-卸载Dashboard-v2-0版本"><a href="#3-7-1-卸载Dashboard-v2-0版本" class="headerlink" title="3.7.1 卸载Dashboard:v2.0版本"></a>3.7.1 卸载Dashboard:v2.0版本</h3><h4 id="3-7-1-1-卸载Dashboard"><a href="#3-7-1-1-卸载Dashboard" class="headerlink" title="3.7.1.1 卸载Dashboard"></a>3.7.1.1 卸载Dashboard</h4><div class="hljs"><pre><code class="hljs powershell"><span class="hljs-variable">$</span> kubectl delete <span class="hljs-operator">-f</span> kubernetes<span class="hljs-literal">-dashboard</span>.yaml</code></pre></div>
 
@@ -958,8 +958,8 @@ $ kubectl <span class="hljs-attribute">-s</span>=<span class="hljs-string">"http
 
 <h4 id="3-7-2-6-访问"><a href="#3-7-2-6-访问" class="headerlink" title="3.7.2.6 访问"></a>3.7.2.6 访问</h4><p>访问 <a href="https://192.168.80.128:30000/" target="_blank" rel="noopener">https://192.168.80.128:30000/</a></p>
 <p>使用 admin/admin 登陆</p>
-<p><img src="https://image.focusprogram.top/20200403155621.png" srcset="/img/loading.gif" alt=""></p>
-<p><img src="https://image.focusprogram.top/20200403155637.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20200403155621.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20200403155637.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <h2 id="3-8-安装常见问题汇总"><a href="#3-8-安装常见问题汇总" class="headerlink" title="3.8 安装常见问题汇总"></a>3.8 安装常见问题汇总</h2><h3 id="3-8-1-克隆github代码速度慢"><a href="#3-8-1-克隆github代码速度慢" class="headerlink" title="3.8.1 克隆github代码速度慢"></a>3.8.1 克隆github代码速度慢</h3><p>解决办法：</p>
 <div class="hljs"><pre><code class="hljs vim">http<span class="hljs-variable">s:</span>//github.<span class="hljs-keyword">com</span>/<span class="hljs-keyword">x</span> 换成 gi<span class="hljs-variable">t:</span>//github.<span class="hljs-keyword">com</span>/<span class="hljs-keyword">x</span></code></pre></div>
 
@@ -1010,8 +1010,8 @@ $ kubectl <span class="hljs-built_in">describe</span> pod kubernetes-dashboard -
 <p>Metrics API: 通过 Metrics API，您可以获得 node 或 pod 当前的资源使用情况（但是不存储）。</p>
 <p>metres-server比 heapster 优势在于： 访问不需要 apiserver 的代理机制，提供认证和授权等; 很多集群内组件依赖它（HPA,scheduler,kubectl top），因此它应该在集群中默认运行</p>
 </blockquote>
-<h2 id="4-1-Kubernetes安装版本信息"><a href="#4-1-Kubernetes安装版本信息" class="headerlink" title="4.1 Kubernetes安装版本信息"></a>4.1 Kubernetes安装版本信息</h2><p><img src="https://image.focusprogram.top/20200402112923.png" srcset="/img/loading.gif" alt=""></p>
-<p><img src="https://image.focusprogram.top/20200402113046.png" srcset="/img/loading.gif" alt=""></p>
+<h2 id="4-1-Kubernetes安装版本信息"><a href="#4-1-Kubernetes安装版本信息" class="headerlink" title="4.1 Kubernetes安装版本信息"></a>4.1 Kubernetes安装版本信息</h2><p><img src="https://image.focusprogram.top/20200402112923.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20200402113046.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <h2 id="4-2-部署metrics-server"><a href="#4-2-部署metrics-server" class="headerlink" title="4.2 部署metrics-server"></a>4.2 部署metrics-server</h2><h3 id="4-2-1-下载metrics-server"><a href="#4-2-1-下载metrics-server" class="headerlink" title="4.2.1 下载metrics-server"></a>4.2.1 下载metrics-server</h3><div class="hljs"><pre><code class="hljs shell"><span class="hljs-meta">$</span><span class="bash"> <span class="hljs-built_in">cd</span> /data</span>
 
 <span class="hljs-meta">$</span><span class="bash"> git <span class="hljs-built_in">clone</span> https://github.com/kubernetes-incubator/metrics-server</span></code></pre></div>
@@ -1025,33 +1025,33 @@ metrics-<span class="hljs-keyword">server</span>-deployment.yaml: image: k8s.gcr
 <span class="hljs-meta"># 无法访问外网，修改为阿里云镜像</span>
 $ sed -i <span class="hljs-string">"s/image: .*/image: registry.cn-hangzhou.aliyuncs.com\/centosos\/metrics-server-amd64:v0.3.6/g"</span> metrics-<span class="hljs-keyword">server</span>-deployment.yaml</code></pre></div>
 
-<p><img src="https://image.focusprogram.top/20200402114356.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20200402114356.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <h3 id="4-2-3-安装metrics-server"><a href="#4-2-3-安装metrics-server" class="headerlink" title="4.2.3 安装metrics-server"></a>4.2.3 安装metrics-server</h3><div class="hljs"><pre><code class="hljs powershell"><span class="hljs-variable">$</span> kubectl create <span class="hljs-operator">-f</span> /<span class="hljs-keyword">data</span>/metrics<span class="hljs-literal">-server</span>/deploy/kubernetes/</code></pre></div>
 
-<p><img src="https://image.focusprogram.top/20200402114521.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20200402114521.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <p>查看pod是否运行</p>
 <div class="hljs"><pre><code class="hljs routeros">$ kubectl -n kube-system <span class="hljs-builtin-name">get</span> pods -l <span class="hljs-attribute">k8s-app</span>=metrics-server</code></pre></div>
 
-<p><img src="https://image.focusprogram.top/20200402114549.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20200402114549.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <p>查看pod的具体信息</p>
 <div class="hljs"><pre><code class="hljs gams"><span class="hljs-symbol">$</span> kubectl get pods -n kube-<span class="hljs-keyword">system</span> -o wide</code></pre></div>
 
-<p><img src="https://image.focusprogram.top/20200402114617.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20200402114617.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <p>验证是否安全成功查看 apiserver</p>
 <div class="hljs"><pre><code class="hljs routeros">$ kubectl <span class="hljs-builtin-name">get</span> apiservices</code></pre></div>
 
-<p><img src="https://image.focusprogram.top/20200402114655.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20200402114655.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <p>查看服务是否正常</p>
 <div class="hljs"><pre><code class="hljs crmsh">$ kubectl top <span class="hljs-keyword">node</span> <span class="hljs-title">出现error</span>: metrics not available yet
 
 <span class="hljs-comment">## 查看pod信息诊断</span>
 $ kubectl describe pods metrics-server-bfcf447f7-vk9bm -n kube-system</code></pre></div>
 
-<p><img src="https://image.focusprogram.top/20200402115616.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20200402115616.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <div class="hljs"><pre><code class="hljs clean">## 查看日志
 $ kubectl logs metrics-server-bfcf447f7-vk9bm -n kube-<span class="hljs-keyword">system</span></code></pre></div>
 
-<p><img src="https://image.focusprogram.top/20200402115824.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20200402115824.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <h3 id="4-2-4-问题总结"><a href="#4-2-4-问题总结" class="headerlink" title="4.2.4 问题总结"></a>4.2.4 问题总结</h3><ul>
 <li><p>问题1：metrics-server默认使用节点hostname通过kubelet 10250端口获取数据，但是coredns里面没有该数据无法解析(10.96.0.10:53)，可以在metrics server启动命令添加参数 –kubelet-preferred-address-types=InternalIP 直接使用节点IP地址获取数据</p>
 </li>
@@ -1072,17 +1072,17 @@ $ kubectl logs metrics-server-bfcf447f7-vk9bm -n kube-<span class="hljs-keyword"
            - --kubelet-preferred-address-types=InternalIP,Hostname,InternalDNS,ExternalDNS,ExternalIP
            - --kubelet-insecure-tls</code></pre></div>
 
-<p><img src="https://image.focusprogram.top/20200402125032.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20200402125032.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <p>然后重新部署metrics-server</p>
 <div class="hljs"><pre><code class="hljs powershell"><span class="hljs-variable">$</span> kubectl apply <span class="hljs-operator">-f</span> /<span class="hljs-keyword">data</span>/metrics<span class="hljs-literal">-server</span>/deploy/kubernetes/metrics<span class="hljs-literal">-server</span><span class="hljs-literal">-deployment</span>.yaml</code></pre></div>
 
-<p><img src="https://image.focusprogram.top/20200402125008.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20200402125008.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <p>查看部署状态并验证</p>
 <div class="hljs"><pre><code class="hljs crmsh">$ kubectl get pods -n kube-system
 
 $ kubectl top <span class="hljs-keyword">node</span><span class="hljs-title"></span></code></pre></div>
 
-<p><img src="https://image.focusprogram.top/20200402132122.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20200402132122.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <font color="red">
 
 <p>出现该报错信息：the server is currently unable to handle the request (get nodes.metrics.k8s.io)</p>
@@ -1096,11 +1096,11 @@ $ kubectl top <span class="hljs-keyword">node</span><span class="hljs-title"></s
 
 - --enable-aggregator-routing</code></pre></div>
 
-<p><img src="https://image.focusprogram.top/20200402171535.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20200402171535.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <p>再次验证：</p>
-<p><img src="https://image.focusprogram.top/20200402163020.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20200402163020.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <h2 id="4-3-访问Dashboard查看metrics-server"><a href="#4-3-访问Dashboard查看metrics-server" class="headerlink" title="4.3 访问Dashboard查看metrics-server"></a>4.3 访问Dashboard查看metrics-server</h2><p>显示如下,部署成功：<a href="https://192.168.80.128:30001/" target="_blank" rel="noopener">https://192.168.80.128:30001/</a></p>
-<p><img src="https://image.focusprogram.top/20200402163034.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20200402163034.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 
             </article>
             <hr>

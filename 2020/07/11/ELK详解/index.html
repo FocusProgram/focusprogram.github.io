@@ -276,7 +276,7 @@
 <p>3.关联事件。多个数据源产生的日志进行联动分析，通过某种分析算法，就能够解决生活中各个问题。比如金融里的风险欺诈等。这个可以可以应用到无数领域了，取决于你的想象力。</p>
 <p>4.数据分析。 这个对于数据分析师，还有算法工程师都是有所裨益的。</p>
 </blockquote>
-<h1 id="3-ELK架构设计"><a href="#3-ELK架构设计" class="headerlink" title="3. ELK架构设计"></a>3. ELK架构设计</h1><p><img src="http://image.focusprogram.top/elk.png" srcset="/img/loading.gif" alt=""></p>
+<h1 id="3-ELK架构设计"><a href="#3-ELK架构设计" class="headerlink" title="3. ELK架构设计"></a>3. ELK架构设计</h1><p><img src="http://image.focusprogram.top/elk.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <h1 id="4-ELK搭建部署"><a href="#4-ELK搭建部署" class="headerlink" title="4. ELK搭建部署"></a>4. ELK搭建部署</h1><h2 id="4-1-环境准备"><a href="#4-1-环境准备" class="headerlink" title="4.1 环境准备"></a>4.1 环境准备</h2><h3 id="4-1-1-所需配置"><a href="#4-1-1-所需配置" class="headerlink" title="4.1.1 所需配置"></a>4.1.1 所需配置</h3><table>
 <thead>
 <tr>
@@ -382,7 +382,7 @@
 <div class="hljs"><pre><code class="hljs n1ql">$ chmod +x <span class="hljs-keyword">build</span>.sh &amp;&amp; ./<span class="hljs-keyword">build</span>.sh</code></pre></div>
 
 <p>构建成功显示如下：</p>
-<p><img src="http://image.focusprogram.top/20200511112646.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="http://image.focusprogram.top/20200511112646.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <p>测试是否成功启动</p>
 <div class="hljs"><pre><code class="hljs gams"><span class="hljs-symbol">$</span> curl http:<span class="hljs-comment">//localhost:9200</span></code></pre></div>
 
@@ -430,7 +430,7 @@ sysctl -<span class="hljs-keyword">a</span>|<span class="hljs-keyword">grep</spa
 &#125;</code></pre></div>
 
 <p>访问 <a href="http://192.168.80.130:9100/" target="_blank" rel="noopener">http://192.168.80.130:9100/</a>,显示如下，则说明elasticsearch-head启动成功</p>
-<p><img src="http://image.focusprogram.top/20200511113534.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="http://image.focusprogram.top/20200511113534.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <p><strong>注意事项：</strong></p>
 <ul>
 <li><ol>
@@ -675,7 +675,7 @@ DELETE product</code></pre></div>
 <span class="hljs-string">  &#125;</span>
 <span class="hljs-string">&#125;</span></code></pre></div>
 
-<h2 id="4-3-logstash"><a href="#4-3-logstash" class="headerlink" title="4.3 logstash"></a>4.3 logstash</h2><h3 id="4-3-1-处理过程"><a href="#4-3-1-处理过程" class="headerlink" title="4.3.1 处理过程"></a>4.3.1 处理过程</h3><p><img src="http://image.focusprogram.top/20200511114553.png" srcset="/img/loading.gif" alt=""></p>
+<h2 id="4-3-logstash"><a href="#4-3-logstash" class="headerlink" title="4.3 logstash"></a>4.3 logstash</h2><h3 id="4-3-1-处理过程"><a href="#4-3-1-处理过程" class="headerlink" title="4.3.1 处理过程"></a>4.3.1 处理过程</h3><p><img src="http://image.focusprogram.top/20200511114553.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <p>如上图，Logstash的数据处理过程主要包括：Inputs, Filters, Outputs 三部分， 另外在Inputs和Outputs中可以使用Codecs对数据格式进行处理。这四个部分均以插件形式存在，用户通过定义pipeline配置文件，设置需要使用的input，filter，output, codec插件，以实现特定的数据采集，数据处理，数据输出等功能  </p>
 <ul>
 <li><strong>Inputs</strong>：用于从数据源获取数据，常见的插件如file, syslog, redis, beats 等<a href="https://www.elastic.co/guide/en/logstash/5.6/input-plugins.html" target="_blank" rel="noopener">详细参考</a></li>
@@ -863,7 +863,7 @@ DELETE product</code></pre></div>
 <div class="hljs"><pre><code class="hljs n1ql">$ chmod +x <span class="hljs-keyword">build</span>.sh &amp;&amp; ./<span class="hljs-keyword">build</span>.sh</code></pre></div>
 
 <p>查看启动日志，发现数据库两个表数据已经成功同步,每当数据库指定表中插入数据时，数据会在设定的同步时间内同步到elasticsearch中。目前设置的同步策略为一分钟同步一次</p>
-<p><img src="http://image.focusprogram.top/20200511125914.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="http://image.focusprogram.top/20200511125914.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <h2 id="4-4-kibana"><a href="#4-4-kibana" class="headerlink" title="4.4 kibana"></a>4.4 kibana</h2><blockquote>
 <p>Kibana 是一款开源的数据分析和可视化平台，它是 Elastic Stack 成员之一，设计用于和 Elasticsearch 协作。您可以使用 Kibana 对 Elasticsearch 索引中的数据进行搜索、查看、交互操作。您可以很方便的利用图表、表格及地图对数据进行多元化的分析和呈现。</p>
 <p>Kibana 可以使大数据通俗易懂。它很简单，基于浏览器的界面便于您快速创建和分享动态数据仪表板来追踪 Elasticsearch 的实时数据变化。</p>
@@ -900,14 +900,14 @@ DELETE product</code></pre></div>
 <div class="hljs"><pre><code class="hljs n1ql">$ chmod +x <span class="hljs-keyword">build</span>.sh &amp;&amp; ./<span class="hljs-keyword">build</span>.sh</code></pre></div>
 
 <p>成功构建，显示如下：</p>
-<p><img src="http://image.focusprogram.top/20200511130308.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="http://image.focusprogram.top/20200511130308.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <h3 id="4-4-3-访问Kibana"><a href="#4-4-3-访问Kibana" class="headerlink" title="4.4.3 访问Kibana"></a>4.4.3 访问Kibana</h3><p><a href="http://192.168.80.130:5601/status" target="_blank" rel="noopener">http://192.168.80.130:5601/status</a></p>
-<p><img src="http://image.focusprogram.top/20200511133846.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="http://image.focusprogram.top/20200511133846.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <p><a href="http://192.168.80.130:5601/" target="_blank" rel="noopener">http://192.168.80.130:5601/</a></p>
-<p><img src="http://image.focusprogram.top/20200511130538.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="http://image.focusprogram.top/20200511130538.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <p>创建索引user、product</p>
-<p><img src="http://image.focusprogram.top/20200511132114.png" srcset="/img/loading.gif" alt=""></p>
-<p><img src="http://image.focusprogram.top/20200511132218.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="http://image.focusprogram.top/20200511132114.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
+<p><img src="http://image.focusprogram.top/20200511132218.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 
             </article>
             <hr>

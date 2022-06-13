@@ -288,7 +288,7 @@
 </ul>
 </blockquote>
 <h2 id="2-2-原理解析"><a href="#2-2-原理解析" class="headerlink" title="2.2 原理解析"></a>2.2 原理解析</h2><p><strong>实现原理一：</strong></p>
-<p><img src="https://image.focusprogram.top/redis-lock.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/redis-lock.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <p><strong>过程分析</strong>：</p>
 <ul>
 <li>1.客户端获取锁，通过setnx(lockkey,currenttime+timeout)命令，将key为lockkey的value设置为当前时间+锁超时时间</li>
@@ -316,7 +316,7 @@
 <p>为解决以上设计存在的弊端，优化设计，采用双重防死锁解决死锁问题</p>
 </blockquote>
 <p><strong>实现原理二：</strong></p>
-<p><img src="https://image.focusprogram.top/redis-lock-2.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/redis-lock-2.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <p><strong>过程分析：</strong></p>
 <ul>
 <li>1.当A通过setnx(lockkey,currenttime+timeout)命令能成功设置lockkey时，即返回值为1，过程与原理1一致；</li>

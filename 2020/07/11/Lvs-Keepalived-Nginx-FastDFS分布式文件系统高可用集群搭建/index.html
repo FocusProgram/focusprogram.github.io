@@ -263,10 +263,10 @@
             <article class="markdown-body">
               <p>高可用文件服务器架构设计图</p>
 <hr>
-<p><img src="https://image.focusprogram.top/FastDFS.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/FastDFS.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <p>所需服务器配置</p>
 <hr>
-<p><img src="https://image.focusprogram.top/20191127143513.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20191127143513.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <blockquote>
 <p>==192.168.80.128==       和 ==192.168.80.129==两台服务器上搭建Nginx+Keepalived</p>
 </blockquote>
@@ -827,7 +827,7 @@ $ chmod +x /etc/rc.d/rc.local
 $ chmod 755 /etc/rc.d/rc.local</code></pre></div>
 
 <p>查看是否配置成功</p>
-<p><img src="https://image.focusprogram.top/20191127234906.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20191127234906.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <blockquote>
 <p>启动Keepalived</p>
 </blockquote>
@@ -838,9 +838,9 @@ $ <span class="hljs-meta-keyword">/etc/</span>init.d/keepalived restart <span cl
 $ <span class="hljs-meta-keyword">/etc/</span>init.d/keepalived stop <span class="hljs-meta"># 停止</span></code></pre></div>
 
 <p>检查主keepalived 启动后的配置情况<br>ip a<br>如果网卡下出现192.168.80.80（VIP）说明主已经启动成功</p>
-<p><img src="https://image.focusprogram.top/20191127235938.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20191127235938.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <p>检查备keepalived 启动后的配置情况<br>ip a<br>备服务器的网卡下没有出现192.168.80.80（VIP）的ip，说明备服务正常<br>注:如果这里也出现了VIP，那么说明裂脑了，需要检查防火墙是否配置正确；是否允许了vrrp的多播通讯</p>
-<p><img src="https://image.focusprogram.top/20191128000041.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20191128000041.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <blockquote>
 <p>FastDFS集群搭建</p>
 </blockquote>
@@ -1080,8 +1080,8 @@ exec <span class="hljs-regexp">/usr/</span>bin<span class="hljs-regexp">/fdfs_st
 <p>检测集群</p>
 <div class="hljs"><pre><code class="hljs awk">$ <span class="hljs-regexp">/usr/</span>bin<span class="hljs-regexp">/fdfs_monitor /</span>etc<span class="hljs-regexp">/fdfs/</span>storage.conf</code></pre></div>
 
-<p><img src="https://image.focusprogram.top/Tracker-one.png" srcset="/img/loading.gif" alt=""></p>
-<p><img src="https://image.focusprogram.top/Tracker-two.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/Tracker-one.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/Tracker-two.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <p>客户端测试上传</p>
 <div class="hljs"><pre><code class="hljs gradle">#保存后测试,返回ID表示成功 如：group1<span class="hljs-regexp">/M00/</span><span class="hljs-number">00</span><span class="hljs-regexp">/00/</span>xx.tar.gz
 
@@ -1089,10 +1089,10 @@ $ fdfs_upload_file <span class="hljs-regexp">/etc/</span>fdfs<span class="hljs-r
 
 $ <span class="hljs-regexp">/usr/</span>bin<span class="hljs-regexp">/fdfs_test /</span>etc<span class="hljs-regexp">/fdfs/</span>client.conf upload <span class="hljs-regexp">/data/</span>soft<span class="hljs-regexp">/nginx-1.16.1.tar.gz</span></code></pre></div>
 
-<p><img src="https://image.focusprogram.top/20191130184341.png" srcset="/img/loading.gif" alt=""></p>
-<p><img src="https://image.focusprogram.top/20191130184409.png" srcset="/img/loading.gif" alt=""></p>
-<p><img src="https://image.focusprogram.top/20191130184433.png" srcset="/img/loading.gif" alt=""></p>
-<p><img src="https://image.focusprogram.top/20191130184703.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20191130184341.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20191130184409.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20191130184433.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20191130184703.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <p>若四台机器均可正常访问图片,至此两台Tracker+四台Storage正式搭建成功</p>
 <blockquote>
 <p>配置文件访问的负载均衡和高可用</p>
@@ -1234,7 +1234,7 @@ $ <span class="hljs-regexp">/usr/</span>bin<span class="hljs-regexp">/fdfs_test 
 &#125;</code></pre></div>
 
 <p>通过VIP主机访问，访问成功，至此LVS+Keepalived+Nginx+FastDFS高可用集群全部搭建成功</p>
-<p><img src="https://image.focusprogram.top/20191130191442.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/20191130191442.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
 <blockquote>
 <p>Fast分组集群</p>
 </blockquote>
