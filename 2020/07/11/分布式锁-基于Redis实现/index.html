@@ -7,8 +7,8 @@
 
 <head>
   <meta charset="UTF-8">
-  <link rel="apple-touch-icon" sizes="76x76" href="/k-focusprogram.gitee.io/img/Mr.Kong.jpg">
-  <link rel="icon" type="image/png" href="/k-focusprogram.gitee.io/img/Mr.Kong.jpg">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/Mr.Kong.jpg">
+  <link rel="icon" type="image/png" href="/img/Mr.Kong.jpg">
   <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -23,7 +23,7 @@
 
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
-  <link  rel="stylesheet" href="/k-focusprogram.gitee.io/lib/hint/hint.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
 
   
     <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/dark.min.css" />
@@ -41,12 +41,12 @@
 <link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
 
 
-<link  rel="stylesheet" href="/k-focusprogram.gitee.io/css/main.css" />
+<link  rel="stylesheet" href="/css/main.css" />
 
 <!-- 自定义样式保持在最底部 -->
 
 
-  <script  src="/k-focusprogram.gitee.io/js/utils.js" ></script>
+  <script  src="/js/utils.js" ></script>
 <meta name="generator" content="Hexo 4.2.1"></head>
 
 
@@ -55,7 +55,7 @@
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand"
-       href="/k-focusprogram.gitee.io/">&nbsp;<strong>Mr.Kong</strong>&nbsp;</a>
+       href="/">&nbsp;<strong>Mr.Kong</strong>&nbsp;</a>
 
     <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
             data-target="#navbarSupportedContent"
@@ -72,7 +72,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/k-focusprogram.gitee.io/">
+              <a class="nav-link" href="/">
                 <i class="iconfont icon-home-fill"></i>
                 首页
               </a>
@@ -84,7 +84,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/k-focusprogram.gitee.io/archives/">
+              <a class="nav-link" href="/archives/">
                 <i class="iconfont icon-archive-fill"></i>
                 归档
               </a>
@@ -96,7 +96,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/k-focusprogram.gitee.io/categories/">
+              <a class="nav-link" href="/categories/">
                 <i class="iconfont icon-category-fill"></i>
                 分类
               </a>
@@ -108,7 +108,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/k-focusprogram.gitee.io/tags/">
+              <a class="nav-link" href="/tags/">
                 <i class="iconfont icon-tags-fill"></i>
                 标签
               </a>
@@ -120,7 +120,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/k-focusprogram.gitee.io/links/">
+              <a class="nav-link" href="/links/">
                 <i class="iconfont icon-link-fill"></i>
                 友链
               </a>
@@ -132,7 +132,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/k-focusprogram.gitee.io/about/">
+              <a class="nav-link" href="/about/">
                 <i class="iconfont icon-user-fill"></i>
                 关于
               </a>
@@ -182,7 +182,7 @@
 </nav>
 
     <div class="view intro-2" id="background" parallax=true
-         style="background: url('/k-focusprogram.gitee.io/img/neight.jpg') no-repeat center center;
+         style="background: url('/img/neight.jpg') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
@@ -288,7 +288,7 @@
 </ul>
 </blockquote>
 <h2 id="2-2-原理解析"><a href="#2-2-原理解析" class="headerlink" title="2.2 原理解析"></a>2.2 原理解析</h2><p><strong>实现原理一：</strong></p>
-<p><img src="https://image.focusprogram.top/redis-lock.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/redis-lock.png" srcset="/img/loading.gif" alt=""></p>
 <p><strong>过程分析</strong>：</p>
 <ul>
 <li>1.客户端获取锁，通过setnx(lockkey,currenttime+timeout)命令，将key为lockkey的value设置为当前时间+锁超时时间</li>
@@ -316,7 +316,7 @@
 <p>为解决以上设计存在的弊端，优化设计，采用双重防死锁解决死锁问题</p>
 </blockquote>
 <p><strong>实现原理二：</strong></p>
-<p><img src="https://image.focusprogram.top/redis-lock-2.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt=""></p>
+<p><img src="https://image.focusprogram.top/redis-lock-2.png" srcset="/img/loading.gif" alt=""></p>
 <p><strong>过程分析：</strong></p>
 <ul>
 <li>1.当A通过setnx(lockkey,currenttime+timeout)命令能成功设置lockkey时，即返回值为1，过程与原理1一致；</li>
@@ -1242,7 +1242,7 @@ public <span class="hljs-keyword">class</span> RedisLockAspect &#123;
                   <div class="post-meta mr-3">
                     <i class="iconfont icon-category"></i>
                     
-                      <a class="hover-with-bg" href="/k-focusprogram.gitee.io/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">微服务</a>
+                      <a class="hover-with-bg" href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">微服务</a>
                     
                   </div>
                 
@@ -1250,9 +1250,9 @@ public <span class="hljs-keyword">class</span> RedisLockAspect &#123;
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/k-focusprogram.gitee.io/tags/SpringCloud/">SpringCloud</a>
+                      <a class="hover-with-bg" href="/tags/SpringCloud/">SpringCloud</a>
                     
-                      <a class="hover-with-bg" href="/k-focusprogram.gitee.io/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">微服务</a>
+                      <a class="hover-with-bg" href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">微服务</a>
                     
                   </div>
                 
@@ -1265,7 +1265,7 @@ public <span class="hljs-keyword">class</span> RedisLockAspect &#123;
                   <div class="post-prev col-6">
                     
                     
-                      <a href="/k-focusprogram.gitee.io/2020/07/11/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81-%E5%9F%BA%E4%BA%8EZookeeper%E5%AE%9E%E7%8E%B0/">
+                      <a href="/2020/07/11/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81-%E5%9F%BA%E4%BA%8EZookeeper%E5%AE%9E%E7%8E%B0/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">分布式锁-基于Zookeeper实现</span>
                         <span class="visible-mobile">上一篇</span>
@@ -1275,7 +1275,7 @@ public <span class="hljs-keyword">class</span> RedisLockAspect &#123;
                   <div class="post-next col-6">
                     
                     
-                      <a href="/k-focusprogram.gitee.io/2020/07/11/Tx-Lcn/">
+                      <a href="/2020/07/11/Tx-Lcn/">
                         <span class="hidden-mobile">Tx-Lcn</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
@@ -1436,7 +1436,7 @@ public <span class="hljs-keyword">class</span> RedisLockAspect &#123;
     
   <!-- 备案信息 -->
   <div class="beian">
-    <img src="https://image.focusprogram.top/icp_beian.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" style="margin-top:-5px">
+    <img src="https://image.focusprogram.top/icp_beian.png" srcset="/img/loading.gif" style="margin-top:-5px">
     <a href="http://beian.miit.gov.cn/" target="_blank"
        rel="nofollow noopener">苏ICP备19063834号-1</a>
     
@@ -1448,7 +1448,7 @@ public <span class="hljs-keyword">class</span> RedisLockAspect &#123;
       >
         <span class="beian-police-sep">&nbsp;|&nbsp;</span>
         
-          <img src="/k-focusprogram.gitee.io/img/police_beian.png" srcset="/k-focusprogram.gitee.io/img/loading.gif" alt="police-icon" />
+          <img src="/img/police_beian.png" srcset="/img/loading.gif" alt="police-icon" />
         
         <span>苏公安网备44030602004695号</span>
       </a>
@@ -1463,20 +1463,20 @@ public <span class="hljs-keyword">class</span> RedisLockAspect &#123;
 <!-- SCRIPTS -->
 <script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
 <script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
-<script  src="/k-focusprogram.gitee.io/js/debouncer.js" ></script>
-<script  src="/k-focusprogram.gitee.io/js/main.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
 
 <!-- Plugins -->
 
 
   
-    <script  src="/k-focusprogram.gitee.io/js/lazyload.js" ></script>
+    <script  src="/js/lazyload.js" ></script>
   
 
 
 
   <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
-  <script  src="/k-focusprogram.gitee.io/js/clipboard-use.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
 
 
 
@@ -1550,9 +1550,9 @@ public <span class="hljs-keyword">class</span> RedisLockAspect &#123;
 
 
 
-  <script  src="/k-focusprogram.gitee.io/js/local-search.js" ></script>
+  <script  src="/js/local-search.js" ></script>
   <script>
-    var path = "/k-focusprogram.gitee.io/local-search.xml";
+    var path = "/local-search.xml";
     var inputArea = document.querySelector("#local-search-input");
     inputArea.onclick = function () {
       searchFunc(path, 'local-search-input', 'local-search-result');
