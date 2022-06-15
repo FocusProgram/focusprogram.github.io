@@ -1,0 +1,1027 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head><!-- hexo injector head_begin start -->
+  <script defer src="/js/post_head.js"></script>
+<!-- hexo injector head_begin end -->
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/Mr.Kong.jpg">
+  <link rel="icon" href="/img/Mr.Kong.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Mr.Kong">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="ELK详解  1. 什么是ELK? ELK 是elastic公司提供的一套完整的日志收集以及展示的解决方案，是三个产品的首字母缩写，分别是ElasticSearch、Logstash 和 Kibana。 ElasticSearch 简称ES，它是一个实时的分布式搜索和分析引擎，它可以用于全文搜索，结构化搜索以及分析。它是一个建立在全文搜索引擎 Apache Lucene 基础上的搜索引擎，使用 J">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ELK详解">
+<meta property="og:url" content="http://yoursite.com/2020/07/11/ELK%E8%AF%A6%E8%A7%A3/index.html">
+<meta property="og:site_name" content="Mr.Kong Blog">
+<meta property="og:description" content="ELK详解  1. 什么是ELK? ELK 是elastic公司提供的一套完整的日志收集以及展示的解决方案，是三个产品的首字母缩写，分别是ElasticSearch、Logstash 和 Kibana。 ElasticSearch 简称ES，它是一个实时的分布式搜索和分析引擎，它可以用于全文搜索，结构化搜索以及分析。它是一个建立在全文搜索引擎 Apache Lucene 基础上的搜索引擎，使用 J">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://image.focusprogram.top/elk.png">
+<meta property="article:published_time" content="2020-07-11T08:26:11.000Z">
+<meta property="article:modified_time" content="2022-06-11T03:09:45.177Z">
+<meta property="article:author" content="Mr.Kong">
+<meta property="article:tag" content="SpringCloud">
+<meta property="article:tag" content="微服务">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://image.focusprogram.top/elk.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>ELK详解 - Mr.Kong Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"yoursite.com","root":"/","version":"1.9.1","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":false,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":"ture","follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Mr.Kong</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-bookmark-fill"></i>
+                开源地址
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" target="_blank" rel="noopener" href="https://gitee.com/FocusProgram/">
+                    
+                    Gitee
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" target="_blank" rel="noopener" href="https://github.com/FocusProgram/">
+                    
+                    GitHub
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/neight.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="ELK详解"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-07-11 16:26" pubdate>
+          2020年7月11日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          15k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          126 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="padding-left: 2rem; margin-right: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">ELK详解</h1>
+            
+            <div class="markdown-body">
+              
+              <p><strong>ELK详解</strong></p>
+<hr>
+<h1 id="1-什么是ELK"><a href="#1-什么是ELK" class="headerlink" title="1. 什么是ELK?"></a>1. 什么是ELK?</h1><blockquote>
+<p>ELK 是elastic公司提供的一套完整的日志收集以及展示的解决方案，是三个产品的首字母缩写，分别是ElasticSearch、Logstash 和 Kibana。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/elastic/elasticsearch">ElasticSearch</a> 简称ES，它是一个实时的分布式搜索和分析引擎，它可以用于全文搜索，结构化搜索以及分析。它是一个建立在全文搜索引擎 Apache Lucene 基础上的搜索引擎，使用 Java 语言编写。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/elastic/logstash">Logstash</a> 是一个具有实时传输能力的数据收集引擎，用来进行数据收集（如：读取文本文件）、解析，并将数据发送给ES。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/elastic/kibana">Kibana</a> 为 Elasticsearch 提供了分析和可视化的 Web 平台。它可以在 Elasticsearch 的索引中查找，交互数据，并生成各种维度表格、图形。</p>
+</blockquote>
+<h1 id="2-ELK用途？"><a href="#2-ELK用途？" class="headerlink" title="2. ELK用途？"></a>2. ELK用途？</h1><blockquote>
+<p>传统意义上，ELK是作为替代Splunk的一个开源解决方案。Splunk 是日志分析领域的领导者。日志分析并不仅仅包括系统产生的错误日志，异常，也包括业务逻辑，或者任何文本类的分析。而基于日志的分析，能够在其上产生非常多的解决方案，譬如：</p>
+<p>1.问题排查。我们常说，运维和开发这一辈子无非就是和问题在战斗，所以这个说起来很朴实的四个字，其实是沉甸甸的。很多公司其实不缺钱，就要稳定，而要稳定，就要运维和开发能够快速的定位问题，甚至防微杜渐，把问题杀死在摇篮里。日志分析技术显然问题排查的基石。基于日志做问题排查，还有一个很帅的技术，叫全链路追踪，比如阿里的eagleeye<br>或者Google的dapper，也算是日志分析技术里的一种。</p>
+<p>2.监控和预警。 日志，监控，预警是相辅相成的。基于日志的监控，预警使得运维有自己的机械战队，大大节省人力以及延长运维的寿命。</p>
+<p>3.关联事件。多个数据源产生的日志进行联动分析，通过某种分析算法，就能够解决生活中各个问题。比如金融里的风险欺诈等。这个可以可以应用到无数领域了，取决于你的想象力。</p>
+<p>4.数据分析。 这个对于数据分析师，还有算法工程师都是有所裨益的。</p>
+</blockquote>
+<h1 id="3-ELK架构设计"><a href="#3-ELK架构设计" class="headerlink" title="3. ELK架构设计"></a>3. ELK架构设计</h1><p><img src="http://image.focusprogram.top/elk.png"></p>
+<h1 id="4-ELK搭建部署"><a href="#4-ELK搭建部署" class="headerlink" title="4. ELK搭建部署"></a>4. ELK搭建部署</h1><h2 id="4-1-环境准备"><a href="#4-1-环境准备" class="headerlink" title="4.1 环境准备"></a>4.1 环境准备</h2><h3 id="4-1-1-所需配置"><a href="#4-1-1-所需配置" class="headerlink" title="4.1.1 所需配置"></a>4.1.1 所需配置</h3><table>
+<thead>
+<tr>
+<th>服务名</th>
+<th>Docker ip地址</th>
+<th>宿主机ip地址</th>
+<th>开放端口</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>elasticsearch</td>
+<td>172.20.0.2</td>
+<td>192.168.80.130</td>
+<td>9200、9300</td>
+<td>搜索</td>
+</tr>
+<tr>
+<td>elasticsearch-head</td>
+<td>172.20.0.3</td>
+<td>192.168.80.130</td>
+<td>9100</td>
+<td>elasticsearch界面管理</td>
+</tr>
+<tr>
+<td>logstash</td>
+<td>172.20.0.4</td>
+<td>192.168.80.130</td>
+<td>5044</td>
+<td>日志收集</td>
+</tr>
+<tr>
+<td>kibana</td>
+<td>172.20.0.5</td>
+<td>192.168.80.130</td>
+<td>5061</td>
+<td>展示、监控</td>
+</tr>
+</tbody></table>
+<h3 id="4-1-2-创建网络"><a href="#4-1-2-创建网络" class="headerlink" title="4.1.2 创建网络"></a>4.1.2 创建网络</h3><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">$ docker<span class="hljs-built_in"> network </span>create <span class="hljs-attribute">--driver</span>=bridge <span class="hljs-attribute">--subnet</span>=172.30.0.1/16 elk-network<br></code></pre></td></tr></table></figure>
+
+<h2 id="4-2-elasticsearch"><a href="#4-2-elasticsearch" class="headerlink" title="4.2 elasticsearch"></a>4.2 elasticsearch</h2><blockquote>
+<p>Elasticsearch 是一个分布式可扩展的实时搜索和分析引擎,一个建立在全文搜索引擎 Apache Lucene(TM) 基础上的搜索引擎.当然 Elasticsearch 并不仅仅是 Lucene 那么简单，它不仅包括了全文搜索功能，还可以进行以下工作:</p>
+<p>分布式实时文件存储，并将每一个字段都编入索引，使其可以被搜索。<br>实时分析的分布式搜索引擎。<br>可以扩展到上百台服务器，处理PB级别的结构化或非结构化数据。</p>
+</blockquote>
+<h3 id="4-2-1-elasticsearch配置文件"><a href="#4-2-1-elasticsearch配置文件" class="headerlink" title="4.2.1 elasticsearch配置文件"></a>4.2.1 elasticsearch配置文件</h3><p>编辑配置文件es.yml</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs stylus">cluster<span class="hljs-selector-class">.name</span>: elasticsearch<br>node<span class="hljs-selector-class">.name</span>: es<br>network<span class="hljs-selector-class">.bind_host</span>: <span class="hljs-number">0.0</span>.<span class="hljs-number">0.0</span><br>network<span class="hljs-selector-class">.publish_host</span>: <span class="hljs-number">172.30</span>.<span class="hljs-number">0.2</span><br>http<span class="hljs-selector-class">.port</span>: <span class="hljs-number">9200</span><br>transport<span class="hljs-selector-class">.tcp</span><span class="hljs-selector-class">.port</span>: <span class="hljs-number">9300</span><br>http<span class="hljs-selector-class">.cors</span><span class="hljs-selector-class">.enabled</span>: true<br>http<span class="hljs-selector-class">.cors</span><span class="hljs-selector-class">.allow-origin</span>: <span class="hljs-string">&quot;*&quot;</span><br>node<span class="hljs-selector-class">.master</span>: true<br>node<span class="hljs-selector-class">.data</span>: true<br>discovery<span class="hljs-selector-class">.zen</span><span class="hljs-selector-class">.ping</span><span class="hljs-selector-class">.unicast</span><span class="hljs-selector-class">.hosts</span>: <span class="hljs-selector-attr">[<span class="hljs-string">&quot;172.30.0.2:9300&quot;</span>]</span><br>discovery<span class="hljs-selector-class">.zen</span><span class="hljs-selector-class">.minimum_master_nodes</span>: <span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="4-2-2-docker-compose配置文件"><a href="#4-2-2-docker-compose配置文件" class="headerlink" title="4.2.2 docker-compose配置文件"></a>4.2.2 docker-compose配置文件</h3><p>编辑docker-compose配置文件elasticsearch.yml</p>
+<figure class="highlight nestedtext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs nestedtext"><span class="hljs-attribute">version</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#x27;3&#x27;</span><br><span class="hljs-attribute">services</span><span class="hljs-punctuation">:</span><br>  <span class="hljs-attribute">elasticsearch</span><span class="hljs-punctuation">:</span><br>    <span class="hljs-attribute">image</span><span class="hljs-punctuation">:</span> <span class="hljs-string">elasticsearch</span><br>    <span class="hljs-attribute">container_name</span><span class="hljs-punctuation">:</span> <span class="hljs-string">elasticsearch</span><br>    <span class="hljs-attribute">restart</span><span class="hljs-punctuation">:</span> <span class="hljs-string">always</span><br>    <span class="hljs-attribute">networks</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-attribute">default</span><span class="hljs-punctuation">:</span><br>        <span class="hljs-attribute">ipv4_address</span><span class="hljs-punctuation">:</span> <span class="hljs-string">172.30.0.2</span><br>    <span class="hljs-attribute">ports</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">9200:9200</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">9300:9300</span><br>    <span class="hljs-attribute">volumes</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">./es.yml:/usr/share/elasticsearch/config/elasticsearch.yml</span><br>      <span class="hljs-comment"># 指定Ik分词器和拼音分词器可以支持中文和拼音搜索</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">./plugins:/usr/share/elasticsearch/plugins</span><br><br>  <span class="hljs-attribute">elasticsearch-head</span><span class="hljs-punctuation">:</span><br>    <span class="hljs-attribute">image</span><span class="hljs-punctuation">:</span> <span class="hljs-string">mobz/elasticsearch-head:5</span><br>    <span class="hljs-attribute">container_name</span><span class="hljs-punctuation">:</span> <span class="hljs-string">elasticsearch-head</span><br>    <span class="hljs-attribute">restart</span><span class="hljs-punctuation">:</span> <span class="hljs-string">always</span><br>    <span class="hljs-attribute">networks</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-attribute">default</span><span class="hljs-punctuation">:</span><br>        <span class="hljs-attribute">ipv4_address</span><span class="hljs-punctuation">:</span> <span class="hljs-string">172.30.0.3</span><br>    <span class="hljs-attribute">ports</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">9100:9100</span><br>    <span class="hljs-attribute">links</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">elasticsearch:elasticsearch</span><br><br><span class="hljs-attribute">networks</span><span class="hljs-punctuation">:</span><br>  <span class="hljs-attribute">default</span><span class="hljs-punctuation">:</span><br>    <span class="hljs-attribute">external</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-attribute">name</span><span class="hljs-punctuation">:</span> <span class="hljs-string">elk-network</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="4-2-3-构建脚本"><a href="#4-2-3-构建脚本" class="headerlink" title="4.2.3 构建脚本"></a>4.2.3 构建脚本</h3><p>编辑构建脚本build.sh</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs powershell">docker<span class="hljs-literal">-compose</span> <span class="hljs-operator">-f</span> elasticsearch.yml stop<br><br>docker<span class="hljs-literal">-compose</span> <span class="hljs-operator">-f</span> elasticsearch.yml <span class="hljs-built_in">rm</span> <span class="hljs-literal">--force</span><br><br>docker<span class="hljs-literal">-compose</span> <span class="hljs-operator">-f</span> elasticsearch.yml up <span class="hljs-literal">-d</span><br></code></pre></td></tr></table></figure>
+
+<p>执行构建脚本</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">chmod</span> +x build.sh &amp;&amp; ./build.sh</span><br></code></pre></td></tr></table></figure>
+
+<p>构建成功显示如下：</p>
+<p><img src="http://image.focusprogram.top/20200511112646.png"></p>
+<p>测试是否成功启动</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">$ curl http:<span class="hljs-regexp">//</span>localhost:<span class="hljs-number">9200</span><br></code></pre></td></tr></table></figure>
+
+<p>发现无法访问，查看日志，报错信息如下：</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vim"><span class="hljs-built_in">max</span> virtual memory areas <span class="hljs-keyword">vm</span>.max_map_count [<span class="hljs-number">65530</span>] <span class="hljs-keyword">is</span> too low, increase <span class="hljs-keyword">to</span> at least [<span class="hljs-number">262144</span>]<br></code></pre></td></tr></table></figure>
+
+<p>解决方法如下：</p>
+<ol>
+<li>临时生效，重启服务器后实效</li>
+</ol>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs vim">执行命令：<br><br>sysctl -<span class="hljs-keyword">w</span> <span class="hljs-keyword">vm</span>.max_map_count=<span class="hljs-number">262144</span><br><br>查看结果：<br><br>sysctl -<span class="hljs-keyword">a</span>|<span class="hljs-keyword">grep</span> <span class="hljs-keyword">vm</span>.max_map_count<br><br>显示：<br><br><span class="hljs-keyword">vm</span>.max_map_count = <span class="hljs-number">262144</span><br></code></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>永久有效</li>
+</ol>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs vim">$ <span class="hljs-keyword">vim</span> /etc/sysctl.<span class="hljs-keyword">conf</span><br><br><span class="hljs-keyword">vm</span>.max_map_count=<span class="hljs-number">262144</span><br></code></pre></td></tr></table></figure>
+
+<p>修改重新编译后，再次访问，显示如下，则启动成功：</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs actionscript">$ curl http:<span class="hljs-comment">//localhost:9200</span><br><br>&#123;<br>  <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;es&quot;</span>,<br>  <span class="hljs-string">&quot;cluster_name&quot;</span> : <span class="hljs-string">&quot;elasticsearch&quot;</span>,<br>  <span class="hljs-string">&quot;cluster_uuid&quot;</span> : <span class="hljs-string">&quot;uDlzhbhgT-6B9Zv_KGD29Q&quot;</span>,<br>  <span class="hljs-string">&quot;version&quot;</span> : &#123;<br>    <span class="hljs-string">&quot;number&quot;</span> : <span class="hljs-string">&quot;5.6.12&quot;</span>,<br>    <span class="hljs-string">&quot;build_hash&quot;</span> : <span class="hljs-string">&quot;cfe3d9f&quot;</span>,<br>    <span class="hljs-string">&quot;build_date&quot;</span> : <span class="hljs-string">&quot;2018-09-10T20:12:43.732Z&quot;</span>,<br>    <span class="hljs-string">&quot;build_snapshot&quot;</span> : <span class="hljs-literal">false</span>,<br>    <span class="hljs-string">&quot;lucene_version&quot;</span> : <span class="hljs-string">&quot;6.6.1&quot;</span><br>  &#125;,<br>  <span class="hljs-string">&quot;tagline&quot;</span> : <span class="hljs-string">&quot;You Know, for Search&quot;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>访问 <a target="_blank" rel="noopener" href="http://192.168.80.130:9100/">http://192.168.80.130:9100/</a>,显示如下，则说明elasticsearch-head启动成功</p>
+<p><img src="http://image.focusprogram.top/20200511113534.png"></p>
+<p><strong>注意事项：</strong></p>
+<ul>
+<li><ol>
+<li>修改vm.max_map_count参数，否则无法正常启动</li>
+</ol>
+</li>
+<li><ol start="2">
+<li>plugins中ik分词器插件版本要与elasticsearch版本保持一致，否则无法正常使用中文分词</li>
+</ol>
+</li>
+</ul>
+<h3 id="4-3-4-elasticsearch常用命令"><a href="#4-3-4-elasticsearch常用命令" class="headerlink" title="4.3.4 elasticsearch常用命令"></a>4.3.4 elasticsearch常用命令</h3><ol>
+<li>查询全部</li>
+</ol>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-built_in">GET</span> _search<br>&#123;<br>  <span class="hljs-string">&quot;query&quot;</span>: &#123;<br>    <span class="hljs-string">&quot;match_all&quot;</span>: &#123;&#125;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>查询索引以及索引映射类型</li>
+</ol>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-built_in">GET</span> user/_search<br><br><span class="hljs-built_in">GET</span> user/_mapping<br><br><span class="hljs-built_in">GET</span> product/_search<br><br><span class="hljs-built_in">GET</span> product/_mapping<br></code></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>删除索引</li>
+</ol>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs crmsh">DELETE <span class="hljs-keyword">user</span><br><br><span class="hljs-title">DELETE</span> product<br></code></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>重新指定文档类型映射IK分词类型</li>
+</ol>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><code class="hljs awk">POST <span class="hljs-regexp">/product/</span>_mapping/product<br>&#123;<br>      <span class="hljs-string">&quot;product&quot;</span>: &#123;<br>        <span class="hljs-string">&quot;properties&quot;</span>: &#123;<br>          <span class="hljs-string">&quot;@timestamp&quot;</span>: &#123;<br>            <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;date&quot;</span><br>          &#125;,<br>          <span class="hljs-string">&quot;@version&quot;</span>: &#123;<br>            <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;text&quot;</span>,<br>            <span class="hljs-string">&quot;fields&quot;</span>: &#123;<br>              <span class="hljs-string">&quot;keyword&quot;</span>: &#123;<br>                <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;keyword&quot;</span>,<br>                <span class="hljs-string">&quot;ignore_above&quot;</span>: <span class="hljs-number">256</span><br>              &#125;<br>            &#125;<br>          &#125;,<br>          <span class="hljs-string">&quot;attribute_list&quot;</span>: &#123;<br>            <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;text&quot;</span>,<br>            <span class="hljs-string">&quot;fields&quot;</span>: &#123;<br>              <span class="hljs-string">&quot;keyword&quot;</span>: &#123;<br>                <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;keyword&quot;</span>,<br>                <span class="hljs-string">&quot;ignore_above&quot;</span>: <span class="hljs-number">256</span><br>              &#125;<br>            &#125;<br>          &#125;,<br>          <span class="hljs-string">&quot;category_id&quot;</span>: &#123;<br>            <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;long&quot;</span><br>          &#125;,<br>          <span class="hljs-string">&quot;created_time&quot;</span>: &#123;<br>            <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;date&quot;</span><br>          &#125;,<br>          <span class="hljs-string">&quot;detail&quot;</span>: &#123;<br>            <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;text&quot;</span>,<br>             <span class="hljs-string">&quot;analyzer&quot;</span>:<span class="hljs-string">&quot;ik_smart&quot;</span>,<br>            <span class="hljs-string">&quot;search_analyzer&quot;</span>:<span class="hljs-string">&quot;ik_smart&quot;</span><br><br>          &#125;,<br>          <span class="hljs-string">&quot;id&quot;</span>: &#123;<br>            <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;long&quot;</span><br>          &#125;,<br>          <span class="hljs-string">&quot;main_image&quot;</span>: &#123;<br>            <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;text&quot;</span>,<br>            <span class="hljs-string">&quot;fields&quot;</span>: &#123;<br>              <span class="hljs-string">&quot;keyword&quot;</span>: &#123;<br>                <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;keyword&quot;</span>,<br>                <span class="hljs-string">&quot;ignore_above&quot;</span>: <span class="hljs-number">256</span><br>              &#125;<br>            &#125;<br>          &#125;,<br>          <span class="hljs-string">&quot;name&quot;</span>: &#123;<br>            <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;text&quot;</span>,<br>            <span class="hljs-string">&quot;analyzer&quot;</span>:<span class="hljs-string">&quot;ik_smart&quot;</span>,<br>            <span class="hljs-string">&quot;search_analyzer&quot;</span>:<span class="hljs-string">&quot;ik_smart&quot;</span><br><br>          &#125;,<br>          <span class="hljs-string">&quot;revision&quot;</span>: &#123;<br>            <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;long&quot;</span><br>          &#125;,<br>          <span class="hljs-string">&quot;status&quot;</span>: &#123;<br>            <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;long&quot;</span><br>          &#125;,<br>          <span class="hljs-string">&quot;sub_images&quot;</span>: &#123;<br>            <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;text&quot;</span>,<br>            <span class="hljs-string">&quot;fields&quot;</span>: &#123;<br>              <span class="hljs-string">&quot;keyword&quot;</span>: &#123;<br>                <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;keyword&quot;</span>,<br>                <span class="hljs-string">&quot;ignore_above&quot;</span>: <span class="hljs-number">256</span><br>              &#125;<br>            &#125;<br>          &#125;,<br>          <span class="hljs-string">&quot;subtitle&quot;</span>: &#123;<br>            <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;text&quot;</span>,<br>          <span class="hljs-string">&quot;analyzer&quot;</span>:<span class="hljs-string">&quot;ik_smart&quot;</span>,<br>         <span class="hljs-string">&quot;search_analyzer&quot;</span>:<span class="hljs-string">&quot;ik_smart&quot;</span><br><br>          &#125;,<br>          <span class="hljs-string">&quot;updated_time&quot;</span>: &#123;<br>            <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;date&quot;</span><br>          &#125;<br>        &#125;<br>      &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>添加自定义拼音和IK分词插件</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br></pre></td><td class="code"><pre><code class="hljs bash">PUT /product<br>&#123;<br>   <span class="hljs-string">&quot;settings&quot;</span>: &#123;<br>        <span class="hljs-string">&quot;analysis&quot;</span>: &#123;<br>            <span class="hljs-string">&quot;analyzer&quot;</span>: &#123;<br>                <span class="hljs-string">&quot;ik_smart_pinyin&quot;</span>: &#123;<br>                    <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;custom&quot;</span>,<br>                    <span class="hljs-string">&quot;tokenizer&quot;</span>: <span class="hljs-string">&quot;ik_smart&quot;</span>,<br>                    <span class="hljs-string">&quot;filter&quot;</span>: [<span class="hljs-string">&quot;my_pinyin&quot;</span>, <span class="hljs-string">&quot;word_delimiter&quot;</span>]<br>                &#125;,<br>                <span class="hljs-string">&quot;ik_max_word_pinyin&quot;</span>: &#123;<br>                    <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;custom&quot;</span>,<br>                    <span class="hljs-string">&quot;tokenizer&quot;</span>: <span class="hljs-string">&quot;ik_max_word&quot;</span>,<br>                    <span class="hljs-string">&quot;filter&quot;</span>: [<span class="hljs-string">&quot;my_pinyin&quot;</span>, <span class="hljs-string">&quot;word_delimiter&quot;</span>]<br>                &#125;<br>            &#125;,<br>            <span class="hljs-string">&quot;filter&quot;</span>: &#123;<br>                <span class="hljs-string">&quot;my_pinyin&quot;</span>: &#123;<br>                    <span class="hljs-string">&quot;type&quot;</span> : <span class="hljs-string">&quot;pinyin&quot;</span>,<br>                    <span class="hljs-string">&quot;keep_separate_first_letter&quot;</span> : <span class="hljs-literal">true</span>,<br>                    <span class="hljs-string">&quot;keep_full_pinyin&quot;</span> : <span class="hljs-literal">true</span>,<br>                    <span class="hljs-string">&quot;keep_original&quot;</span> : <span class="hljs-literal">true</span>,<br>                    <span class="hljs-string">&quot;limit_first_letter_length&quot;</span> : 16,<br>                    <span class="hljs-string">&quot;lowercase&quot;</span> : <span class="hljs-literal">true</span>,<br>                    <span class="hljs-string">&quot;remove_duplicated_term&quot;</span> : <span class="hljs-literal">true</span> <br>                &#125;<br>            &#125;<br>        &#125;<br>  &#125;<br>  <br>&#125;<br><br><span class="hljs-comment"># 重新指定文档类型映射自定义分词类型</span><br>POST /product/_mapping/product<br>&#123;<br>  <span class="hljs-string">&quot;product&quot;</span>: &#123;<br>	<span class="hljs-string">&quot;properties&quot;</span>: &#123;<br>	  <span class="hljs-string">&quot;@timestamp&quot;</span>: &#123;<br>		<span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;date&quot;</span><br>	  &#125;,<br>	  <span class="hljs-string">&quot;@version&quot;</span>: &#123;<br>		<span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;text&quot;</span>,<br>		<span class="hljs-string">&quot;fields&quot;</span>: &#123;<br>		  <span class="hljs-string">&quot;keyword&quot;</span>: &#123;<br>			<span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;keyword&quot;</span>,<br>			<span class="hljs-string">&quot;ignore_above&quot;</span>: 256<br>		  &#125;<br>		&#125;<br>	  &#125;,<br>	  <span class="hljs-string">&quot;attribute_list&quot;</span>: &#123;<br>		<span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;text&quot;</span>,<br>		<span class="hljs-string">&quot;fields&quot;</span>: &#123;<br>		  <span class="hljs-string">&quot;keyword&quot;</span>: &#123;<br>			<span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;keyword&quot;</span>,<br>			<span class="hljs-string">&quot;ignore_above&quot;</span>: 256<br>		  &#125;<br>		&#125;<br>	  &#125;,<br>	  <span class="hljs-string">&quot;category_id&quot;</span>: &#123;<br>		<span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;long&quot;</span><br>	  &#125;,<br>	  <span class="hljs-string">&quot;created_time&quot;</span>: &#123;<br>		<span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;date&quot;</span><br>	  &#125;,<br>	  <span class="hljs-string">&quot;detail&quot;</span>: &#123;<br>		<span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;text&quot;</span>,<br>		 <span class="hljs-string">&quot;analyzer&quot;</span>:<span class="hljs-string">&quot;ik_smart_pinyin&quot;</span>,<br>		<span class="hljs-string">&quot;search_analyzer&quot;</span>:<span class="hljs-string">&quot;ik_smart_pinyin&quot;</span><br><br>	  &#125;,<br>	  <span class="hljs-string">&quot;id&quot;</span>: &#123;<br>		<span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;long&quot;</span><br>	  &#125;,<br>	  <span class="hljs-string">&quot;main_image&quot;</span>: &#123;<br>		<span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;text&quot;</span>,<br>		<span class="hljs-string">&quot;fields&quot;</span>: &#123;<br>		  <span class="hljs-string">&quot;keyword&quot;</span>: &#123;<br>			<span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;keyword&quot;</span>,<br>			<span class="hljs-string">&quot;ignore_above&quot;</span>: 256<br>		  &#125;<br>		&#125;<br>	  &#125;,<br>	  <span class="hljs-string">&quot;name&quot;</span>: &#123;<br>		<span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;text&quot;</span>,<br>		<span class="hljs-string">&quot;analyzer&quot;</span>:<span class="hljs-string">&quot;ik_smart_pinyin&quot;</span>,<br>		<span class="hljs-string">&quot;search_analyzer&quot;</span>:<span class="hljs-string">&quot;ik_smart_pinyin&quot;</span><br><br>	  &#125;,<br>	  <span class="hljs-string">&quot;revision&quot;</span>: &#123;<br>		<span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;long&quot;</span><br>	  &#125;,<br>	  <span class="hljs-string">&quot;status&quot;</span>: &#123;<br>		<span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;long&quot;</span><br>	  &#125;,<br>	  <span class="hljs-string">&quot;sub_images&quot;</span>: &#123;<br>		<span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;text&quot;</span>,<br>		<span class="hljs-string">&quot;fields&quot;</span>: &#123;<br>		  <span class="hljs-string">&quot;keyword&quot;</span>: &#123;<br>			<span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;keyword&quot;</span>,<br>			<span class="hljs-string">&quot;ignore_above&quot;</span>: 256<br>		  &#125;<br>		&#125;<br>	  &#125;,<br>	  <span class="hljs-string">&quot;subtitle&quot;</span>: &#123;<br>		<span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;text&quot;</span>,<br>	  <span class="hljs-string">&quot;analyzer&quot;</span>:<span class="hljs-string">&quot;ik_smart&quot;</span>,<br>	 <span class="hljs-string">&quot;search_analyzer&quot;</span>:<span class="hljs-string">&quot;ik_smart&quot;</span><br><br>	  &#125;,<br>	  <span class="hljs-string">&quot;updated_time&quot;</span>: &#123;<br>		<span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;date&quot;</span><br>	  &#125;<br>	&#125;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="4-3-logstash"><a href="#4-3-logstash" class="headerlink" title="4.3 logstash"></a>4.3 logstash</h2><h3 id="4-3-1-处理过程"><a href="#4-3-1-处理过程" class="headerlink" title="4.3.1 处理过程"></a>4.3.1 处理过程</h3><p><img src="http://image.focusprogram.top/20200511114553.png"></p>
+<p>如上图，Logstash的数据处理过程主要包括：Inputs, Filters, Outputs 三部分， 另外在Inputs和Outputs中可以使用Codecs对数据格式进行处理。这四个部分均以插件形式存在，用户通过定义pipeline配置文件，设置需要使用的input，filter，output, codec插件，以实现特定的数据采集，数据处理，数据输出等功能  </p>
+<ul>
+<li><strong>Inputs</strong>：用于从数据源获取数据，常见的插件如file, syslog, redis, beats 等<a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/logstash/5.6/input-plugins.html">详细参考</a></li>
+<li><strong>Filters</strong>：用于处理数据如格式转换，数据派生等，常见的插件如grok, mutate, drop,  clone, geoip等<a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/logstash/5.6/output-plugins.html">详细参考</a>  </li>
+<li><strong>Outputs</strong>：用于数据输出，常见的插件如elastcisearch，file, graphite, statsd等<a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/logstash/5.6/filter-plugins.html">详细参考</a></li>
+<li><strong>Codecs</strong>：Codecs不是一个单独的流程，而是在输入和输出等插件中用于数据转换的模块，用于对数据进行编码处理，常见的插件如json，multiline<a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/logstash/5.6/codec-plugins.html">详细参考</a></li>
+</ul>
+<h3 id="4-3-2-执行模型"><a href="#4-3-2-执行模型" class="headerlink" title="4.3.2 执行模型"></a>4.3.2 执行模型</h3><ul>
+<li>每个Input启动一个线程，从对应数据源获取数据  </li>
+<li>Input会将数据写入一个队列：默认为内存中的有界队列（意外停止会导致数据丢失）。为了防止数丢失Logstash提供了两个特性：<ul>
+<li>Persistent Queues：通过磁盘上的queue来防止数据丢失</li>
+<li>Dead Letter Queues：保存无法处理的event（仅支持Elasticsearch作为输出源）</li>
+</ul>
+</li>
+<li>Logstash会有多个pipeline worker, 每一个pipeline worker会从队列中取一批数据，然后执行filter和output（worker数目及每次处理的数据量均由配置确定）</li>
+</ul>
+<h3 id="4-3-3-收集数据来源"><a href="#4-3-3-收集数据来源" class="headerlink" title="4.3.3 收集数据来源"></a>4.3.3 收集数据来源</h3><h4 id="4-3-3-1-kafka数据来源"><a href="#4-3-3-1-kafka数据来源" class="headerlink" title="4.3.3.1 kafka数据来源"></a>4.3.3.1 kafka数据来源</h4><p>编辑logstash_kafka.conf</p>
+<figure class="highlight puppet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs puppet"><span class="hljs-keyword">input</span> &#123;<br>  kafka &#123;<br>    <span class="hljs-attr">bootstrap_servers</span> =&gt; <span class="hljs-string">&quot;192.168.80.130:9092&quot;</span><br>    <span class="hljs-attr">topics</span> =&gt; [<span class="hljs-string">&quot;my_log&quot;</span>]<br>  &#125;<br>&#125;<br><span class="hljs-keyword">output</span> &#123;<br>    stdout &#123; <span class="hljs-attr">codec</span> =&gt; rubydebug &#125;<br>    <span class="hljs-keyword">elasticsearch</span> &#123;<br>       <span class="hljs-attr">hosts</span> =&gt; [<span class="hljs-string">&quot;192.168.80.130:9200&quot;</span>]<br>       <span class="hljs-attr">index</span> =&gt; <span class="hljs-string">&quot;my_log&quot;</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="4-3-3-2-tomcat数据来源"><a href="#4-3-3-2-tomcat数据来源" class="headerlink" title="4.3.3.2 tomcat数据来源"></a>4.3.3.2 tomcat数据来源</h4><p>编辑logstash_tomcat.conf</p>
+<figure class="highlight puppet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs puppet"><span class="hljs-keyword">input</span> &#123;<br>    <span class="hljs-comment"># 从文件读取日志信息 输送到控制台</span><br>    file &#123;<br>        <span class="hljs-attr">path</span> =&gt; <span class="hljs-string">&quot;/tomcat.logs&quot;</span><br>        <span class="hljs-attr">codec</span> =&gt; <span class="hljs-string">&quot;json&quot;</span> <span class="hljs-comment">## 以JSON格式读取日志</span><br>        <span class="hljs-attr">type</span> =&gt; <span class="hljs-string">&quot;elasticsearch&quot;</span><br>        <span class="hljs-attr">start_position</span> =&gt; <span class="hljs-string">&quot;beginning&quot;</span><br>    &#125;<br>&#125;<br><br><span class="hljs-comment"># filter &#123;</span><br><span class="hljs-comment">#</span><br><span class="hljs-comment"># &#125;</span><br><br><span class="hljs-keyword">output</span> &#123;<br>    <span class="hljs-comment"># 标准输出</span><br>    <span class="hljs-comment"># stdout &#123;&#125;</span><br>    <span class="hljs-comment"># 输出进行格式化，采用Ruby库来解析日志</span><br>     stdout &#123; <span class="hljs-attr">codec</span> =&gt; rubydebug &#125;<br>         <span class="hljs-keyword">elasticsearch</span> &#123;<br>        <span class="hljs-attr">hosts</span> =&gt; [<span class="hljs-string">&quot;192.168.80.130:9200&quot;</span>]<br>        <span class="hljs-attr">index</span> =&gt; <span class="hljs-string">&quot;tomcat-%&#123;+YYYY.MM.dd&#125;&quot;</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="4-3-3-3-mysql数据来源"><a href="#4-3-3-3-mysql数据来源" class="headerlink" title="4.3.3.3 mysql数据来源"></a>4.3.3.3 mysql数据来源</h4><p>编辑mysql_tables.conf</p>
+<figure class="highlight puppet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><code class="hljs puppet"><span class="hljs-keyword">input</span> &#123;<br>  jdbc &#123;<br>    <span class="hljs-attr">jdbc_driver_library</span> =&gt; <span class="hljs-string">&quot;/mysql-connector-java-5.1.46.jar&quot;</span><br>    <span class="hljs-attr">jdbc_driver_class</span> =&gt; <span class="hljs-string">&quot;com.mysql.jdbc.Driver&quot;</span><br>    <span class="hljs-attr">jdbc_connection_string</span> =&gt; <span class="hljs-string">&quot;jdbc:mysql://114.55.34.44:3306/elk&quot;</span><br>    <span class="hljs-attr">jdbc_user</span> =&gt; <span class="hljs-string">&quot;root&quot;</span><br>    <span class="hljs-attr">jdbc_password</span> =&gt; <span class="hljs-string">&quot;root&quot;</span><br>    <span class="hljs-attr">schedule</span> =&gt; <span class="hljs-string">&quot;* * * * *&quot;</span><br>    <span class="hljs-attr">statement</span> =&gt; <span class="hljs-string">&quot;SELECT * FROM user WHERE update_time &gt;= :sql_last_value&quot;</span><br>    <span class="hljs-attr">use_column_value</span> =&gt; <span class="hljs-keyword">true</span><br>    <span class="hljs-attr">tracking_column_type</span> =&gt; <span class="hljs-string">&quot;timestamp&quot;</span><br>    <span class="hljs-attr">tracking_column</span> =&gt; <span class="hljs-string">&quot;update_time&quot;</span><br>    <span class="hljs-attr">last_run_metadata_path</span> =&gt; <span class="hljs-string">&quot;syncpoint_table&quot;</span><br>    <span class="hljs-attr">type</span> =&gt; <span class="hljs-string">&quot;user&quot;</span><br>  &#125;<br><br>  <span class="hljs-keyword">jdbc</span> &#123;<br>    <span class="hljs-attr">jdbc_driver_library</span> =&gt; <span class="hljs-string">&quot;/mysql-connector-java-5.1.46.jar&quot;</span><br>    <span class="hljs-attr">jdbc_driver_class</span> =&gt; <span class="hljs-string">&quot;com.mysql.jdbc.Driver&quot;</span><br>    <span class="hljs-attr">jdbc_connection_string</span> =&gt; <span class="hljs-string">&quot;jdbc:mysql://114.55.34.44:3306/goods&quot;</span><br>    <span class="hljs-attr">jdbc_user</span> =&gt; <span class="hljs-string">&quot;root&quot;</span><br>    <span class="hljs-attr">jdbc_password</span> =&gt; <span class="hljs-string">&quot;root&quot;</span><br>    <span class="hljs-attr">schedule</span> =&gt; <span class="hljs-string">&quot;* * * * *&quot;</span><br>    <span class="hljs-attr">statement</span> =&gt; <span class="hljs-string">&quot;SELECT * FROM product WHERE updated_time &gt;= :sql_last_value&quot;</span><br>    <span class="hljs-attr">use_column_value</span> =&gt; <span class="hljs-keyword">true</span><br>    <span class="hljs-attr">tracking_column_type</span> =&gt; <span class="hljs-string">&quot;timestamp&quot;</span><br>    <span class="hljs-attr">tracking_column</span> =&gt; <span class="hljs-string">&quot;update_time&quot;</span><br>    <span class="hljs-attr">last_run_metadata_path</span> =&gt; <span class="hljs-string">&quot;syncpoint_table&quot;</span><br>    <span class="hljs-attr">type</span> =&gt; <span class="hljs-string">&quot;product&quot;</span><br>  &#125;<br><br>&#125;<br><br><span class="hljs-keyword">output</span> &#123;<br>    <br>    <span class="hljs-keyword">if</span> [<span class="hljs-built_in">type</span>] == <span class="hljs-string">&quot;user&quot;</span>&#123;     	<br>       elasticsearch &#123; <br>        <span class="hljs-comment"># ES的IP地址及端口</span><br>        <span class="hljs-attr">hosts</span> =&gt; [<span class="hljs-string">&quot;192.168.80.130:9200&quot;</span>]<br>        <span class="hljs-comment"># 索引名称 可自定义</span><br>        <span class="hljs-attr">index</span> =&gt; <span class="hljs-string">&quot;user&quot;</span> <br>        <span class="hljs-comment"># 需要关联的数据库中有有一个id字段，对应类型中的id</span><br>        <span class="hljs-attr">document_id</span> =&gt; <span class="hljs-string">&quot;%&#123;id&#125;&quot;</span><br>        <span class="hljs-attr">document_type</span> =&gt; <span class="hljs-string">&quot;user&quot;</span><br>       &#125;<br>    &#125;<br><br>    if [type] == <span class="hljs-string">&quot;product&quot;</span>&#123;<br>       <span class="hljs-keyword">elasticsearch</span> &#123;  <br>        <span class="hljs-comment"># ES的IP地址及端口</span><br>        <span class="hljs-attr">hosts</span> =&gt; [<span class="hljs-string">&quot;192.168.80.130:9200&quot;</span>]<br>        <span class="hljs-comment"># 索引名称 可自定义</span><br>        <span class="hljs-attr">index</span> =&gt; <span class="hljs-string">&quot;product&quot;</span> <br>        <span class="hljs-comment"># 需要关联的数据库中有有一个id字段，对应类型中的id</span><br>        <span class="hljs-attr">document_id</span> =&gt; <span class="hljs-string">&quot;%&#123;id&#125;&quot;</span><br>        <span class="hljs-attr">document_type</span> =&gt; <span class="hljs-string">&quot;product&quot;</span><br>       &#125;<br>    &#125;<br>    <br>    <span class="hljs-keyword">stdout</span> &#123;<br>        <span class="hljs-comment"># JSON格式输出</span><br>        <span class="hljs-attr">codec</span> =&gt; json_lines<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>配置文件说明</p>
+<figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs avrasm"><span class="hljs-symbol">jdbc_driver_library:</span> jdbc mysql 驱动的路径<br><span class="hljs-symbol">jdbc_driver_class:</span> 驱动类的名字，mysql 填 <span class="hljs-keyword">com</span>.mysql.jdbc.Driver 就好了<br><span class="hljs-symbol">jdbc_connection_string:</span> mysql 地址<br><span class="hljs-symbol">jdbc_user:</span> mysql 用户<br><span class="hljs-symbol">jdbc_password:</span> mysql 密码<br><span class="hljs-symbol">schedule:</span> 执行 sql 时机，类似 crontab 的调度<br><span class="hljs-symbol">statement:</span> 要执行的 sql，以 “:” 开头是定义的变量，可以通过 parameters 来设置变量，这里的 sql_last_value 是内置的变量，表示上一次 sql 执行中 update_time 的值，这里 update_time 条件是 &gt;= 因为时间有可能相等，没有等号可能会漏掉一些增量<br><span class="hljs-symbol">use_column_value:</span> 使用递增列的值<br><span class="hljs-symbol">tracking_column_type:</span> 递增字段的类型，numeric 表示数值类型, timestamp 表示时间戳类型<br><span class="hljs-symbol">tracking_column:</span> 递增字段的名称，这里使用 update_time 这一列，这列的类型是 timestamp<br><span class="hljs-symbol">last_run_metadata_path:</span> 同步点文件，这个文件记录了上次的同步点，重启时会读取这个文件，这个文件可以手动修改<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">logstash-<span class="hljs-keyword">input</span>-jdbc原理:<br><br>使用 logstash-<span class="hljs-keyword">input</span>-jdbc 插件读取 mysql 的数据，这个插件的工作原理比较简单，就是定时执行一个 <span class="hljs-keyword">sql</span>，然后将 <span class="hljs-keyword">sql</span> 执行的结果写入到流中，增量获取的方式没有通过 binlog 方式同步，而是用一个递增字段作为条件去查询，每次都记录当前查询的位置，由于递增的特性，只需要查询比当前大的记录即可获取这段时间内的全部增量，一般的递增字段有两种，AUTO_INCREMENT 的主键 id 和 <span class="hljs-keyword">ON</span> <span class="hljs-keyword">UPDATE</span> <span class="hljs-built_in">CURRENT_TIMESTAMP</span> 的 update_time 字段，id 字段只适用于那种只有插入没有更新的表，update_time 更加通用一些，建议在 mysql 表设计的时候都增加一个 update_time 字段<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-3-4-docker-compose配置文件"><a href="#4-3-4-docker-compose配置文件" class="headerlink" title="4.3.4 docker-compose配置文件"></a>4.3.4 docker-compose配置文件</h3><p>编辑docker-compose配置文件logstash.yml</p>
+<figure class="highlight nestedtext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs nestedtext"><span class="hljs-attribute">version</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#x27;3&#x27;</span><br><span class="hljs-attribute">services</span><span class="hljs-punctuation">:</span><br>  <span class="hljs-attribute">logstash</span><span class="hljs-punctuation">:</span><br>    <span class="hljs-attribute">image</span><span class="hljs-punctuation">:</span> <span class="hljs-string">logstash</span><br>    <span class="hljs-attribute">container_name</span><span class="hljs-punctuation">:</span> <span class="hljs-string">logstash</span><br>    <span class="hljs-attribute">restart</span><span class="hljs-punctuation">:</span> <span class="hljs-string">always</span><br>    <span class="hljs-attribute">networks</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-attribute">default</span><span class="hljs-punctuation">:</span><br>        <span class="hljs-attribute">ipv4_address</span><span class="hljs-punctuation">:</span> <span class="hljs-string">172.30.0.4</span><br>    <span class="hljs-attribute">ports</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">5044:5044</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">4560:4560</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">8080:8080</span><br>    <span class="hljs-attribute">volumes</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">./data:/data</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">./config:/config</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">./patterns:/opt/logstash/patterns</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">./logs/tomcat.logs:/logs/tomcat.logs</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">./java/mysql-connector-java-5.1.46.jar:/mysql-connector-java-5.1.46.jar</span><br>    <span class="hljs-attribute">external_links</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">elasticsearch:elasticsearch</span><br>    <span class="hljs-attribute">command</span><span class="hljs-punctuation">:</span> <span class="hljs-string">bash -c &quot;chmod +x /data &amp;&amp; logstash -f /config/mysql_tables.conf --path.data=/data&quot;</span><br><br><span class="hljs-attribute">networks</span><span class="hljs-punctuation">:</span><br>  <span class="hljs-attribute">default</span><span class="hljs-punctuation">:</span><br>    <span class="hljs-attribute">external</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-attribute">name</span><span class="hljs-punctuation">:</span> <span class="hljs-string">elk-network</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>注意事项：</strong></p>
+<ul>
+<li><p>logstash -f &#x2F;config&#x2F; 会启动config文件夹下全部需要同步数据来源的配置文件，但是需要在input中指定type进行不同来源的区分，在output进行区分输出</p>
+</li>
+<li><p>logstash -f &#x2F;config&#x2F;mysql_tables.conf 指定启动某个数据来源的配置文件</p>
+</li>
+</ul>
+<h3 id="4-3-5-构建脚本"><a href="#4-3-5-构建脚本" class="headerlink" title="4.3.5 构建脚本"></a>4.3.5 构建脚本</h3><p>编辑构建脚本build.sh</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs powershell">docker<span class="hljs-literal">-compose</span> <span class="hljs-operator">-f</span> logstash.yml stop<br><br>docker<span class="hljs-literal">-compose</span> <span class="hljs-operator">-f</span> logstash.yml <span class="hljs-built_in">rm</span> <span class="hljs-literal">--force</span><br><br>docker<span class="hljs-literal">-compose</span> <span class="hljs-operator">-f</span> logstash.yml up <span class="hljs-literal">-d</span><br></code></pre></td></tr></table></figure>
+
+<p>执行构建脚本</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">chmod</span> +x build.sh &amp;&amp; ./build.sh</span><br></code></pre></td></tr></table></figure>
+
+<p>查看启动日志，发现数据库两个表数据已经成功同步,每当数据库指定表中插入数据时，数据会在设定的同步时间内同步到elasticsearch中。目前设置的同步策略为一分钟同步一次</p>
+<p><img src="http://image.focusprogram.top/20200511125914.png"></p>
+<h2 id="4-4-kibana"><a href="#4-4-kibana" class="headerlink" title="4.4 kibana"></a>4.4 kibana</h2><blockquote>
+<p>Kibana 是一款开源的数据分析和可视化平台，它是 Elastic Stack 成员之一，设计用于和 Elasticsearch 协作。您可以使用 Kibana 对 Elasticsearch 索引中的数据进行搜索、查看、交互操作。您可以很方便的利用图表、表格及地图对数据进行多元化的分析和呈现。</p>
+<p>Kibana 可以使大数据通俗易懂。它很简单，基于浏览器的界面便于您快速创建和分享动态数据仪表板来追踪 Elasticsearch 的实时数据变化。</p>
+</blockquote>
+<h3 id="4-4-1-docker-compose配置文件"><a href="#4-4-1-docker-compose配置文件" class="headerlink" title="4.4.1 docker-compose配置文件"></a>4.4.1 docker-compose配置文件</h3><p>编辑kibana.yml配置文件</p>
+<figure class="highlight nestedtext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs nestedtext"><span class="hljs-attribute">version</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#x27;3&#x27;</span><br><span class="hljs-attribute">services</span><span class="hljs-punctuation">:</span><br>  <span class="hljs-attribute">kibana</span><span class="hljs-punctuation">:</span><br>    <span class="hljs-attribute">image</span><span class="hljs-punctuation">:</span> <span class="hljs-string">kibana</span><br>    <span class="hljs-attribute">container_name</span><span class="hljs-punctuation">:</span> <span class="hljs-string">kibana</span><br>    <span class="hljs-attribute">restart</span><span class="hljs-punctuation">:</span> <span class="hljs-string">always</span><br>    <span class="hljs-attribute">networks</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-attribute">default</span><span class="hljs-punctuation">:</span><br>        <span class="hljs-attribute">ipv4_address</span><span class="hljs-punctuation">:</span> <span class="hljs-string">172.30.0.5</span><br>    <span class="hljs-attribute">environment</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">ELASTICSEARCH_URL=http://172.30.0.2:9200</span><br>    <span class="hljs-attribute">ports</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">5601:5601</span><br>    <span class="hljs-attribute">external_links</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">elasticsearch:elasticsearch</span><br><br><span class="hljs-attribute">networks</span><span class="hljs-punctuation">:</span><br>  <span class="hljs-attribute">default</span><span class="hljs-punctuation">:</span><br>    <span class="hljs-attribute">external</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-attribute">name</span><span class="hljs-punctuation">:</span> <span class="hljs-string">elk-network</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="4-4-2-构建脚本"><a href="#4-4-2-构建脚本" class="headerlink" title="4.4.2 构建脚本"></a>4.4.2 构建脚本</h3><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs powershell">docker<span class="hljs-literal">-compose</span> <span class="hljs-operator">-f</span> kibana.yml stop<br><br>docker<span class="hljs-literal">-compose</span> <span class="hljs-operator">-f</span> kibana.yml <span class="hljs-built_in">rm</span> <span class="hljs-literal">--force</span><br><br>docker<span class="hljs-literal">-compose</span> <span class="hljs-operator">-f</span> kibana.yml up <span class="hljs-literal">-d</span><br></code></pre></td></tr></table></figure>
+
+<p>执行构建脚本</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">chmod</span> +x build.sh &amp;&amp; ./build.sh</span><br></code></pre></td></tr></table></figure>
+
+<p>成功构建，显示如下：</p>
+<p><img src="http://image.focusprogram.top/20200511130308.png"></p>
+<h3 id="4-4-3-访问Kibana"><a href="#4-4-3-访问Kibana" class="headerlink" title="4.4.3 访问Kibana"></a>4.4.3 访问Kibana</h3><p><a target="_blank" rel="noopener" href="http://192.168.80.130:5601/status">http://192.168.80.130:5601/status</a></p>
+<p><img src="http://image.focusprogram.top/20200511133846.png"></p>
+<p><a target="_blank" rel="noopener" href="http://192.168.80.130:5601/">http://192.168.80.130:5601/</a></p>
+<p><img src="http://image.focusprogram.top/20200511130538.png"></p>
+<p>创建索引user、product</p>
+<p><img src="http://image.focusprogram.top/20200511132114.png"></p>
+<p><img src="http://image.focusprogram.top/20200511132218.png"></p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" class="category-chain-item">微服务</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/SpringCloud/">#SpringCloud</a>
+      
+        <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">#微服务</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>ELK详解</div>
+      <div>http://yoursite.com/2020/07/11/ELK详解/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Mr.Kong</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年7月11日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - Mr.Kong">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/07/11/ELK-Kafka%E5%88%86%E5%B8%83%E5%BC%8F%E6%97%A5%E5%BF%97%E6%94%B6%E9%9B%86/" title="ELK-Kafka分布式日志收集">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">ELK-Kafka分布式日志收集</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/07/11/xxl-job/" title="xxl-job">
+                        <span class="hidden-mobile">xxl-job</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments">
+    
+  <div id="waline"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#waline', function() {
+      Fluid.utils.createCssLink('https://lib.baomitu.com/waline/2.5.1/waline.min.css')
+      Fluid.utils.createScript('https://lib.baomitu.com/waline/2.5.1/waline.min.js', function() {
+        var options = Object.assign(
+          {"serverURL":"https://waline-server-lake-five.vercel.app","path":"window.location.pathname","placeholder":"留下您想说的话吧(*^▽^*)","meta":["nick","mail","link"],"requiredMeta":["nick"],"visitor":true,"lang":"zh-CN","avatar":"robohash","emoji":["//unpkg.com/@waline/emojis@1.0.1/weibo"],"dark":"html[data-user-color-scheme=\"dark\"]","search":true,"recordIP":true,"highlighter":true,"wordLimit":0,"pageSize":10},
+          {
+            el: '#waline',
+            path: window.location.pathname
+          }
+        )
+        Waline.init(options);
+        Fluid.utils.waitElementVisible('#waline .vcontent', () => {
+          var imgSelector = '#waline .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://github.com/FocusProgram" target="_blank" rel="nofollow noopener"><span>Always persistent</span></a> <i class="iconfont icon-love"></i> <a href="https://gitee.com/FocusProgram/" target="_blank" rel="nofollow noopener"><span>Forever love</span></a> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      苏ICP备19063834号-1
+    </a>
+  </span>
+  
+    
+      <span>
+        <a
+          href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=44030602004695"
+          rel="nofollow noopener"
+          class="beian-police"
+          target="_blank"
+        >
+          
+            <span style="visibility: hidden; width: 0">|</span>
+            <img src="/img/police_beian.png" alt="police-icon"/>
+          
+          <span>苏公安网备44030602004695号</span>
+        </a>
+      </span>
+    
+  
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<!-- hexo injector body_end start -->
+  <script defer src="/js/daovoice.js"></script>
+<!-- hexo injector body_end end --></body>
+</html>

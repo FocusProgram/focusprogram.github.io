@@ -1,0 +1,985 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head><!-- hexo injector head_begin start -->
+  <script defer src="/js/post_head.js"></script>
+<!-- hexo injector head_begin end -->
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/Mr.Kong.jpg">
+  <link rel="icon" href="/img/Mr.Kong.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Mr.Kong">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Seata  1. 什么是Seata? Seata 是一款开源的分布式事务解决方案，致力于提供高性能和简单易用的分布式事务服务。Seata 将为用户提供了 AT、TCC、SAGA 和 XA事务模式，为用户打造一站式的分布式解决方案。微服务体系结构具有高性能和易于使用的分布式事务解决方案  2. 发展历史蚂蚁金服：  Xts：扩展事务服务。 蚂蚁金服中间件团队从2007年开始开发分布式事务中间件，该">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Seata">
+<meta property="og:url" content="http://yoursite.com/2020/07/11/Seata/index.html">
+<meta property="og:site_name" content="Mr.Kong Blog">
+<meta property="og:description" content="Seata  1. 什么是Seata? Seata 是一款开源的分布式事务解决方案，致力于提供高性能和简单易用的分布式事务服务。Seata 将为用户提供了 AT、TCC、SAGA 和 XA事务模式，为用户打造一站式的分布式解决方案。微服务体系结构具有高性能和易于使用的分布式事务解决方案  2. 发展历史蚂蚁金服：  Xts：扩展事务服务。 蚂蚁金服中间件团队从2007年开始开发分布式事务中间件，该">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://image.focusprogram.top/68747470733a2f2f63646e2e6e6c61726b2e636f6d2f6c61726b2f302f323031382f706e672f31383836322f313534353239363739313037342d33626365376263652d303235652d343563332d393338362d3762393531333564616465382e706e67.png">
+<meta property="article:published_time" content="2020-07-11T08:34:05.000Z">
+<meta property="article:modified_time" content="2022-06-11T03:16:12.549Z">
+<meta property="article:author" content="Mr.Kong">
+<meta property="article:tag" content="SpringCloud">
+<meta property="article:tag" content="微服务">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://image.focusprogram.top/68747470733a2f2f63646e2e6e6c61726b2e636f6d2f6c61726b2f302f323031382f706e672f31383836322f313534353239363739313037342d33626365376263652d303235652d343563332d393338362d3762393531333564616465382e706e67.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Seata - Mr.Kong Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"yoursite.com","root":"/","version":"1.9.1","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":false,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":"ture","follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Mr.Kong</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-bookmark-fill"></i>
+                开源地址
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" target="_blank" rel="noopener" href="https://gitee.com/FocusProgram/">
+                    
+                    Gitee
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" target="_blank" rel="noopener" href="https://github.com/FocusProgram/">
+                    
+                    GitHub
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/neight.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Seata"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-07-11 16:34" pubdate>
+          2020年7月11日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          13k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          105 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="padding-left: 2rem; margin-right: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Seata</h1>
+            
+            <div class="markdown-body">
+              
+              <p><strong>Seata</strong></p>
+<hr>
+<h2 id="1-什么是Seata"><a href="#1-什么是Seata" class="headerlink" title="1. 什么是Seata?"></a>1. 什么是Seata?</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/seata/seata">Seata</a> 是一款开源的分布式事务解决方案，致力于提供高性能和简单易用的分布式事务服务。Seata 将为用户提供了 AT、TCC、SAGA 和 XA<br>事务模式，为用户打造一站式的分布式解决方案。微服务体系结构具有高性能和易于使用的分布式事务解决方案</p>
+</blockquote>
+<h2 id="2-发展历史"><a href="#2-发展历史" class="headerlink" title="2. 发展历史"></a>2. 发展历史</h2><p><strong>蚂蚁金服：</strong></p>
+<ul>
+<li><p>Xts：扩展事务服务。 蚂蚁金服中间件团队从2007年开始开发分布式事务中间件，该中间件广泛应用于蚂蚁金服服务，解决了数据库和服务之间的数据一致性问题。</p>
+</li>
+<li><p>Dtx：分布式事务扩展。 自2013年以来，XTS 已经以 DTX 的名字发布在蚂蚁金服云上。</p>
+</li>
+</ul>
+<p><strong>阿里巴巴：</strong></p>
+<ul>
+<li><p>TXC：阿里巴巴中间件团队从2014年开始启动这个项目，以解决由于应用程序体系结构从单一向微型服务转变而导致的分布式事务问题</p>
+</li>
+<li><p>GTS：全球交易服务。 Txc 作为一个新名字 GTS 的阿里云中间件产品于2016年发布</p>
+</li>
+<li><p>Fescar：我们从2019年开始启动基于 txc &#x2F; gts 的开源项目 Fescar，以便在未来与社区密切合作</p>
+</li>
+<li><p>Seata：简单可扩展的自治事务架构。 蚂蚁金服加入了 Fescar，使它成为一个更加中立和开放的分布式交易社区，而 Fescar 被重命名为 Seata</p>
+</li>
+</ul>
+<h2 id="3-微服务中的分布式事务问题"><a href="#3-微服务中的分布式事务问题" class="headerlink" title="3. 微服务中的分布式事务问题"></a>3. 微服务中的分布式事务问题</h2><p>传统的单体应用的场景——电商购物。 其业务由3个模块构成（库存、订单和账户），这三个模块使用各自的本地数据源。</p>
+<p>在业务发生过程中，本地事务将保证数据的一致性。</p>
+<p><img src="https://image.focusprogram.top/68747470733a2f2f63646e2e6e6c61726b2e636f6d2f6c61726b2f302f323031382f706e672f31383836322f313534353239363737303234342d34636564663337652d396463362d346663302d613937662d6634323430623964383634302e706e67.png"></p>
+<p>微服务体系结构发生了变化。 上面提到的3个模块被设计成在3个不同数据源之上的3个服务(模式: 每个服务的数据库)。 本地事务自然而然地保证了每个服务中的数据一致性。</p>
+<p><img src="https://image.focusprogram.top/68747470733a2f2f63646e2e6e6c61726b2e636f6d2f6c61726b2f302f323031382f706e672f31383836322f313534353239363738313233312d34303239646139632d383830332d343361342d616332662d3663386231653265613434382e706e67.png"></p>
+<h2 id="4-Seata如何解决分布式事务？"><a href="#4-Seata如何解决分布式事务？" class="headerlink" title="4. Seata如何解决分布式事务？"></a>4. Seata如何解决分布式事务？</h2><h3 id="4-1-Seata解决分布式事务设计原理："><a href="#4-1-Seata解决分布式事务设计原理：" class="headerlink" title="4.1 Seata解决分布式事务设计原理："></a>4.1 Seata解决分布式事务设计原理：</h3><p><img src="https://image.focusprogram.top/68747470733a2f2f63646e2e6e6c61726b2e636f6d2f6c61726b2f302f323031382f706e672f31383836322f313534353239363739313037342d33626365376263652d303235652d343563332d393338362d3762393531333564616465382e706e67.png"></p>
+<h3 id="4-2-如何定义分布式事务："><a href="#4-2-如何定义分布式事务：" class="headerlink" title="4.2 如何定义分布式事务："></a>4.2 如何定义分布式事务：</h3><blockquote>
+<p>分布式事务是由一批分支事务组成的全局事务，通常分支事务就是本地事务。</p>
+</blockquote>
+<p><img src="https://image.focusprogram.top/68747470733a2f2f63646e2e6e6c61726b2e636f6d2f6c61726b2f302f323031382f706e672f31383836322f313534353031353435343937392d61313865313666362d656434312d343466312d396337612d6264383263346435666639392e706e67.png"></p>
+<h3 id="4-3-Seata有3个基本组件："><a href="#4-3-Seata有3个基本组件：" class="headerlink" title="4.3 Seata有3个基本组件："></a>4.3 Seata有3个基本组件：</h3><ul>
+<li>事务协调器（TC）：维护全局和分支事务的状态，驱动全局提交或回滚。</li>
+<li>事务管理器（TM）：定义全局事务的范围：开始全局事务，提交或回滚全局事务。</li>
+<li>资源管理器（RM）：管理分支事务的资源，与TC通信以注册分支事务和报告分支事务的状态，</li>
+</ul>
+<p><img src="https://image.focusprogram.top/68747470733a2f2f63646e2e6e6c61726b2e636f6d2f6c61726b2f302f323031382f706e672f31383836322f313534353031333931353238362d34613930663064662d356664612d343165312d393165302d3261613364333331633033352e706e67.png"></p>
+<h3 id="4-4-Seata管理分布式事务的典型生命周期："><a href="#4-4-Seata管理分布式事务的典型生命周期：" class="headerlink" title="4.4 Seata管理分布式事务的典型生命周期："></a>4.4 Seata管理分布式事务的典型生命周期：</h3><ul>
+<li><p>TM要求TC开始新的全局事务。 TC生成表示全局事务的XID。</p>
+</li>
+<li><p>XID通过微服务的调用链传播。</p>
+</li>
+<li><p>RM将本地事务注册为XID到TC的相应全局事务的分支。</p>
+</li>
+<li><p>TM要求TC提交或回滚XID的相应全局事务。</p>
+</li>
+<li><p>TC在XID的相应全局事务下驱动所有分支事务，以完成分支提交或回滚。</p>
+</li>
+</ul>
+<p><img src="https://image.focusprogram.top/68747470733a2f2f63646e2e6e6c61726b2e636f6d2f6c61726b2f302f323031382f706e672f31383836322f313534353239363931373838312d32366661626562392d373166612d346633652d386137612d6663333137643333383966342e706e67.png"></p>
+<h2 id="5-SpringCloud集成Seata"><a href="#5-SpringCloud集成Seata" class="headerlink" title="5. SpringCloud集成Seata"></a>5. SpringCloud集成Seata</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/FocusProgram/person-improve/tree/main/springcloud-seata/springcloud-jpa-seata">github源码参考地址</a></p>
+</blockquote>
+<h3 id="5-1-运行Seata"><a href="#5-1-运行Seata" class="headerlink" title="5.1 运行Seata"></a>5.1 运行Seata</h3><h4 id="5-1-1-Seata下载地址-https-github-com-seata-seata-releases"><a href="#5-1-1-Seata下载地址-https-github-com-seata-seata-releases" class="headerlink" title="5.1.1 Seata下载地址 https://github.com/seata/seata/releases"></a>5.1.1 Seata下载地址 <a target="_blank" rel="noopener" href="https://github.com/seata/seata/releases">https://github.com/seata/seata/releases</a></h4><h4 id="5-1-2-Seata配置文件"><a href="#5-1-2-Seata配置文件" class="headerlink" title="5.1.2 Seata配置文件"></a>5.1.2 Seata配置文件</h4><blockquote>
+<p>seata server所有的配置都在conf文件夹内，该文件夹内有两个文件我们必须要详细介绍下。</p>
+<p>seata server默认使用file（文件方式）进行存储事务日志、事务运行信息，我们可以通过-m db脚本参数的形式来指定，目前仅支持file、db这两种方式。</p>
+</blockquote>
+<p><strong>file.conf</strong></p>
+<p>该文件用于配置存储方式、透传事务信息的NIO等信息，默认对应registry.conf文件内的file方式配置。</p>
+<p><strong>registry.conf</strong></p>
+<p>seata server核心配置文件，可以通过该文件配置服务注册方式、配置读取方式。</p>
+<p>注册方式目前支持file 、nacos 、eureka、redis、zk、consul、etcd3、sofa等方式，默认为file，对应读取file.conf内的注册方式信息。</p>
+<p>读取配置信息的方式支持file、nacos 、apollo、zk、consul、etcd3等方式，默认为file，对应读取file.conf文件内的配置。</p>
+<h4 id="5-1-3-运行Seata"><a href="#5-1-3-运行Seata" class="headerlink" title="5.1.3 运行Seata"></a>5.1.3 运行Seata</h4><p><strong>windows环境下</strong></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus">seata-server<span class="hljs-selector-class">.bat</span> -<span class="hljs-selector-tag">p</span> <span class="hljs-number">8091</span> -m file<br></code></pre></td></tr></table></figure>
+
+<p><strong>Linux环境下</strong></p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs stata"><span class="hljs-keyword">sh</span> seata-server.<span class="hljs-keyword">sh</span> -p 8091 -<span class="hljs-keyword">m</span> <span class="hljs-keyword">file</span>                       #以前台运行方式运行seata<br><br>nohup <span class="hljs-keyword">sh</span> seata-server.<span class="hljs-keyword">sh</span> -p 8091 -<span class="hljs-keyword">h</span> 127.0.0.1 -<span class="hljs-keyword">m</span> <span class="hljs-keyword">file</span> &amp;&gt; seata.<span class="hljs-keyword">log</span> &amp;            #以后台方运行式启动seata<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>–host -h 指定绑定主机号，默认0.0.0.0</p>
+<p>–port -p 指定监听端口号，默认8091</p>
+<p>–storeMOde -m 日志存储方式（file、db）,默认file</p>
+</blockquote>
+<h3 id="5-2-初始化sql脚本"><a href="#5-2-初始化sql脚本" class="headerlink" title="5.2 初始化sql脚本"></a>5.2 初始化sql脚本</h3><figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><code class="hljs n1ql"># Account<br><span class="hljs-keyword">DROP</span> <span class="hljs-keyword">SCHEMA</span> <span class="hljs-keyword">IF</span> <span class="hljs-keyword">EXISTS</span> db_account;<br><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">SCHEMA</span> db_account;<br>USE db_account;<br><br><span class="hljs-keyword">CREATE</span> TABLE <span class="hljs-symbol">`account_tbl`</span><br>(<br>    <span class="hljs-symbol">`id`</span>      INT(<span class="hljs-number">11</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> AUTO_INCREMENT,<br>    <span class="hljs-symbol">`user_id`</span> VARCHAR(<span class="hljs-number">255</span>) DEFAULT <span class="hljs-literal">NULL</span>,<br>    <span class="hljs-symbol">`money`</span>   INT(<span class="hljs-number">11</span>)      DEFAULT <span class="hljs-number">0</span>,<br>    <span class="hljs-keyword">PRIMARY</span> <span class="hljs-keyword">KEY</span> (<span class="hljs-symbol">`id`</span>)<br>) ENGINE = InnoDB<br>  DEFAULT CHARSET = utf8;<br><br><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> account_tbl (id, user_id, money)<br><span class="hljs-keyword">VALUES</span> (<span class="hljs-number">1</span>, <span class="hljs-string">&#x27;1001&#x27;</span>, <span class="hljs-number">10000</span>);<br><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> account_tbl (id, user_id, money)<br><span class="hljs-keyword">VALUES</span> (<span class="hljs-number">2</span>, <span class="hljs-string">&#x27;1002&#x27;</span>, <span class="hljs-number">10000</span>);<br><br><span class="hljs-keyword">CREATE</span> TABLE <span class="hljs-symbol">`undo_log`</span> (<br>  <span class="hljs-symbol">`id`</span> bigint(<span class="hljs-number">20</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> AUTO_INCREMENT,<br>  <span class="hljs-symbol">`branch_id`</span> bigint(<span class="hljs-number">20</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,<br>  <span class="hljs-symbol">`xid`</span> varchar(<span class="hljs-number">100</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,<br>  <span class="hljs-symbol">`context`</span> varchar(<span class="hljs-number">128</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,<br>  <span class="hljs-symbol">`rollback_info`</span> longblob <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,<br>  <span class="hljs-symbol">`log_status`</span> int(<span class="hljs-number">11</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,<br>  <span class="hljs-symbol">`log_created`</span> datetime <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,<br>  <span class="hljs-symbol">`log_modified`</span> datetime <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,<br>  <span class="hljs-keyword">PRIMARY</span> <span class="hljs-keyword">KEY</span> (<span class="hljs-symbol">`id`</span>),<br>  <span class="hljs-keyword">UNIQUE</span> <span class="hljs-keyword">KEY</span> <span class="hljs-symbol">`ux_undo_log`</span> (<span class="hljs-symbol">`xid`</span>,<span class="hljs-symbol">`branch_id`</span>)<br>) ENGINE=InnoDB AUTO_INCREMENT=<span class="hljs-number">1</span> DEFAULT CHARSET=utf8;<br><br># Order<br><span class="hljs-keyword">DROP</span> <span class="hljs-keyword">SCHEMA</span> <span class="hljs-keyword">IF</span> <span class="hljs-keyword">EXISTS</span> db_order;<br><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">SCHEMA</span> db_order;<br>USE db_order;<br><br><span class="hljs-keyword">CREATE</span> TABLE <span class="hljs-symbol">`order_tbl`</span><br>(<br>    <span class="hljs-symbol">`id`</span>             INT(<span class="hljs-number">11</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> AUTO_INCREMENT,<br>    <span class="hljs-symbol">`user_id`</span>        VARCHAR(<span class="hljs-number">255</span>) DEFAULT <span class="hljs-literal">NULL</span>,<br>    <span class="hljs-symbol">`commodity_code`</span> VARCHAR(<span class="hljs-number">255</span>) DEFAULT <span class="hljs-literal">NULL</span>,<br>    <span class="hljs-symbol">`count`</span>          INT(<span class="hljs-number">11</span>)      DEFAULT <span class="hljs-string">&#x27;0&#x27;</span>,<br>    <span class="hljs-symbol">`money`</span>          INT(<span class="hljs-number">11</span>)      DEFAULT <span class="hljs-string">&#x27;0&#x27;</span>,<br>    <span class="hljs-keyword">PRIMARY</span> <span class="hljs-keyword">KEY</span> (<span class="hljs-symbol">`id`</span>)<br>) ENGINE = InnoDB<br>  DEFAULT CHARSET = utf8;<br><br><span class="hljs-keyword">CREATE</span> TABLE <span class="hljs-symbol">`undo_log`</span> (<br>  <span class="hljs-symbol">`id`</span> bigint(<span class="hljs-number">20</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> AUTO_INCREMENT,<br>  <span class="hljs-symbol">`branch_id`</span> bigint(<span class="hljs-number">20</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,<br>  <span class="hljs-symbol">`xid`</span> varchar(<span class="hljs-number">100</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,<br>  <span class="hljs-symbol">`context`</span> varchar(<span class="hljs-number">128</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,<br>  <span class="hljs-symbol">`rollback_info`</span> longblob <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,<br>  <span class="hljs-symbol">`log_status`</span> int(<span class="hljs-number">11</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,<br>  <span class="hljs-symbol">`log_created`</span> datetime <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,<br>  <span class="hljs-symbol">`log_modified`</span> datetime <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,<br>  <span class="hljs-keyword">PRIMARY</span> <span class="hljs-keyword">KEY</span> (<span class="hljs-symbol">`id`</span>),<br>  <span class="hljs-keyword">UNIQUE</span> <span class="hljs-keyword">KEY</span> <span class="hljs-symbol">`ux_undo_log`</span> (<span class="hljs-symbol">`xid`</span>,<span class="hljs-symbol">`branch_id`</span>)<br>) ENGINE=InnoDB AUTO_INCREMENT=<span class="hljs-number">1</span> DEFAULT CHARSET=utf8;<br><br># Storage<br><span class="hljs-keyword">DROP</span> <span class="hljs-keyword">SCHEMA</span> <span class="hljs-keyword">IF</span> <span class="hljs-keyword">EXISTS</span> db_storage;<br><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">SCHEMA</span> db_storage;<br>USE db_storage;<br><br><span class="hljs-keyword">CREATE</span> TABLE <span class="hljs-symbol">`storage_tbl`</span><br>(<br>    <span class="hljs-symbol">`id`</span>             INT(<span class="hljs-number">11</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> AUTO_INCREMENT,<br>    <span class="hljs-symbol">`commodity_code`</span> VARCHAR(<span class="hljs-number">255</span>) DEFAULT <span class="hljs-literal">NULL</span>,<br>    <span class="hljs-symbol">`count`</span>          INT(<span class="hljs-number">11</span>)      DEFAULT <span class="hljs-string">&#x27;0&#x27;</span>,<br>    <span class="hljs-keyword">PRIMARY</span> <span class="hljs-keyword">KEY</span> (<span class="hljs-symbol">`id`</span>),<br>    <span class="hljs-keyword">UNIQUE</span> <span class="hljs-keyword">KEY</span> <span class="hljs-symbol">`commodity_code`</span> (<span class="hljs-symbol">`commodity_code`</span>)<br>) ENGINE = InnoDB<br>  DEFAULT CHARSET = utf8;<br><br><br><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> storage_tbl (id, commodity_code, <span class="hljs-built_in">count</span>)<br><span class="hljs-keyword">VALUES</span> (<span class="hljs-number">1</span>, <span class="hljs-string">&#x27;2001&#x27;</span>, <span class="hljs-number">1000</span>);<br><br><span class="hljs-keyword">CREATE</span> TABLE <span class="hljs-symbol">`undo_log`</span> (<br>  <span class="hljs-symbol">`id`</span> bigint(<span class="hljs-number">20</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> AUTO_INCREMENT,<br>  <span class="hljs-symbol">`branch_id`</span> bigint(<span class="hljs-number">20</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,<br>  <span class="hljs-symbol">`xid`</span> varchar(<span class="hljs-number">100</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,<br>  <span class="hljs-symbol">`context`</span> varchar(<span class="hljs-number">128</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,<br>  <span class="hljs-symbol">`rollback_info`</span> longblob <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,<br>  <span class="hljs-symbol">`log_status`</span> int(<span class="hljs-number">11</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,<br>  <span class="hljs-symbol">`log_created`</span> datetime <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,<br>  <span class="hljs-symbol">`log_modified`</span> datetime <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,<br>  <span class="hljs-keyword">PRIMARY</span> <span class="hljs-keyword">KEY</span> (<span class="hljs-symbol">`id`</span>),<br>  <span class="hljs-keyword">UNIQUE</span> <span class="hljs-keyword">KEY</span> <span class="hljs-symbol">`ux_undo_log`</span> (<span class="hljs-symbol">`xid`</span>,<span class="hljs-symbol">`branch_id`</span>)<br>) ENGINE=InnoDB AUTO_INCREMENT=<span class="hljs-number">1</span> DEFAULT CHARSET=utf8;<br></code></pre></td></tr></table></figure>
+
+<h3 id="5-3-项目结构"><a href="#5-3-项目结构" class="headerlink" title="5.3 项目结构"></a>5.3 项目结构</h3><ul>
+<li>order-servie 订单服务</li>
+<li>business-service 商户服务</li>
+<li>order-service 订单服务</li>
+<li>storage-service 仓储服务</li>
+</ul>
+<p><img src="https://image.focusprogram.top/20200311152423.png"></p>
+<h3 id="5-4-引入maven依赖"><a href="#5-4-引入maven依赖" class="headerlink" title="5.4 引入maven依赖"></a>5.4 引入maven依赖</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>io.seata<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>seata-all<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>1.1.0<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-context<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>5.0.4.RELEASE<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>mysql<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>mysql-connector-java<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>8.0.11<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-starter-openfeign<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>2.0.0.RELEASE<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-starter-netflix-ribbon<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>2.0.0.RELEASE<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="5-5-配置文件"><a href="#5-5-配置文件" class="headerlink" title="5.5 配置文件"></a>5.5 配置文件</h3><blockquote>
+<p>file.conf 的 service.vgroup_mapping 配置必须和spring.application.name一致<br>在 org.springframework.cloud:spring-cloud-starter-alibaba-seata的org.springframework.cloud.alibaba.seata.GlobalTransactionAutoConfiguration类中，默认会使用 ${spring.application.name}-fescar-service-group作为服务名注册到 Seata Server上，如果和file.conf中的配置不一致，会提示 no available server to connect错误</p>
+<p>也可以通过配置 spring.cloud.alibaba.seata.tx-service-group修改后缀，但是必须和file.conf中的配置保持一致</p>
+</blockquote>
+<p><img src="https://image.focusprogram.top/20200311154141.png"></p>
+<p><img src="https://image.focusprogram.top/20200311154205.png"></p>
+<p><strong>application.properties</strong></p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">spring.application.name</span>=account-service<br><span class="hljs-attr">server.port</span>=<span class="hljs-number">8083</span><br><span class="hljs-attr">spring.datasource.url</span>=jdbc:mysql://localhost:<span class="hljs-number">3306</span>/db_account?useSSL=<span class="hljs-literal">false</span>&amp;serverTimezone=UTC<br><span class="hljs-attr">spring.datasource.username</span>=root<br><span class="hljs-attr">spring.datasource.password</span>=root<br><span class="hljs-attr">spring.jpa.show-sql</span>=<span class="hljs-literal">true</span><br><span class="hljs-attr">spring.cloud.alibaba.seata.tx-service-group</span>=my_group<br></code></pre></td></tr></table></figure>
+
+<p><strong>file.conf</strong></p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs abnf">service &#123;<br>  vgroupMapping.my_group <span class="hljs-operator">=</span> <span class="hljs-string">&quot;account-service&quot;</span><br>  account-service.grouplist <span class="hljs-operator">=</span> <span class="hljs-string">&quot;127.0.0.1:8091&quot;</span><br>  enableDegrade <span class="hljs-operator">=</span> false<br>  disableGlobalTransaction <span class="hljs-operator">=</span> false<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="5-6-启动项目，显示如下证明启动成功："><a href="#5-6-启动项目，显示如下证明启动成功：" class="headerlink" title="5.6 启动项目，显示如下证明启动成功："></a>5.6 启动项目，显示如下证明启动成功：</h3><p><img src="https://image.focusprogram.top/20200311154701.png"></p>
+<p><img src="https://image.focusprogram.top/20200311154722.png"></p>
+<p><img src="https://image.focusprogram.top/20200311154807.png"></p>
+<p><img src="https://image.focusprogram.top/20200311154749.png"></p>
+<h3 id="5-7-测试："><a href="#5-7-测试：" class="headerlink" title="5.7 测试："></a>5.7 测试：</h3><p>无错误成功提交：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">curl http:<span class="hljs-regexp">//</span><span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>:<span class="hljs-number">8084</span><span class="hljs-regexp">/purchase/</span>commit<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>完成后可以看到数据库中 account_tbl的id为1的money会减少 5，order_tbl中会新增一条记录，storage_tbl的id为1的count字段减少 1</p>
+</blockquote>
+<p>发生异常事务回滚:</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">curl http:<span class="hljs-regexp">//</span><span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>:<span class="hljs-number">8084</span><span class="hljs-regexp">/purchase/</span>rollback<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>此时 account-service 会抛出异常，发生回滚，待完成后数据库中的数据没有发生变化，回滚成功</p>
+</blockquote>
+<h2 id="6-SpringCloud集成Seata-Nacos"><a href="#6-SpringCloud集成Seata-Nacos" class="headerlink" title="6. SpringCloud集成Seata+Nacos"></a>6. SpringCloud集成Seata+Nacos</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/FocusProgram/person-improve/tree/main/springcloud-seata/springcloud-nacos-seata">github源码参考地址</a></p>
+</blockquote>
+<h3 id="6-1-运行Seata"><a href="#6-1-运行Seata" class="headerlink" title="6.1 运行Seata"></a>6.1 运行Seata</h3><h4 id="6-1-1-编辑配置文件conf-x2F-registry-conf"><a href="#6-1-1-编辑配置文件conf-x2F-registry-conf" class="headerlink" title="6.1.1 编辑配置文件conf&#x2F;registry.conf"></a>6.1.1 编辑配置文件conf&#x2F;registry.conf</h4><blockquote>
+<p>注：serverAddr不能带‘http:&#x2F;&#x2F;’前缀</p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs fsharp"><span class="hljs-keyword">registry</span> &#123;<br>  # file 、nacos 、eureka、redis、zk、consul、etcd3、sofa<br>  <span class="hljs-keyword">type</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;nacos&quot;</span><br><br>  <span class="hljs-keyword">nacos</span> &#123;<br>    serverAddr <span class="hljs-operator">=</span> <span class="hljs-string">&quot;114.55.34.44&quot;</span><br>    <span class="hljs-keyword">namespace</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;&quot;</span><br>    cluster <span class="hljs-operator">=</span> <span class="hljs-string">&quot;default&quot;</span><br>  &#125;<br>&#125;<br><span class="hljs-keyword">config</span> &#123;<br>  # file、nacos 、apollo、zk、consul、etcd3<br>  <span class="hljs-keyword">type</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;nacos&quot;</span><br>  <span class="hljs-keyword">nacos</span> &#123;<br>    serverAddr <span class="hljs-operator">=</span> <span class="hljs-string">&quot;114.55.34.44&quot;</span><br>    <span class="hljs-keyword">namespace</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;&quot;</span><br>    cluster <span class="hljs-operator">=</span> <span class="hljs-string">&quot;default&quot;</span><br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="6-1-2-编辑配置文件conf-x2F-nacos-config-txt-仅限seata-service-1-1-0版本以下"><a href="#6-1-2-编辑配置文件conf-x2F-nacos-config-txt-仅限seata-service-1-1-0版本以下" class="headerlink" title="6.1.2 编辑配置文件conf&#x2F;nacos-config.txt(仅限seata-service-1.1.0版本以下)"></a>6.1.2 编辑配置文件conf&#x2F;nacos-config.txt(仅限seata-service-1.1.0版本以下)</h4><p>service.vgroup_mapping.${your-service-gruop}&#x3D;default，中间的${your-service-gruop}为自己定义的服务组名称，服务中的application.properties文件里配置服务组名称。</p>
+<p>demo中有两个服务，分别是storage-service和order-service，所以配置如下:</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">service.vgroup_mapping.<span class="hljs-keyword">storage</span>-service-<span class="hljs-keyword">group</span>=<span class="hljs-keyword">default</span><br>service.vgroup_mapping.<span class="hljs-keyword">order</span>-service-<span class="hljs-keyword">group</span>=<span class="hljs-keyword">default</span><br></code></pre></td></tr></table></figure>
+
+<p>初始化seata的nacos配置：</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm">cd conf<br><span class="hljs-keyword">sh </span>nacos-<span class="hljs-built_in">config</span>.<span class="hljs-keyword">sh </span><span class="hljs-number">114</span>.<span class="hljs-number">55</span>.<span class="hljs-number">34</span>.<span class="hljs-number">44</span>  <span class="hljs-comment">#114.55.34.44为nacos的服务器地址</span><br></code></pre></td></tr></table></figure>
+
+<p>seata-service-1.1.0版本在Nacos手动添加配置:</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">service.vgroupMapping.<span class="hljs-keyword">storage</span>-service-<span class="hljs-keyword">group</span>=<span class="hljs-keyword">default</span><br>service.vgroupMapping.<span class="hljs-keyword">order</span>-service-<span class="hljs-keyword">group</span>=<span class="hljs-keyword">default</span><br></code></pre></td></tr></table></figure>
+
+<p>启动seata-service:</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs stata"><span class="hljs-keyword">cd</span> bin<br><span class="hljs-keyword">sh</span> seata-server.<span class="hljs-keyword">sh</span> -p 8091 -<span class="hljs-keyword">m</span> <span class="hljs-keyword">file</span><br></code></pre></td></tr></table></figure>
+
+<p>成功启动后显示如下：</p>
+<p><img src="https://image.focusprogram.top/20200311205043.png"></p>
+<p><img src="https://image.focusprogram.top/20200311205111.png"></p>
+<h4 id="6-1-3-初始化sql脚本"><a href="#6-1-3-初始化sql脚本" class="headerlink" title="6.1.3 初始化sql脚本"></a>6.1.3 初始化sql脚本</h4><figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><code class="hljs autohotkey">-- 创建 order库、业务表、undo_log表<br>create database seat<span class="hljs-built_in">a_order</span><span class="hljs-comment">;</span><br>use seat<span class="hljs-built_in">a_order</span><span class="hljs-comment">;</span><br><br>DROP TABLE IF EXISTS `order_tbl`;<br>CREATE TABLE `order_tbl` (<br>  `id` int(<span class="hljs-number">11</span>) <span class="hljs-literal">NOT</span> NULL AUTO_INCREMENT,<br>  `user_id` varchar(<span class="hljs-number">255</span>) DEFAULT NULL,<br>  `commodity_code` varchar(<span class="hljs-number">255</span>) DEFAULT NULL,<br>  `count` int(<span class="hljs-number">11</span>) DEFAULT <span class="hljs-number">0</span>,<br>  `money` int(<span class="hljs-number">11</span>) DEFAULT <span class="hljs-number">0</span>,<br>  PRIMARY KEY (`id`)<br>) ENGINE=InnoDB DEFAULT CHARSET=utf8<span class="hljs-comment">;</span><br><br>CREATE TABLE `undo_log`<br>(<br>  `id`            BIGINT(<span class="hljs-number">20</span>)   <span class="hljs-literal">NOT</span> NULL AUTO_INCREMENT,<br>  `branch_id`     BIGINT(<span class="hljs-number">20</span>)   <span class="hljs-literal">NOT</span> NULL,<br>  `xid`           VARCHAR(<span class="hljs-number">100</span>) <span class="hljs-literal">NOT</span> NULL,<br>  `context`       VARCHAR(<span class="hljs-number">128</span>) <span class="hljs-literal">NOT</span> NULL,<br>  `rollback_info` LONGBLOB     <span class="hljs-literal">NOT</span> NULL,<br>  `log_status`    INT(<span class="hljs-number">11</span>)      <span class="hljs-literal">NOT</span> NULL,<br>  `log_created`   DATETIME     <span class="hljs-literal">NOT</span> NULL,<br>  `log_modified`  DATETIME     <span class="hljs-literal">NOT</span> NULL,<br>  `ext`           VARCHAR(<span class="hljs-number">100</span>) DEFAULT NULL,<br>  PRIMARY KEY (`id`),<br>  UNIQUE KEY `ux_undo_log` (`xid`, `branch_id`)<br>) ENGINE = InnoDB<br>  AUTO_INCREMENT = <span class="hljs-number">1</span><br>  DEFAULT CHARSET = utf8<span class="hljs-comment">;</span><br><br><br>-- 创建 storage库、业务表、undo_log表<br>create database seat<span class="hljs-built_in">a_storage</span><span class="hljs-comment">;</span><br>use seat<span class="hljs-built_in">a_storage</span><span class="hljs-comment">;</span><br><br>DROP TABLE IF EXISTS `storage_tbl`;<br>CREATE TABLE `storage_tbl` (<br>  `id` int(<span class="hljs-number">11</span>) <span class="hljs-literal">NOT</span> NULL AUTO_INCREMENT,<br>  `commodity_code` varchar(<span class="hljs-number">255</span>) DEFAULT NULL,<br>  `count` int(<span class="hljs-number">11</span>) DEFAULT <span class="hljs-number">0</span>,<br>  PRIMARY KEY (`id`),<br>  UNIQUE KEY (`commodity_code`)<br>) ENGINE=InnoDB DEFAULT CHARSET=utf8<span class="hljs-comment">;</span><br><br>CREATE TABLE `undo_log`<br>(<br>  `id`            BIGINT(<span class="hljs-number">20</span>)   <span class="hljs-literal">NOT</span> NULL AUTO_INCREMENT,<br>  `branch_id`     BIGINT(<span class="hljs-number">20</span>)   <span class="hljs-literal">NOT</span> NULL,<br>  `xid`           VARCHAR(<span class="hljs-number">100</span>) <span class="hljs-literal">NOT</span> NULL,<br>  `context`       VARCHAR(<span class="hljs-number">128</span>) <span class="hljs-literal">NOT</span> NULL,<br>  `rollback_info` LONGBLOB     <span class="hljs-literal">NOT</span> NULL,<br>  `log_status`    INT(<span class="hljs-number">11</span>)      <span class="hljs-literal">NOT</span> NULL,<br>  `log_created`   DATETIME     <span class="hljs-literal">NOT</span> NULL,<br>  `log_modified`  DATETIME     <span class="hljs-literal">NOT</span> NULL,<br>  `ext`           VARCHAR(<span class="hljs-number">100</span>) DEFAULT NULL,<br>  PRIMARY KEY (`id`),<br>  UNIQUE KEY `ux_undo_log` (`xid`, `branch_id`)<br>) ENGINE = InnoDB<br>  AUTO_INCREMENT = <span class="hljs-number">1</span><br>  DEFAULT CHARSET = utf8<span class="hljs-comment">;</span><br><br>-- 初始化库存模拟数据<br>INSERT INTO seat<span class="hljs-built_in">a_storage</span>.storage_tbl (id, commodity_code, count) VALUES (<span class="hljs-number">1</span>, &#x27;product-<span class="hljs-number">1</span>&#x27;, <span class="hljs-number">9999999</span>)<span class="hljs-comment">;</span><br>INSERT INTO seat<span class="hljs-built_in">a_storage</span>.storage_tbl (id, commodity_code, count) VALUES (<span class="hljs-number">2</span>, &#x27;product-<span class="hljs-number">2</span>&#x27;, <span class="hljs-number">0</span>)<span class="hljs-comment">;</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="6-1-4-引入maven依赖"><a href="#6-1-4-引入maven依赖" class="headerlink" title="6.1.4 引入maven依赖"></a>6.1.4 引入maven依赖</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.projectlombok<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>lombok<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">optional</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">optional</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-test<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">scope</span>&gt;</span>test<span class="hljs-tag">&lt;/<span class="hljs-name">scope</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-starter-openfeign<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br><span class="hljs-comment">&lt;!-- nacos --&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-nacos-discovery<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>0.2.1.RELEASE<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br><span class="hljs-comment">&lt;!-- seata--&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.alibaba.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-alibaba-seata<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>2.1.0.RELEASE<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>io.seata<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>seata-all<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>1.1.0<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br><span class="hljs-comment">&lt;!-- mysql --&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.work<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>base-framework-mysql-support<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>1.0-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="6-1-5-配置文件registy-conf"><a href="#6-1-5-配置文件registy-conf" class="headerlink" title="6.1.5 配置文件registy.conf"></a>6.1.5 配置文件registy.conf</h4><figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs fsharp"><span class="hljs-keyword">registry</span> &#123;<br>  # file 、nacos 、eureka、redis、zk、consul、etcd3、sofa<br>  <span class="hljs-keyword">type</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;nacos&quot;</span><br><br>  <span class="hljs-keyword">nacos</span> &#123;<br>    serverAddr <span class="hljs-operator">=</span> <span class="hljs-string">&quot;114.55.34.44&quot;</span><br>    <span class="hljs-keyword">namespace</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;&quot;</span><br>    cluster <span class="hljs-operator">=</span> <span class="hljs-string">&quot;default&quot;</span><br>  &#125;<br>&#125;<br><span class="hljs-keyword">config</span> &#123;<br>  # file、nacos 、apollo、zk、consul、etcd3<br>  <span class="hljs-keyword">type</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;nacos&quot;</span><br>  <span class="hljs-keyword">nacos</span> &#123;<br>    serverAddr <span class="hljs-operator">=</span> <span class="hljs-string">&quot;114.55.34.44&quot;</span><br>    <span class="hljs-keyword">namespace</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;&quot;</span><br>    cluster <span class="hljs-operator">=</span> <span class="hljs-string">&quot;default&quot;</span><br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="6-1-6-配置文件application-properties"><a href="#6-1-6-配置文件application-properties" class="headerlink" title="6.1.6 配置文件application.properties"></a>6.1.6 配置文件application.properties</h4><p><strong>order-service</strong></p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">spring.application.name</span>=order-service<br><span class="hljs-attr">server.port</span>=<span class="hljs-number">9091</span><br><br><span class="hljs-comment"># Nacos 注册中心地址</span><br><span class="hljs-attr">spring.cloud.nacos.discovery.server-addr</span> = <span class="hljs-number">114.55</span>.<span class="hljs-number">34.44</span>:<span class="hljs-number">8848</span><br><br><span class="hljs-comment"># seata 服务分组，要与服务端nacos-config.txt中service.vgroup_mapping的后缀对应</span><br><span class="hljs-attr">spring.cloud.alibaba.seata.tx-service-group</span>=order-service-group<br><span class="hljs-attr">logging.level.io.seata</span> = debug<br><br><span class="hljs-comment"># 数据源配置</span><br><span class="hljs-attr">spring.datasource.druid.url</span>=jdbc:mysql://<span class="hljs-number">114.55</span>.<span class="hljs-number">34.44</span>:<span class="hljs-number">3306</span>/seata_order?allowMultiQueries=<span class="hljs-literal">true</span><br><span class="hljs-attr">spring.datasource.druid.driverClassName</span>=com.mysql.jdbc.Driver<br><span class="hljs-attr">spring.datasource.druid.username</span>=root<br><span class="hljs-attr">spring.datasource.druid.password</span>=root<br></code></pre></td></tr></table></figure>
+
+<p><strong>storage-service</strong></p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">spring.application.name</span>=storage-service<br><span class="hljs-attr">server.port</span>=<span class="hljs-number">9092</span><br><br><span class="hljs-comment"># Nacos 注册中心地址</span><br><span class="hljs-attr">spring.cloud.nacos.discovery.server-addr</span> = <span class="hljs-number">114.55</span>.<span class="hljs-number">34.44</span>:<span class="hljs-number">8848</span><br><br><span class="hljs-comment"># seata 服务分组，要与服务端nacos-config.txt中service.vgroup_mapping的后缀对应</span><br><span class="hljs-attr">spring.cloud.alibaba.seata.tx-service-group</span>=storage-service-group<br><span class="hljs-attr">logging.level.io.seata</span> = debug<br><br><span class="hljs-comment"># 数据源配置</span><br><span class="hljs-attr">spring.datasource.druid.url</span>=jdbc:mysql://<span class="hljs-number">114.55</span>.<span class="hljs-number">34.44</span>:<span class="hljs-number">3306</span>/seata_storage?allowMultiQueries=<span class="hljs-literal">true</span><br><span class="hljs-attr">spring.datasource.druid.driverClassName</span>=com.mysql.jdbc.Driver<br><span class="hljs-attr">spring.datasource.druid.username</span>=root<br><span class="hljs-attr">spring.datasource.druid.password</span>=root<br></code></pre></td></tr></table></figure>
+
+<h4 id="6-1-7-启动项目"><a href="#6-1-7-启动项目" class="headerlink" title="6.1.7 启动项目"></a>6.1.7 启动项目</h4><p><img src="https://image.focusprogram.top/20200312000829.png"></p>
+<h4 id="6-1-8-测试"><a href="#6-1-8-测试" class="headerlink" title="6.1.8 测试"></a>6.1.8 测试</h4><p>分布式事务成功，模拟正常下单、扣库存</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">curl localhost:<span class="hljs-number">9091</span><span class="hljs-regexp">/order/</span>placeOrder/commit<br></code></pre></td></tr></table></figure>
+
+<p>分布式事务失败，模拟下单成功、扣库存失败，最终同时回滚</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">curl localhost:<span class="hljs-number">9091</span><span class="hljs-regexp">/order/</span>placeOrder/rollback<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>更多注册中心以及框架集成，<a target="_blank" rel="noopener" href="https://github.com/seata/seata-samples">参考文档</a></p>
+</blockquote>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" class="category-chain-item">微服务</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/SpringCloud/">#SpringCloud</a>
+      
+        <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">#微服务</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Seata</div>
+      <div>http://yoursite.com/2020/07/11/Seata/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Mr.Kong</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年7月11日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - Mr.Kong">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/07/11/Tx-Lcn/" title="Tx-Lcn">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Tx-Lcn</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/07/11/ELK-Kafka%E5%88%86%E5%B8%83%E5%BC%8F%E6%97%A5%E5%BF%97%E6%94%B6%E9%9B%86/" title="ELK-Kafka分布式日志收集">
+                        <span class="hidden-mobile">ELK-Kafka分布式日志收集</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments">
+    
+  <div id="waline"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#waline', function() {
+      Fluid.utils.createCssLink('https://lib.baomitu.com/waline/2.5.1/waline.min.css')
+      Fluid.utils.createScript('https://lib.baomitu.com/waline/2.5.1/waline.min.js', function() {
+        var options = Object.assign(
+          {"serverURL":"https://waline-server-lake-five.vercel.app","path":"window.location.pathname","placeholder":"留下您想说的话吧(*^▽^*)","meta":["nick","mail","link"],"requiredMeta":["nick"],"visitor":true,"lang":"zh-CN","avatar":"robohash","emoji":["//unpkg.com/@waline/emojis@1.0.1/weibo"],"dark":"html[data-user-color-scheme=\"dark\"]","search":true,"recordIP":true,"highlighter":true,"wordLimit":0,"pageSize":10},
+          {
+            el: '#waline',
+            path: window.location.pathname
+          }
+        )
+        Waline.init(options);
+        Fluid.utils.waitElementVisible('#waline .vcontent', () => {
+          var imgSelector = '#waline .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://github.com/FocusProgram" target="_blank" rel="nofollow noopener"><span>Always persistent</span></a> <i class="iconfont icon-love"></i> <a href="https://gitee.com/FocusProgram/" target="_blank" rel="nofollow noopener"><span>Forever love</span></a> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      苏ICP备19063834号-1
+    </a>
+  </span>
+  
+    
+      <span>
+        <a
+          href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=44030602004695"
+          rel="nofollow noopener"
+          class="beian-police"
+          target="_blank"
+        >
+          
+            <span style="visibility: hidden; width: 0">|</span>
+            <img src="/img/police_beian.png" alt="police-icon"/>
+          
+          <span>苏公安网备44030602004695号</span>
+        </a>
+      </span>
+    
+  
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<!-- hexo injector body_end start -->
+  <script defer src="/js/daovoice.js"></script>
+<!-- hexo injector body_end end --></body>
+</html>

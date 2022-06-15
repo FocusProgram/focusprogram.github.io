@@ -1,0 +1,1010 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head><!-- hexo injector head_begin start -->
+  <script defer src="/js/post_head.js"></script>
+<!-- hexo injector head_begin end -->
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/Mr.Kong.jpg">
+  <link rel="icon" href="/img/Mr.Kong.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Mr.Kong">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="ELK-Kafka分布式日志收集  1. ELK搭建详细教程参考ELK详细教程-地址一 ELK详细教程-地址二 2. ELK-Kafka分布式日志收集架构设计 使用SpringAop进行日志收集，然后通过kafka将日志发送给logstash，logstash再将日志写入elasticsearch，这样elasticsearch就有了日志数据了，最后，则使用kibana将存放在elasticsea">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ELK-Kafka分布式日志收集">
+<meta property="og:url" content="http://yoursite.com/2020/07/11/ELK-Kafka%E5%88%86%E5%B8%83%E5%BC%8F%E6%97%A5%E5%BF%97%E6%94%B6%E9%9B%86/index.html">
+<meta property="og:site_name" content="Mr.Kong Blog">
+<meta property="og:description" content="ELK-Kafka分布式日志收集  1. ELK搭建详细教程参考ELK详细教程-地址一 ELK详细教程-地址二 2. ELK-Kafka分布式日志收集架构设计 使用SpringAop进行日志收集，然后通过kafka将日志发送给logstash，logstash再将日志写入elasticsearch，这样elasticsearch就有了日志数据了，最后，则使用kibana将存放在elasticsea">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://image.focusprogram.top/elk-kafka.png">
+<meta property="article:published_time" content="2020-07-11T08:31:28.000Z">
+<meta property="article:modified_time" content="2022-06-11T03:09:10.224Z">
+<meta property="article:author" content="Mr.Kong">
+<meta property="article:tag" content="SpringCloud">
+<meta property="article:tag" content="微服务">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://image.focusprogram.top/elk-kafka.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>ELK-Kafka分布式日志收集 - Mr.Kong Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"yoursite.com","root":"/","version":"1.9.1","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":false,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":"ture","follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Mr.Kong</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-bookmark-fill"></i>
+                开源地址
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" target="_blank" rel="noopener" href="https://gitee.com/FocusProgram/">
+                    
+                    Gitee
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" target="_blank" rel="noopener" href="https://github.com/FocusProgram/">
+                    
+                    GitHub
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/neight.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="ELK-Kafka分布式日志收集"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-07-11 16:31" pubdate>
+          2020年7月11日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          16k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          134 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="padding-left: 2rem; margin-right: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">ELK-Kafka分布式日志收集</h1>
+            
+            <div class="markdown-body">
+              
+              <p><strong>ELK-Kafka分布式日志收集</strong></p>
+<hr>
+<h1 id="1-ELK搭建详细教程参考"><a href="#1-ELK搭建详细教程参考" class="headerlink" title="1. ELK搭建详细教程参考"></a>1. ELK搭建详细教程参考</h1><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_41112063/article/details/106056681">ELK详细教程-地址一</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/FocusProgram/person-improve/blob/main/springcloud-elk/docs/ELK%E8%AF%A6%E8%A7%A3.md">ELK详细教程-地址二</a></p>
+<h1 id="2-ELK-Kafka分布式日志收集架构设计"><a href="#2-ELK-Kafka分布式日志收集架构设计" class="headerlink" title="2. ELK-Kafka分布式日志收集架构设计"></a>2. ELK-Kafka分布式日志收集架构设计</h1><blockquote>
+<p>使用SpringAop进行日志收集，然后通过kafka将日志发送给logstash，logstash再将日志写入elasticsearch，这样elasticsearch就有了日志数据了，最后，则使用kibana将存放在elasticsearch中的日志数据显示出来，并且可以做实时的数据图表分析等等。</p>
+</blockquote>
+<p><img src="http://image.focusprogram.top/elk-kafka.png"></p>
+<h1 id="3-环境搭建部署"><a href="#3-环境搭建部署" class="headerlink" title="3. 环境搭建部署"></a>3. 环境搭建部署</h1><h2 id="3-1-环境准备"><a href="#3-1-环境准备" class="headerlink" title="3.1 环境准备"></a>3.1 环境准备</h2><table>
+<thead>
+<tr>
+<th>服务名</th>
+<th>Docker ip地址</th>
+<th>宿主机ip地址</th>
+<th>开放端口</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>elasticsearch-one</td>
+<td>172.20.0.2</td>
+<td>192.168.80.130</td>
+<td>9200、9300</td>
+<td>搜索</td>
+</tr>
+<tr>
+<td>elasticsearch-two</td>
+<td>172.20.0.3</td>
+<td>192.168.80.130</td>
+<td>9202、9303</td>
+<td>搜索</td>
+</tr>
+<tr>
+<td>logstash</td>
+<td>172.20.0.4</td>
+<td>192.168.80.130</td>
+<td>5044</td>
+<td>日志收集</td>
+</tr>
+<tr>
+<td>kibana</td>
+<td>172.20.0.5</td>
+<td>192.168.80.130</td>
+<td>5061</td>
+<td>展示、监控</td>
+</tr>
+<tr>
+<td>zookeeper</td>
+<td>172.20.0.6</td>
+<td>192.168.80.130</td>
+<td>2181</td>
+<td>注册配置中心</td>
+</tr>
+<tr>
+<td>kafka</td>
+<td>172.20.0.7</td>
+<td>192.168.80.130</td>
+<td>9092</td>
+<td>消息中间件，提供发布订阅功能</td>
+</tr>
+<tr>
+<td>kafka-manage</td>
+<td>172.20.0.8</td>
+<td>192.168.80.130</td>
+<td>9000</td>
+<td>kafka界面化管理</td>
+</tr>
+</tbody></table>
+<p><strong>备注：</strong> 由于需要整合springboot程序，所以elasticsearch必须是集群形式，至少需要两台，否则程序启动会报错</p>
+<h2 id="3-2-创建网络"><a href="#3-2-创建网络" class="headerlink" title="3.2 创建网络"></a>3.2 创建网络</h2><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">$ docker<span class="hljs-built_in"> network </span>create <span class="hljs-attribute">--driver</span>=bridge <span class="hljs-attribute">--subnet</span>=172.20.0.1/16 elk-kafka-network<br></code></pre></td></tr></table></figure>
+
+<h2 id="3-3-elasticsearch"><a href="#3-3-elasticsearch" class="headerlink" title="3.3 elasticsearch"></a>3.3 elasticsearch</h2><h3 id="3-3-1-elasticsearch配置文件"><a href="#3-3-1-elasticsearch配置文件" class="headerlink" title="3.3.1 elasticsearch配置文件"></a>3.3.1 elasticsearch配置文件</h3><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs stylus">$ vim es-one<span class="hljs-selector-class">.yml</span><br><br>cluster<span class="hljs-selector-class">.name</span>: elasticsearch-cluster<br>node<span class="hljs-selector-class">.name</span>: es-node-one<br>network<span class="hljs-selector-class">.bind_host</span>: <span class="hljs-number">0.0</span>.<span class="hljs-number">0.0</span><br>network<span class="hljs-selector-class">.publish_host</span>: <span class="hljs-number">172.20</span>.<span class="hljs-number">0.2</span><br>http<span class="hljs-selector-class">.port</span>: <span class="hljs-number">9200</span><br>transport<span class="hljs-selector-class">.tcp</span><span class="hljs-selector-class">.port</span>: <span class="hljs-number">9300</span><br>http<span class="hljs-selector-class">.cors</span><span class="hljs-selector-class">.enabled</span>: true<br>http<span class="hljs-selector-class">.cors</span><span class="hljs-selector-class">.allow-origin</span>: <span class="hljs-string">&quot;*&quot;</span><br>node<span class="hljs-selector-class">.master</span>: true<br>node<span class="hljs-selector-class">.data</span>: true<br>discovery<span class="hljs-selector-class">.zen</span><span class="hljs-selector-class">.ping</span><span class="hljs-selector-class">.unicast</span><span class="hljs-selector-class">.hosts</span>: <span class="hljs-selector-attr">[<span class="hljs-string">&quot;172.20.0.2:9300&quot;</span>,<span class="hljs-string">&quot;172.20.0.3:9303&quot;</span>]</span><br>discovery<span class="hljs-selector-class">.zen</span><span class="hljs-selector-class">.minimum_master_nodes</span>: <span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs stylus">$ vim es-two<span class="hljs-selector-class">.yml</span><br><br><br>cluster<span class="hljs-selector-class">.name</span>: elasticsearch-cluster<br>node<span class="hljs-selector-class">.name</span>: es-node-two<br>network<span class="hljs-selector-class">.bind_host</span>: <span class="hljs-number">0.0</span>.<span class="hljs-number">0.0</span><br>network<span class="hljs-selector-class">.publish_host</span>: <span class="hljs-number">172.20</span>.<span class="hljs-number">0.3</span><br>http<span class="hljs-selector-class">.port</span>: <span class="hljs-number">9202</span><br>transport<span class="hljs-selector-class">.tcp</span><span class="hljs-selector-class">.port</span>: <span class="hljs-number">9303</span><br>http<span class="hljs-selector-class">.cors</span><span class="hljs-selector-class">.enabled</span>: true<br>http<span class="hljs-selector-class">.cors</span><span class="hljs-selector-class">.allow-origin</span>: <span class="hljs-string">&quot;*&quot;</span><br>node<span class="hljs-selector-class">.master</span>: true<br>node<span class="hljs-selector-class">.data</span>: true<br>discovery<span class="hljs-selector-class">.zen</span><span class="hljs-selector-class">.ping</span><span class="hljs-selector-class">.unicast</span><span class="hljs-selector-class">.hosts</span>: <span class="hljs-selector-attr">[<span class="hljs-string">&quot;172.20.0.2:9300&quot;</span>,<span class="hljs-string">&quot;172.20.0.3:9303&quot;</span>]</span><br>discovery<span class="hljs-selector-class">.zen</span><span class="hljs-selector-class">.minimum_master_nodes</span>: <span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="3-3-2-docker-compose配置文件"><a href="#3-3-2-docker-compose配置文件" class="headerlink" title="3.3.2 docker-compose配置文件"></a>3.3.2 docker-compose配置文件</h3><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs dts">$ vim elasticsearch-one.yml<br><span class="hljs-symbol"></span><br><span class="hljs-symbol">version:</span> <span class="hljs-string">&#x27;3&#x27;</span><br><span class="hljs-symbol">services:</span><br>  elasticsearch-one:<br><span class="hljs-symbol">    image:</span> elasticsearch<br><span class="hljs-symbol">    container_name:</span> elasticsearch-one<br><span class="hljs-symbol">    restart:</span> always<br><span class="hljs-symbol">    networks:</span><br><span class="hljs-symbol">      default:</span><br><span class="hljs-symbol">        ipv4_address:</span> <span class="hljs-number">172.20</span><span class="hljs-number">.0</span><span class="hljs-number">.2</span><br><span class="hljs-symbol">    ports:</span><br>      - <span class="hljs-number">9200</span>:<span class="hljs-number">9200</span><br>      - <span class="hljs-number">9300</span>:<span class="hljs-number">9300</span><br><span class="hljs-symbol">    volumes:</span><br>      - ./es-one.yml:<span class="hljs-keyword">/usr/</span>share<span class="hljs-keyword">/elasticsearch/</span>config/elasticsearch.yml<br>      - ./plugins-one:<span class="hljs-keyword">/usr/</span>share<span class="hljs-keyword">/elasticsearch/</span>plugins<br><span class="hljs-symbol"></span><br><span class="hljs-symbol">networks:</span><br><span class="hljs-symbol">  default:</span><br><span class="hljs-symbol">    external:</span><br><span class="hljs-symbol">      name:</span> elk-kafka-network<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs dts">$ vim elasticsearch-one.yml<br><span class="hljs-symbol"></span><br><span class="hljs-symbol">version:</span> <span class="hljs-string">&#x27;3&#x27;</span><br><span class="hljs-symbol">services:</span><br>  elasticsearch-two:<br><span class="hljs-symbol">    image:</span> elasticsearch<br><span class="hljs-symbol">    container_name:</span> elasticsearch-two<br><span class="hljs-symbol">    restart:</span> always<br><span class="hljs-symbol">    networks:</span><br><span class="hljs-symbol">      default:</span><br><span class="hljs-symbol">        ipv4_address:</span> <span class="hljs-number">172.20</span><span class="hljs-number">.0</span><span class="hljs-number">.3</span><br><span class="hljs-symbol">    ports:</span><br>      - <span class="hljs-number">9202</span>:<span class="hljs-number">9202</span><br>      - <span class="hljs-number">9303</span>:<span class="hljs-number">9303</span><br><span class="hljs-symbol">    volumes:</span><br>      - ./es-two.yml:<span class="hljs-keyword">/usr/</span>share<span class="hljs-keyword">/elasticsearch/</span>config/elasticsearch.yml<br>      - ./plugins-two:<span class="hljs-keyword">/usr/</span>share<span class="hljs-keyword">/elasticsearch/</span>plugins<br><span class="hljs-symbol"></span><br><span class="hljs-symbol">networks:</span><br><span class="hljs-symbol">  default:</span><br><span class="hljs-symbol">    external:</span><br><span class="hljs-symbol">      name:</span> elk-kafka-network<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-3-3-构建脚本"><a href="#3-3-3-构建脚本" class="headerlink" title="3.3.3 构建脚本"></a>3.3.3 构建脚本</h3><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs powershell"><span class="hljs-variable">$</span> vim <span class="hljs-built_in">build-one</span>.sh<br><br>docker<span class="hljs-literal">-compose</span> <span class="hljs-operator">-f</span> elastic<span class="hljs-built_in">search-one</span>.yml stop<br><br>docker<span class="hljs-literal">-compose</span> <span class="hljs-operator">-f</span> elastic<span class="hljs-built_in">search-one</span>.yml <span class="hljs-built_in">rm</span> <span class="hljs-literal">--force</span><br><br>docker<span class="hljs-literal">-compose</span> <span class="hljs-operator">-f</span> elastic<span class="hljs-built_in">search-one</span>.yml up <span class="hljs-literal">-d</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs powershell"><span class="hljs-variable">$</span> vim <span class="hljs-built_in">build-two</span>.sh<br><br>docker<span class="hljs-literal">-compose</span> <span class="hljs-operator">-f</span> elastic<span class="hljs-built_in">search-two</span>.yml stop<br><br>docker<span class="hljs-literal">-compose</span> <span class="hljs-operator">-f</span> elastic<span class="hljs-built_in">search-two</span>.yml <span class="hljs-built_in">rm</span> <span class="hljs-literal">--force</span><br><br>docker<span class="hljs-literal">-compose</span> <span class="hljs-operator">-f</span> elastic<span class="hljs-built_in">search-two</span>.yml up <span class="hljs-literal">-d</span><br></code></pre></td></tr></table></figure>
+
+<p>执行构建脚本</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stata">$ chmod +x build-<span class="hljs-keyword">one</span>.<span class="hljs-keyword">sh</span> build-<span class="hljs-keyword">two</span>.<span class="hljs-keyword">sh</span> &amp;&amp; ./build-<span class="hljs-keyword">one</span>.<span class="hljs-keyword">sh</span> &amp;&amp; ./build-<span class="hljs-keyword">two</span>.<span class="hljs-keyword">sh</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="3-4-logstash"><a href="#3-4-logstash" class="headerlink" title="3.4 logstash"></a>3.4 logstash</h2><h3 id="3-4-1-订阅kafka数据来源配置文件"><a href="#3-4-1-订阅kafka数据来源配置文件" class="headerlink" title="3.4.1 订阅kafka数据来源配置文件"></a>3.4.1 订阅kafka数据来源配置文件</h3><p>编辑logstash_kafka.conf</p>
+<figure class="highlight puppet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs puppet"><span class="hljs-keyword">input</span> &#123;<br>  kafka &#123;<br>    <span class="hljs-attr">bootstrap_servers</span> =&gt; <span class="hljs-string">&quot;192.168.80.130:9092&quot;</span><br>    <span class="hljs-comment"># topics为kafka订阅主题名</span><br>    <span class="hljs-attr">topics</span> =&gt; [<span class="hljs-string">&quot;my_log&quot;</span>]<br>  &#125;<br>&#125;<br><span class="hljs-keyword">output</span> &#123;<br>    stdout &#123; <span class="hljs-attr">codec</span> =&gt; rubydebug &#125;<br>    <span class="hljs-keyword">elasticsearch</span> &#123;<br>       <span class="hljs-attr">hosts</span> =&gt; [<span class="hljs-string">&quot;192.168.80.130:9200&quot;</span>,<span class="hljs-string">&quot;192.168.80.130:9202&quot;</span>]<br>       <span class="hljs-attr">index</span> =&gt; <span class="hljs-string">&quot;my_log&quot;</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-4-2-docker-compose配置文件"><a href="#3-4-2-docker-compose配置文件" class="headerlink" title="3.4.2 docker-compose配置文件"></a>3.4.2 docker-compose配置文件</h3><p>编辑logstash.yml</p>
+<figure class="highlight nestedtext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs nestedtext"><span class="hljs-attribute">version</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#x27;3&#x27;</span><br><span class="hljs-attribute">services</span><span class="hljs-punctuation">:</span><br>  <span class="hljs-attribute">logstash</span><span class="hljs-punctuation">:</span><br>    <span class="hljs-attribute">image</span><span class="hljs-punctuation">:</span> <span class="hljs-string">logstash</span><br>    <span class="hljs-attribute">container_name</span><span class="hljs-punctuation">:</span> <span class="hljs-string">logstash</span><br>    <span class="hljs-attribute">restart</span><span class="hljs-punctuation">:</span> <span class="hljs-string">always</span><br>    <span class="hljs-attribute">networks</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-attribute">default</span><span class="hljs-punctuation">:</span><br>        <span class="hljs-attribute">ipv4_address</span><span class="hljs-punctuation">:</span> <span class="hljs-string">172.20.0.4</span><br>    <span class="hljs-attribute">ports</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">5044:5044</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">4560:4560</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">8080:8080</span><br>    <span class="hljs-attribute">volumes</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">./data:/data</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">./config:/config</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">./logs/tomcat.logs:/tomcat.logs</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">./patterns:/opt/logstash/patterns</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">./mysql/mysql-connector-java-5.1.46.jar:/mysql-connector-java-5.1.46.jar</span><br>    <span class="hljs-attribute">external_links</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">elasticsearch:elasticsearch</span><br>    <span class="hljs-attribute">command</span><span class="hljs-punctuation">:</span> <span class="hljs-string">bash -c &quot;chmod +x /data &amp;&amp; logstash -f logstash_kafka.conf --path.data=/data&quot;</span><br><br><span class="hljs-attribute">networks</span><span class="hljs-punctuation">:</span><br>  <span class="hljs-attribute">default</span><span class="hljs-punctuation">:</span><br>    <span class="hljs-attribute">external</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-attribute">name</span><span class="hljs-punctuation">:</span> <span class="hljs-string">elk-kafka-network</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="3-4-3-构建脚本"><a href="#3-4-3-构建脚本" class="headerlink" title="3.4.3 构建脚本"></a>3.4.3 构建脚本</h3><p>编辑build.sh</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs powershell">docker<span class="hljs-literal">-compose</span> <span class="hljs-operator">-f</span> logstash.yml stop<br><br>docker<span class="hljs-literal">-compose</span> <span class="hljs-operator">-f</span> logstash.yml <span class="hljs-built_in">rm</span> <span class="hljs-literal">--force</span><br><br>docker<span class="hljs-literal">-compose</span> <span class="hljs-operator">-f</span> logstash.yml up <span class="hljs-literal">-d</span><br></code></pre></td></tr></table></figure>
+
+<p>执行构建脚本</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">chmod</span> +x build.sh &amp;&amp; ./build.sh</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="3-5-kibana"><a href="#3-5-kibana" class="headerlink" title="3.5 kibana"></a>3.5 kibana</h2><h3 id="3-5-1-docker-compose配置文件"><a href="#3-5-1-docker-compose配置文件" class="headerlink" title="3.5.1 docker-compose配置文件"></a>3.5.1 docker-compose配置文件</h3><p>编辑kibana.yml</p>
+<figure class="highlight nestedtext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs nestedtext"><span class="hljs-attribute">version</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#x27;3&#x27;</span><br><span class="hljs-attribute">services</span><span class="hljs-punctuation">:</span><br>  <span class="hljs-attribute">kibana</span><span class="hljs-punctuation">:</span><br>    <span class="hljs-attribute">image</span><span class="hljs-punctuation">:</span> <span class="hljs-string">kibana</span><br>    <span class="hljs-attribute">container_name</span><span class="hljs-punctuation">:</span> <span class="hljs-string">kibana</span><br>    <span class="hljs-attribute">restart</span><span class="hljs-punctuation">:</span> <span class="hljs-string">always</span><br>    <span class="hljs-attribute">networks</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-attribute">default</span><span class="hljs-punctuation">:</span><br>        <span class="hljs-attribute">ipv4_address</span><span class="hljs-punctuation">:</span> <span class="hljs-string">172.20.0.5</span><br>    <span class="hljs-attribute">environment</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">ELASTICSEARCH_URL=http://172.20.0.2:9200</span><br>    <span class="hljs-attribute">ports</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">5601:5601</span><br>    <span class="hljs-attribute">external_links</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">elasticsearch-one:elasticsearch-one</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">elasticsearch-two:elasticsearch-two</span><br><br><span class="hljs-attribute">networks</span><span class="hljs-punctuation">:</span><br>  <span class="hljs-attribute">default</span><span class="hljs-punctuation">:</span><br>    <span class="hljs-attribute">external</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-attribute">name</span><span class="hljs-punctuation">:</span> <span class="hljs-string">elk-kafka-network</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="3-5-2-构建脚本"><a href="#3-5-2-构建脚本" class="headerlink" title="3.5.2 构建脚本"></a>3.5.2 构建脚本</h3><p>编辑build.sh</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs powershell">docker<span class="hljs-literal">-compose</span> <span class="hljs-operator">-f</span> kibana.yml stop<br><br>docker<span class="hljs-literal">-compose</span> <span class="hljs-operator">-f</span> kibana.yml <span class="hljs-built_in">rm</span> <span class="hljs-literal">--force</span><br><br>docker<span class="hljs-literal">-compose</span> <span class="hljs-operator">-f</span> kibana.yml up <span class="hljs-literal">-d</span><br></code></pre></td></tr></table></figure>
+
+<p>执行构建脚本</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">chmod</span> +x build.sh &amp;&amp; ./build.sh</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="3-6-zookeeper"><a href="#3-6-zookeeper" class="headerlink" title="3.6 zookeeper"></a>3.6 zookeeper</h2><h3 id="3-6-1-docker-compose配置文件"><a href="#3-6-1-docker-compose配置文件" class="headerlink" title="3.6.1 docker-compose配置文件"></a>3.6.1 docker-compose配置文件</h3><p>编辑zookeeper.yml</p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs dts"><span class="hljs-symbol">version:</span> <span class="hljs-string">&#x27;3&#x27;</span><br><span class="hljs-symbol">services:</span><br><span class="hljs-symbol">  zookeeper:</span><br><span class="hljs-symbol">    image:</span> wurstmeister/zookeeper<br><span class="hljs-symbol">    container_name:</span> zookeeper<br><span class="hljs-symbol">    restart:</span> always<br><span class="hljs-symbol">    networks:</span><br><span class="hljs-symbol">      default:</span><br><span class="hljs-symbol">        ipv4_address:</span> <span class="hljs-number">172.20</span><span class="hljs-number">.0</span><span class="hljs-number">.6</span><br><span class="hljs-symbol">    ports:</span><br>      - <span class="hljs-number">2181</span>:<span class="hljs-number">2181</span><br><span class="hljs-symbol"></span><br><span class="hljs-symbol">networks:</span><br><span class="hljs-symbol">  default:</span><br><span class="hljs-symbol">    external:</span><br><span class="hljs-symbol">      name:</span> elk-kafka-network<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-6-2-构建脚本"><a href="#3-6-2-构建脚本" class="headerlink" title="3.6.2 构建脚本"></a>3.6.2 构建脚本</h3><p>编辑build.sh</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs powershell">docker<span class="hljs-literal">-compose</span> <span class="hljs-operator">-f</span> zookeeper.yml stop<br><br>docker<span class="hljs-literal">-compose</span> <span class="hljs-operator">-f</span> zookeeper.yml <span class="hljs-built_in">rm</span> <span class="hljs-literal">--force</span><br><br>docker<span class="hljs-literal">-compose</span> <span class="hljs-operator">-f</span> zookeeper.yml up <span class="hljs-literal">-d</span><br></code></pre></td></tr></table></figure>
+
+<p>执行构建脚本</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">chmod</span> +x build.sh &amp;&amp; ./build.sh</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="3-7-kafka"><a href="#3-7-kafka" class="headerlink" title="3.7 kafka"></a>3.7 kafka</h2><h3 id="3-7-1-docker-compose配置文件"><a href="#3-7-1-docker-compose配置文件" class="headerlink" title="3.7.1 docker-compose配置文件"></a>3.7.1 docker-compose配置文件</h3><p>编辑kafka.yml</p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs dts"><span class="hljs-symbol">version:</span> <span class="hljs-string">&#x27;3&#x27;</span><br><span class="hljs-symbol">services:</span><br><span class="hljs-symbol">  kafka:</span><br><span class="hljs-symbol">    image:</span> wurstmeister/kafka<br><span class="hljs-symbol">    container_name:</span> kafka<br><span class="hljs-symbol">    restart:</span> always<br><span class="hljs-symbol">    environment:</span><br>      <span class="hljs-meta">#- KAFKA_BROKER_ID=0</span><br>      <span class="hljs-meta">#- KAFKA_ZOOKEEPER_CONNECT=192.168.80.130:2181</span><br>      <span class="hljs-meta">#- KAFKA_ADVERTISED_LISTENERS=PLAINTEXT:<span class="hljs-comment">//192.168.80.130:9092</span></span><br>      <span class="hljs-meta">#- KAFKA_LISTENERS=PLAINTEXT:<span class="hljs-comment">//0.0.0.0:9092</span></span><br><span class="hljs-symbol">      KAFKA_ADVERTISED_LISTENERS:</span> PLAINTEXT:<span class="hljs-comment">//192.168.80.130:9092</span><br><span class="hljs-symbol">      KAFKA_ZOOKEEPER_CONNECT:</span> <span class="hljs-number">192.168</span><span class="hljs-number">.80</span><span class="hljs-number">.130</span>:<span class="hljs-number">2181</span><br><span class="hljs-symbol">      KAFKA_LISTENERS:</span> PLAINTEXT:<span class="hljs-comment">//0.0.0.0:9092</span><br><span class="hljs-symbol">      KAFKA_DELETE_TOPIC_ENABLE:</span> <span class="hljs-string">&quot;true&quot;</span><br><span class="hljs-symbol">      KAFKA_BROKER_ID:</span> <span class="hljs-number">0</span><br><span class="hljs-symbol">    networks:</span><br><span class="hljs-symbol">      default:</span><br><span class="hljs-symbol">        ipv4_address:</span> <span class="hljs-number">172.20</span><span class="hljs-number">.0</span><span class="hljs-number">.7</span><br><span class="hljs-symbol">    ports:</span><br>      - <span class="hljs-number">9092</span>:<span class="hljs-number">9092</span><br><span class="hljs-symbol">    external_links:</span><br>      - zookeeper:zookeeper<br><span class="hljs-symbol"></span><br><span class="hljs-symbol">networks:</span><br><span class="hljs-symbol">  default:</span><br><span class="hljs-symbol">    external:</span><br><span class="hljs-symbol">      name:</span> elk-kafka-network<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-7-2-构建脚本"><a href="#3-7-2-构建脚本" class="headerlink" title="3.7.2 构建脚本"></a>3.7.2 构建脚本</h3><p>编辑build.sh</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs powershell">docker<span class="hljs-literal">-compose</span> <span class="hljs-operator">-f</span> kafka.yml stop<br><br>docker<span class="hljs-literal">-compose</span> <span class="hljs-operator">-f</span> kafka.yml <span class="hljs-built_in">rm</span> <span class="hljs-literal">--force</span><br><br>docker<span class="hljs-literal">-compose</span> <span class="hljs-operator">-f</span> kafka.yml up <span class="hljs-literal">-d</span><br></code></pre></td></tr></table></figure>
+
+<p>执行构建脚本</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">chmod</span> +x build.sh &amp;&amp; ./build.sh</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="3-8-kafka-manager"><a href="#3-8-kafka-manager" class="headerlink" title="3.8 kafka-manager"></a>3.8 kafka-manager</h2><h3 id="3-8-1-docker-compose配置文件"><a href="#3-8-1-docker-compose配置文件" class="headerlink" title="3.8.1 docker-compose配置文件"></a>3.8.1 docker-compose配置文件</h3><p>编辑kafka-manager.yml</p>
+<figure class="highlight nestedtext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs nestedtext"><span class="hljs-attribute">version</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#x27;3&#x27;</span><br><span class="hljs-attribute">services</span><span class="hljs-punctuation">:</span><br>  <span class="hljs-attribute">kafka-manager</span><span class="hljs-punctuation">:</span><br>    <span class="hljs-attribute">image</span><span class="hljs-punctuation">:</span> <span class="hljs-string">sheepkiller/kafka-manager</span><br>    <span class="hljs-attribute">container_name</span><span class="hljs-punctuation">:</span> <span class="hljs-string">kafka-manager</span><br>    <span class="hljs-attribute">restart</span><span class="hljs-punctuation">:</span> <span class="hljs-string">always</span><br>    <span class="hljs-attribute">environment</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-comment">#- ZK_HOSTS=172.20.0.6:2181</span><br>      <span class="hljs-attribute">ZK_HOSTS</span><span class="hljs-punctuation">:</span> <span class="hljs-string">172.20.0.6:2181</span><br>    <span class="hljs-attribute">networks</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-attribute">default</span><span class="hljs-punctuation">:</span><br>        <span class="hljs-attribute">ipv4_address</span><span class="hljs-punctuation">:</span> <span class="hljs-string">172.20.0.8</span><br>    <span class="hljs-attribute">ports</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">9000:9000</span><br><br><span class="hljs-attribute">networks</span><span class="hljs-punctuation">:</span><br>  <span class="hljs-attribute">default</span><span class="hljs-punctuation">:</span><br>    <span class="hljs-attribute">external</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-attribute">name</span><span class="hljs-punctuation">:</span> <span class="hljs-string">elk-kafka-network</span><br><br></code></pre></td></tr></table></figure>
+
+<h3 id="3-8-2-构建脚本"><a href="#3-8-2-构建脚本" class="headerlink" title="3.8.2 构建脚本"></a>3.8.2 构建脚本</h3><p>编辑build-manager.sh</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs powershell">docker<span class="hljs-literal">-compose</span> <span class="hljs-operator">-f</span> kafka<span class="hljs-literal">-manager</span>.yml stop<br><br>docker<span class="hljs-literal">-compose</span> <span class="hljs-operator">-f</span> kafka<span class="hljs-literal">-manager</span>.yml <span class="hljs-built_in">rm</span> <span class="hljs-literal">--force</span><br><br>docker<span class="hljs-literal">-compose</span> <span class="hljs-operator">-f</span> kafka<span class="hljs-literal">-manager</span>.yml up <span class="hljs-literal">-d</span><br></code></pre></td></tr></table></figure>
+
+<p>执行构建脚本</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs powershell"><span class="hljs-variable">$</span> chmod +x <span class="hljs-built_in">build-manager</span>.sh &amp;&amp; ./<span class="hljs-built_in">build-manager</span>.sh<br></code></pre></td></tr></table></figure>
+
+<h2 id="3-9-搭建部署完成"><a href="#3-9-搭建部署完成" class="headerlink" title="3.9 搭建部署完成"></a>3.9 搭建部署完成</h2><ol>
+<li>查看docker容器状态是否正常</li>
+</ol>
+<p><img src="http://image.focusprogram.top/20200511143815.png"></p>
+<ol start="2">
+<li>查看elasticsearch集群状态是否正常</li>
+</ol>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">$ curl http:<span class="hljs-regexp">//</span>localhost:<span class="hljs-number">9200</span> &amp;&amp; curl http:<span class="hljs-regexp">//</span>localhost:<span class="hljs-number">9202</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="http://image.focusprogram.top/20200511142251.png"></p>
+<p>测试集群效果：</p>
+<p><a target="_blank" rel="noopener" href="http://192.168.80.130:9200/_cat/nodes?pretty">http://192.168.80.130:9200/_cat&#x2F;nodes?pretty</a></p>
+<p><img src="http://image.focusprogram.top/20200511142457.png"></p>
+<ol start="3">
+<li>kafka需要添加指定主题my_log</li>
+</ol>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs awk">$ docker exec -it kafka <span class="hljs-regexp">/bin/</span>bash<br><br><span class="hljs-comment"># 创建my_log topic</span><br><span class="hljs-regexp">/opt/</span>kafka<span class="hljs-regexp">/bin/</span>kafka-topics.sh --create --zookeeper <span class="hljs-number">192.168</span>.<span class="hljs-number">80.130</span>:<span class="hljs-number">2181</span> --replication-factor <span class="hljs-number">1</span> --partitions <span class="hljs-number">1</span> --topic my_log<br><br><span class="hljs-comment"># 查询创建的主题</span><br><span class="hljs-regexp">/opt/</span>kafka<span class="hljs-regexp">/bin/</span>kafka-topics.sh --list --zookeeper <span class="hljs-number">192.168</span>.<span class="hljs-number">80.130</span>:<span class="hljs-number">2181</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="4-springboot整合elk-kafka"><a href="#4-springboot整合elk-kafka" class="headerlink" title="4. springboot整合elk+kafka"></a>4. springboot整合elk+kafka</h1><h2 id="4-1-elasticsearch查询模块"><a href="#4-1-elasticsearch查询模块" class="headerlink" title="4.1 elasticsearch查询模块"></a>4.1 elasticsearch查询模块</h2><p>引入maven依赖</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-data-elasticsearch<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>2.2.6.RELEASE<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.querydsl<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>querydsl-apt<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.querydsl<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>querydsl-jpa<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>添加实体类ProductEntity</p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><code class="hljs lasso">@Document(indexName = <span class="hljs-string">&quot;product&quot;</span>, <span class="hljs-keyword">type</span> = <span class="hljs-string">&quot;product&quot;</span>)<br>@<span class="hljs-built_in">Data</span><br><span class="hljs-keyword">public</span> class ProductEntity &#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 主键ID</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">Integer</span> id;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 类型ID</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">Integer</span> categoryId;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 名称</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">String</span> name;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 小标题</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">String</span> subtitle;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 主图像</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">String</span> mainImage;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 小标题图像</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">String</span> subImages;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 描述</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">String</span> detail;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 商品规格</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">String</span> attributeList;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 价格</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> Double price;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 库存</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">Integer</span> stock;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 状态</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">Integer</span> status;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 创建人</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">String</span> createdBy;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 创建时间</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">Date</span> createdTime;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 更新时间</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> MappingMetaData.Timestamp updatedTime;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>添加es查询接口ProductReposiory</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs angelscript"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-symbol">ProductReposiory</span> <span class="hljs-symbol">extends</span> <span class="hljs-symbol">ElasticsearchRepository</span>&lt;<span class="hljs-symbol">ProductEntity</span>, <span class="hljs-symbol">Long</span>&gt; &#123;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>添加查询接口以及实现</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">ProductSearchService</span> &#123;<br><br>    List&lt;ProductEntity&gt; <span class="hljs-title function_">search</span><span class="hljs-params">(String name, <span class="hljs-meta">@PageableDefault(page = 0, value = 10)</span> Pageable pageable)</span>;<br><br>&#125;<br><br><span class="hljs-meta">@Service</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ProductSearchServiceImpl</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">ProductSearchService</span> &#123;<br><br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> ProductReposiory productReposiory;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> List&lt;ProductEntity&gt; <span class="hljs-title function_">search</span><span class="hljs-params">(String name, <span class="hljs-meta">@PageableDefault(page = 0, value = 10)</span> Pageable pageable)</span> &#123;<br><span class="hljs-comment">//        String user = null;</span><br><span class="hljs-comment">//        System.out.println(user.getBytes());</span><br>        <span class="hljs-comment">// 1.拼接查询条件</span><br>        <span class="hljs-type">BoolQueryBuilder</span> <span class="hljs-variable">builder</span> <span class="hljs-operator">=</span> QueryBuilders.boolQuery();<br>        <span class="hljs-comment">// 2.模糊查询 name、 subtitle、detail含有 搜索关键字</span><br>        builder.must(QueryBuilders.multiMatchQuery(name, <span class="hljs-string">&quot;name&quot;</span>, <span class="hljs-string">&quot;subtitle&quot;</span>, <span class="hljs-string">&quot;detail&quot;</span>));<br>        <span class="hljs-comment">// 3.调用ES接口查询</span><br>        Page&lt;ProductEntity&gt; page = productReposiory.search(builder, pageable);<br>        <span class="hljs-comment">// 4.获取集合数据</span><br>        List&lt;ProductEntity&gt; content = page.getContent();<br>        <span class="hljs-keyword">return</span> content;<br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>添加访问层ProductController</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-meta">@RestController</span><br><span class="hljs-meta">@RequestMapping(<span class="hljs-string">&quot;elk&quot;</span>)</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ProductController</span> </span>&#123;<br><br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> ProductSearchService productSearchService;<br><br>    <span class="hljs-meta">@Cache(key = <span class="hljs-string">&quot;product&quot;</span>)</span><br>    <span class="hljs-meta">@PostMapping(<span class="hljs-string">&quot;search&quot;</span>)</span><br>    <span class="hljs-keyword">public</span> List&lt;ProductEntity&gt; search(<span class="hljs-meta">@RequestParam(<span class="hljs-string">&quot;name&quot;</span>)</span> String name) &#123;<br>        Pageable pageable = PageRequest.of(<span class="hljs-number">0</span>, <span class="hljs-number">10</span>);<br>        <span class="hljs-keyword">return</span> productSearchService.search(name, pageable);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>添加配置文件application.yml</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">server:</span><br>  <span class="hljs-attr">port:</span> <span class="hljs-number">9000</span><br><br><span class="hljs-attr">spring:</span><br>  <span class="hljs-attr">application:</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">elk-es</span><br>  <span class="hljs-attr">data:</span><br>    <span class="hljs-attr">elasticsearch:</span><br>      <span class="hljs-comment"># 指定elasticsearch集群地址</span><br>      <span class="hljs-attr">cluster-name:</span> <span class="hljs-string">elasticsearch-cluster</span><br>      <span class="hljs-attr">cluster-nodes:</span> <span class="hljs-number">192.168</span><span class="hljs-number">.80</span><span class="hljs-number">.130</span><span class="hljs-string">:9300</span><br>  <span class="hljs-attr">kafka:</span><br>    <span class="hljs-attr">bootstrap-servers:</span> <span class="hljs-number">192.168</span><span class="hljs-number">.80</span><span class="hljs-number">.130</span><span class="hljs-string">:9092</span><br><br>  <span class="hljs-attr">redis:</span><br>    <span class="hljs-attr">host:</span> <span class="hljs-number">114.55</span><span class="hljs-number">.34</span><span class="hljs-number">.44</span><br>    <span class="hljs-attr">port:</span> <span class="hljs-number">6379</span><br>    <span class="hljs-attr">password:</span> <span class="hljs-string">root</span><br>    <span class="hljs-attr">timeout:</span> <span class="hljs-number">2000</span><br>    <span class="hljs-attr">jedis:</span><br>      <span class="hljs-attr">pool:</span><br>        <span class="hljs-attr">maxActive:</span> <span class="hljs-number">300</span><br>        <span class="hljs-attr">maxIdle:</span> <span class="hljs-number">100</span><br>        <span class="hljs-attr">maxWait:</span> <span class="hljs-number">1000</span><br>    <span class="hljs-comment"># 服务或应用名</span><br>    <span class="hljs-attr">sysName:</span> <span class="hljs-string">admin</span><br>    <span class="hljs-attr">enable:</span> <span class="hljs-literal">true</span><br>    <span class="hljs-attr">database:</span> <span class="hljs-number">0</span><br><br><span class="hljs-attr">kafka:</span><br>  <span class="hljs-attr">topic:</span> <span class="hljs-string">my_log</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="4-2-kafka日志收集模块"><a href="#4-2-kafka日志收集模块" class="headerlink" title="4.2 kafka日志收集模块"></a>4.2 kafka日志收集模块</h2><p>引入maven依赖</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.kafka<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-kafka<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>2.1.5.RELEASE<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.aspectj<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>aspectjrt<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>1.8.6<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>添加kafka推送消息类KafkaSender</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-meta">@Component</span><br><span class="hljs-meta">@Slf4j</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">KafkaSender</span>&lt;T&gt; &#123;<br><br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-title class_">KafkaTemplate</span>&lt;<span class="hljs-title class_">String</span>, <span class="hljs-title class_">Object</span>&gt; kafkaTemplate;<br><br>    <span class="hljs-meta">@Value</span>(<span class="hljs-string">&quot;$&#123;kafka.topic&#125;&quot;</span>)<br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">String</span> kafkaTopic;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * kafka 发送消息</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> obj 消息对象</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">send</span>(<span class="hljs-params">T obj</span>) &#123;<br>        <span class="hljs-title class_">String</span> jsonObj = <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">toJSONString</span>(obj);<br>        log.<span class="hljs-title function_">info</span>(<span class="hljs-string">&quot;------------ message = &#123;&#125;&quot;</span>, jsonObj);<br><br>        <span class="hljs-comment">// 发送消息</span><br>        <span class="hljs-title class_">ListenableFuture</span>&lt;<span class="hljs-title class_">SendResult</span>&lt;<span class="hljs-title class_">String</span>, <span class="hljs-title class_">Object</span>&gt;&gt; future = kafkaTemplate.<span class="hljs-title function_">send</span>(kafkaTopic, jsonObj);<br>        future.<span class="hljs-title function_">addCallback</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ListenableFutureCallback</span>&lt;<span class="hljs-title class_">SendResult</span>&lt;<span class="hljs-title class_">String</span>, <span class="hljs-title class_">Object</span>&gt;&gt;() &#123;<br>            <span class="hljs-meta">@Override</span><br>            <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">onFailure</span>(<span class="hljs-params">Throwable throwable</span>) &#123;<br>                log.<span class="hljs-title function_">info</span>(<span class="hljs-string">&quot;Produce: The message failed to be sent:&quot;</span> + throwable.<span class="hljs-title function_">getMessage</span>());<br>            &#125;<br><br>            <span class="hljs-meta">@Override</span><br>            <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">onSuccess</span>(<span class="hljs-params">SendResult&lt;<span class="hljs-built_in">String</span>, <span class="hljs-built_in">Object</span>&gt; stringObjectSendResult</span>) &#123;<br>                <span class="hljs-comment">// TODO 业务处理</span><br>                log.<span class="hljs-title function_">info</span>(<span class="hljs-string">&quot;Produce: The message was sent successfully:&quot;</span>);<br>                log.<span class="hljs-title function_">info</span>(<span class="hljs-string">&quot;Produce: _+_+_+_+_+_+_+ result: &quot;</span> + stringObjectSendResult.<span class="hljs-title function_">toString</span>());<br>            &#125;<br>        &#125;);<br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>添加AOP拦截方法请求日志收集类AopLogAspect和全局错误日志收集类GlobalExceptionHandler</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">@Aspect<br>@Slf4j<br>@Component<br>public <span class="hljs-keyword">class</span> AopLogAspect &#123;<br><br>    @Autowired<br>    <span class="hljs-keyword">private</span> KafkaSender&lt;JSONObject&gt; kafkaSender;<br><br>    <span class="hljs-comment">// 申明一个切点 里面是 execution表达式</span><br>    @<span class="hljs-constructor">Pointcut(<span class="hljs-string">&quot;execution(* com.elk.*.controller.*.*(..))&quot;</span>)</span><br>    <span class="hljs-keyword">private</span> void service<span class="hljs-constructor">Aspect()</span> &#123;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 基于注解形式拦截API请求</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * @param joinPoint</span><br><span class="hljs-comment">     */</span><br>    @<span class="hljs-constructor">Before(<span class="hljs-params">value</span> = <span class="hljs-string">&quot;@annotation(com.elk.elkkafka.annotation.MonitorRequest)&quot;</span>)</span><br>    public void <span class="hljs-keyword">do</span><span class="hljs-constructor">Before(JoinPoint <span class="hljs-params">joinPoint</span>)</span> &#123;<br>        <span class="hljs-comment">//获取到请求的属性</span><br>        ServletRequestAttributes attributes =<br>                (ServletRequestAttributes) <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">RequestContextHolder</span>.</span></span>get<span class="hljs-constructor">RequestAttributes()</span>;<br>        <span class="hljs-comment">//获取到请求对象</span><br>        HttpServletRequest request = attributes.get<span class="hljs-constructor">Request()</span>;<br>        <span class="hljs-comment">//URL：根据请求对象拿到访问的地址</span><br>        log.info(<span class="hljs-string">&quot;url=&quot;</span> + request.get<span class="hljs-constructor">RequestURL()</span>);<br>        <span class="hljs-comment">//获取请求的方法，是Get还是Post请求</span><br>        log.info(<span class="hljs-string">&quot;method=&quot;</span> + request.get<span class="hljs-constructor">Method()</span>);<br>        <span class="hljs-comment">//ip：获取到访问</span><br>        log.info(<span class="hljs-string">&quot;ip=&quot;</span> + request.get<span class="hljs-constructor">RemoteAddr()</span>);<br>        <span class="hljs-comment">//获取被拦截的类名和方法名</span><br>        log.info(<span class="hljs-string">&quot;class=&quot;</span> + joinPoint.get<span class="hljs-constructor">Signature()</span>.get<span class="hljs-constructor">DeclaringTypeName()</span> +<br>                <span class="hljs-string">&quot;and method name=&quot;</span> + joinPoint.get<span class="hljs-constructor">Signature()</span>.get<span class="hljs-constructor">Name()</span>);<br>        <span class="hljs-comment">//参数</span><br>        log.info(<span class="hljs-string">&quot;参数=&quot;</span> + joinPoint.get<span class="hljs-constructor">Args()</span>.<span class="hljs-keyword">to</span><span class="hljs-constructor">String()</span>);<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 匹配API拦截</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * @param joinPoint</span><br><span class="hljs-comment">     */</span><br>    @<span class="hljs-constructor">Before(<span class="hljs-params">value</span> = <span class="hljs-string">&quot;serviceAspect()&quot;</span>)</span><br>    public void <span class="hljs-keyword">method</span><span class="hljs-constructor">Before(JoinPoint <span class="hljs-params">joinPoint</span>)</span> &#123;<br>        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder<br>                .get<span class="hljs-constructor">RequestAttributes()</span>;<br>        HttpServletRequest request = requestAttributes.get<span class="hljs-constructor">Request()</span>;<br><br>        <span class="hljs-comment">// 打印请求内容</span><br>        log.info(<span class="hljs-string">&quot;===============请求内容===============&quot;</span>);<br>        log.info(<span class="hljs-string">&quot;请求地址:&quot;</span> + request.get<span class="hljs-constructor">RequestURL()</span>.<span class="hljs-keyword">to</span><span class="hljs-constructor">String()</span>);<br>        log.info(<span class="hljs-string">&quot;请求方式:&quot;</span> + request.get<span class="hljs-constructor">Method()</span>);<br>        log.info(<span class="hljs-string">&quot;请求类方法:&quot;</span> + joinPoint.get<span class="hljs-constructor">Signature()</span>);<br>        log.info(<span class="hljs-string">&quot;请求类方法参数:&quot;</span> + <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Arrays</span>.</span></span><span class="hljs-keyword">to</span><span class="hljs-constructor">String(<span class="hljs-params">joinPoint</span>.<span class="hljs-params">getArgs</span>()</span>));<br>        log.info(<span class="hljs-string">&quot;===============请求内容===============&quot;</span>);<br><br>        JSONObject jsonObject = <span class="hljs-keyword">new</span> <span class="hljs-constructor">JSONObject()</span>;<br>        SimpleDateFormat df = <span class="hljs-keyword">new</span> <span class="hljs-constructor">SimpleDateFormat(<span class="hljs-string">&quot;yyyy-MM-dd HH:mm:ss&quot;</span>)</span>;<span class="hljs-comment">// 设置日期格式</span><br>        jsonObject.put(<span class="hljs-string">&quot;request_time&quot;</span>, df.format(<span class="hljs-keyword">new</span> <span class="hljs-constructor">Date()</span>));<br>        jsonObject.put(<span class="hljs-string">&quot;request_url&quot;</span>, request.get<span class="hljs-constructor">RequestURL()</span>.<span class="hljs-keyword">to</span><span class="hljs-constructor">String()</span>);<br>        jsonObject.put(<span class="hljs-string">&quot;request_method&quot;</span>, request.get<span class="hljs-constructor">Method()</span>);<br>        jsonObject.put(<span class="hljs-string">&quot;signature&quot;</span>, joinPoint.get<span class="hljs-constructor">Signature()</span>);<br>        jsonObject.put(<span class="hljs-string">&quot;request_args&quot;</span>, <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Arrays</span>.</span></span><span class="hljs-keyword">to</span><span class="hljs-constructor">String(<span class="hljs-params">joinPoint</span>.<span class="hljs-params">getArgs</span>()</span>));<br>        <span class="hljs-keyword">try</span> &#123;<br>            jsonObject.put(<span class="hljs-string">&quot;request_ip&quot;</span>, <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">WebToolUtils</span>.</span></span>get<span class="hljs-constructor">LocalIP()</span>);<br>        &#125; catch (UnknownHostException e) &#123;<br>            e.print<span class="hljs-constructor">StackTrace()</span>;<br>        &#125; catch (SocketException e) &#123;<br>            e.print<span class="hljs-constructor">StackTrace()</span>;<br>        &#125;<br>        JSONObject requestJsonObject = <span class="hljs-keyword">new</span> <span class="hljs-constructor">JSONObject()</span>;<br>        requestJsonObject.put(<span class="hljs-string">&quot;request&quot;</span>, jsonObject);<br>        kafkaSender.send(requestJsonObject);<br>    &#125;<br><br>    <span class="hljs-comment">// 在方法执行完结后打印返回内容</span><br>    @<span class="hljs-constructor">AfterReturning(<span class="hljs-params">returning</span> = <span class="hljs-string">&quot;o&quot;</span>, <span class="hljs-params">pointcut</span> = <span class="hljs-string">&quot;serviceAspect()&quot;</span>)</span><br>    public void <span class="hljs-keyword">method</span><span class="hljs-constructor">AfterReturing(Object <span class="hljs-params">o</span>)</span> &#123;<br><br>        log.info(<span class="hljs-string">&quot;--------------返回内容----------------&quot;</span>);<br>        log.info(<span class="hljs-string">&quot;Response内容:&quot;</span> + o.<span class="hljs-keyword">to</span><span class="hljs-constructor">String()</span>);<br>        log.info(<span class="hljs-string">&quot;--------------返回内容----------------&quot;</span>);<br>        JSONObject respJSONObject = <span class="hljs-keyword">new</span> <span class="hljs-constructor">JSONObject()</span>;<br>        JSONObject jsonObject = <span class="hljs-keyword">new</span> <span class="hljs-constructor">JSONObject()</span>;<br>        SimpleDateFormat df = <span class="hljs-keyword">new</span> <span class="hljs-constructor">SimpleDateFormat(<span class="hljs-string">&quot;yyyy-MM-dd HH:mm:ss&quot;</span>)</span>;<span class="hljs-comment">// 设置日期格式</span><br>        jsonObject.put(<span class="hljs-string">&quot;response_time&quot;</span>, df.format(<span class="hljs-keyword">new</span> <span class="hljs-constructor">Date()</span>));<br>        jsonObject.put(<span class="hljs-string">&quot;response_content&quot;</span>, <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">JSONObject</span>.</span></span><span class="hljs-keyword">to</span><span class="hljs-constructor">JSONString(<span class="hljs-params">o</span>)</span>);<br>        respJSONObject.put(<span class="hljs-string">&quot;response&quot;</span>, jsonObject);<br>        kafkaSender.send(respJSONObject);<br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-meta">@ControllerAdvice</span><br><span class="hljs-meta">@Slf4j</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">GlobalExceptionHandler</span> &#123;<br><br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-title class_">KafkaSender</span>&lt;<span class="hljs-title class_">JSON</span><span class="hljs-built_in">Object</span>&gt; kafkaSender;<br><br>    <span class="hljs-meta">@ExceptionHandler</span>(<span class="hljs-title class_">RuntimeException</span>.<span class="hljs-property">class</span>)<br>    <span class="hljs-meta">@ResponseBody</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">JSON</span><span class="hljs-built_in">Object</span> <span class="hljs-title function_">exceptionHandler</span>(<span class="hljs-params">Exception e</span>) &#123;<br>        log.<span class="hljs-title function_">info</span>(<span class="hljs-string">&quot;###全局捕获异常###,error:&#123;&#125;&quot;</span>, e);<br><br>        <span class="hljs-comment">// 1.封装异常日志信息</span><br>        <span class="hljs-title class_">JSON</span><span class="hljs-built_in">Object</span> errorJson = <span class="hljs-keyword">new</span> <span class="hljs-title class_">JSON</span><span class="hljs-built_in">Object</span>();<br>        <span class="hljs-title class_">JSON</span><span class="hljs-built_in">Object</span> logJson = <span class="hljs-keyword">new</span> <span class="hljs-title class_">JSON</span><span class="hljs-built_in">Object</span>();<br>        <span class="hljs-title class_">SimpleDateFormat</span> df = <span class="hljs-keyword">new</span> <span class="hljs-title class_">SimpleDateFormat</span>(<span class="hljs-string">&quot;yyyy-MM-dd HH:mm:ss&quot;</span>);<span class="hljs-comment">// 设置日期格式</span><br>        logJson.<span class="hljs-title function_">put</span>(<span class="hljs-string">&quot;request_time&quot;</span>, df.<span class="hljs-title function_">format</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>()));<br>        logJson.<span class="hljs-title function_">put</span>(<span class="hljs-string">&quot;error_info&quot;</span>, e);<br><br>        errorJson.<span class="hljs-title function_">put</span>(<span class="hljs-string">&quot;request_error&quot;</span>, logJson);<br>        kafkaSender.<span class="hljs-title function_">send</span>(errorJson);<br>        <span class="hljs-comment">// 2. 返回错误信息</span><br>        <span class="hljs-title class_">JSON</span><span class="hljs-built_in">Object</span> result = <span class="hljs-keyword">new</span> <span class="hljs-title class_">JSON</span><span class="hljs-built_in">Object</span>();<br>        result.<span class="hljs-title function_">put</span>(<span class="hljs-string">&quot;code&quot;</span>, <span class="hljs-number">500</span>);<br>        result.<span class="hljs-title function_">put</span>(<span class="hljs-string">&quot;msg&quot;</span>, <span class="hljs-string">&quot;系统错误&quot;</span>);<br><br>        <span class="hljs-comment">// 参数中记录下，IP和端口号</span><br>        <span class="hljs-keyword">return</span> result;<br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="4-3-测试日志收集"><a href="#4-3-测试日志收集" class="headerlink" title="4.3 测试日志收集"></a>4.3 测试日志收集</h2><figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">$ curl http://localhost:<span class="hljs-number">9000</span>/elk/<span class="hljs-keyword">search</span>?<span class="hljs-type">name</span>=苹果<br><br>[<br>    &#123;<br>        &quot;id&quot;: <span class="hljs-number">1</span>,<br>        &quot;categoryId&quot;: <span class="hljs-keyword">null</span>,<br>        &quot;name&quot;: &quot;Pad平板电脑无线局域网&quot;,<br>        &quot;subtitle&quot;: &quot;Pad平板电脑&quot;,<br>        &quot;mainImage&quot;: <span class="hljs-keyword">null</span>,<br>        &quot;subImages&quot;: <span class="hljs-keyword">null</span>,<br>        &quot;detail&quot;: &quot;官方授权Pad苹果电脑&quot;,<br>        &quot;attributeList&quot;: <span class="hljs-keyword">null</span>,<br>        &quot;price&quot;: <span class="hljs-keyword">null</span>,<br>        &quot;stock&quot;: <span class="hljs-keyword">null</span>,<br>        &quot;status&quot;: <span class="hljs-number">0</span>,<br>        &quot;createdBy&quot;: <span class="hljs-keyword">null</span>,<br>        &quot;createdTime&quot;: <span class="hljs-keyword">null</span>,<br>        &quot;updatedTime&quot;: <span class="hljs-keyword">null</span><br>    &#125;<br>]<br></code></pre></td></tr></table></figure>
+
+<p>查询kibana，发现数据已经同步：</p>
+<p><img src="http://image.focusprogram.top/20200511154946.png"></p>
+<p><img src="http://image.focusprogram.top/20200511155151.png"></p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" class="category-chain-item">微服务</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/SpringCloud/">#SpringCloud</a>
+      
+        <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">#微服务</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>ELK-Kafka分布式日志收集</div>
+      <div>http://yoursite.com/2020/07/11/ELK-Kafka分布式日志收集/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Mr.Kong</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年7月11日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - Mr.Kong">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/07/11/Seata/" title="Seata">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Seata</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/07/11/ELK%E8%AF%A6%E8%A7%A3/" title="ELK详解">
+                        <span class="hidden-mobile">ELK详解</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments">
+    
+  <div id="waline"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#waline', function() {
+      Fluid.utils.createCssLink('https://lib.baomitu.com/waline/2.5.1/waline.min.css')
+      Fluid.utils.createScript('https://lib.baomitu.com/waline/2.5.1/waline.min.js', function() {
+        var options = Object.assign(
+          {"serverURL":"https://waline-server-lake-five.vercel.app","path":"window.location.pathname","placeholder":"留下您想说的话吧(*^▽^*)","meta":["nick","mail","link"],"requiredMeta":["nick"],"visitor":true,"lang":"zh-CN","avatar":"robohash","emoji":["//unpkg.com/@waline/emojis@1.0.1/weibo"],"dark":"html[data-user-color-scheme=\"dark\"]","search":true,"recordIP":true,"highlighter":true,"wordLimit":0,"pageSize":10},
+          {
+            el: '#waline',
+            path: window.location.pathname
+          }
+        )
+        Waline.init(options);
+        Fluid.utils.waitElementVisible('#waline .vcontent', () => {
+          var imgSelector = '#waline .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://github.com/FocusProgram" target="_blank" rel="nofollow noopener"><span>Always persistent</span></a> <i class="iconfont icon-love"></i> <a href="https://gitee.com/FocusProgram/" target="_blank" rel="nofollow noopener"><span>Forever love</span></a> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      苏ICP备19063834号-1
+    </a>
+  </span>
+  
+    
+      <span>
+        <a
+          href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=44030602004695"
+          rel="nofollow noopener"
+          class="beian-police"
+          target="_blank"
+        >
+          
+            <span style="visibility: hidden; width: 0">|</span>
+            <img src="/img/police_beian.png" alt="police-icon"/>
+          
+          <span>苏公安网备44030602004695号</span>
+        </a>
+      </span>
+    
+  
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<!-- hexo injector body_end start -->
+  <script defer src="/js/daovoice.js"></script>
+<!-- hexo injector body_end end --></body>
+</html>

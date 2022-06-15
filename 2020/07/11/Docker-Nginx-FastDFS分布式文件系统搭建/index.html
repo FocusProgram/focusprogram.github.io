@@ -1,0 +1,932 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head><!-- hexo injector head_begin start -->
+  <script defer src="/js/post_head.js"></script>
+<!-- hexo injector head_begin end -->
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/Mr.Kong.jpg">
+  <link rel="icon" href="/img/Mr.Kong.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Mr.Kong">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="FastDFS介绍  1.1   什么是FastDFS          FastDFS是用c语言编写的一款开源的分布式文件系统。FastDFS为互联网量身定制，充分考虑了冗余备份、负载均衡、线性扩容等机制，并注重高可用、高性能等指标，使用FastDFS很容易搭建一套高性能的文件服务器集群提供文件上传、下载等服务。 1.2   FastDFS架构          FastDFS架构包括 Trac">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker+Nginx+FastDFS分布式文件系统搭建">
+<meta property="og:url" content="http://yoursite.com/2020/07/11/Docker-Nginx-FastDFS%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E6%90%AD%E5%BB%BA/index.html">
+<meta property="og:site_name" content="Mr.Kong Blog">
+<meta property="og:description" content="FastDFS介绍  1.1   什么是FastDFS          FastDFS是用c语言编写的一款开源的分布式文件系统。FastDFS为互联网量身定制，充分考虑了冗余备份、负载均衡、线性扩容等机制，并注重高可用、高性能等指标，使用FastDFS很容易搭建一套高性能的文件服务器集群提供文件上传、下载等服务。 1.2   FastDFS架构          FastDFS架构包括 Trac">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://image.focusprogram.top/20191107104303.png">
+<meta property="article:published_time" content="2020-07-11T08:40:39.000Z">
+<meta property="article:modified_time" content="2022-06-11T03:07:54.293Z">
+<meta property="article:author" content="Mr.Kong">
+<meta property="article:tag" content="Docker">
+<meta property="article:tag" content="FastDFS">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://image.focusprogram.top/20191107104303.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Docker+Nginx+FastDFS分布式文件系统搭建 - Mr.Kong Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"yoursite.com","root":"/","version":"1.9.1","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":false,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":"ture","follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Mr.Kong</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-bookmark-fill"></i>
+                开源地址
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" target="_blank" rel="noopener" href="https://gitee.com/FocusProgram/">
+                    
+                    Gitee
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" target="_blank" rel="noopener" href="https://github.com/FocusProgram/">
+                    
+                    GitHub
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/neight.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Docker+Nginx+FastDFS分布式文件系统搭建"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-07-11 16:40" pubdate>
+          2020年7月11日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          9.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          78 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="padding-left: 2rem; margin-right: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Docker+Nginx+FastDFS分布式文件系统搭建</h1>
+            
+            <div class="markdown-body">
+              
+              <p>FastDFS介绍</p>
+<hr>
+<p>1.1   什么是FastDFS</p>
+<p>         FastDFS是用c语言编写的一款开源的分布式文件系统。FastDFS为互联网量身定制，充分考虑了冗余备份、负载均衡、线性扩容等机制，并注重高可用、高性能等指标，使用FastDFS很容易搭建一套高性能的文件服务器集群提供文件上传、下载等服务。</p>
+<p>1.2   FastDFS架构</p>
+<p>         FastDFS架构包括 Tracker server和Storage server。客户端请求Tracker server进行文件上传、下载，通过Trackerserver调度最终由Storage server完成文件上传和下载。</p>
+<p>         Trackerserver作用是负载均衡和调度，通过Trackerserver在文件上传时可以根据一些策略找到Storageserver提供文件上传服务。可以将tracker称为追踪服务器或调度服务器。</p>
+<p>         Storageserver作用是文件存储，客户端上传的文件最终存储在Storage服务器上，Storage server没有实现自己的文件系统而是利用操作系统 的文件系统来管理文件。可以将storage称为存储服务器。</p>
+<pre><code class="hljs">Tracker 集群
+
+FastDFS集群中的Trackerserver可以有多台，Trackerserver之间是相互平等关系同时提供服务，Trackerserver不存在单点故障。客户端请求Trackerserver采用轮询方式，如果请求的tracker无法提供服务则换另一个tracker。
+
+Storage 集群
+
+Storage集群采用了分组存储方式。storage集群由一个或多个组构成，集群存储总容量为集群中所有组的存储容量之和。一个组由一台或多台存储服务器组成，组内的Storage server之间是平等关系，不同组的Storageserver之间不会相互通信，同组内的Storageserver之间会相互连接进行文件同步，从而保证同组内每个storage上的文件完全一致的。一个组的存储容量为该组内存储服务器容量最小的那个，由此可见组内存储服务器的软硬件配置最好是一致的。
+
+采用分组存储方式的好处是灵活、可控性较强。比如上传文件时，可以由客户端直接指定上传到的组也可以由tracker进行调度选择。一个分组的存储服务器访问压力较大时，可以在该组增加存储服务器来扩充服务能力（纵向扩容）。当系统容量不足时，可以增加组来扩充存储容量（横向扩容）。
+</code></pre>
+<p>搭建FastDFS文件系统</p>
+<hr>
+<p>准备工作-关闭防火墙</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs routeros">$ systemctl stop firewalld &amp; systemctl <span class="hljs-built_in">disable</span> firewalld<br><br>$ vim /etc/sysconfig/selinux<br>  <br>  <span class="hljs-attribute">SELINUX</span>=disabled<br></code></pre></td></tr></table></figure>
+
+<p>准备工作-编译环境（FastDFS是C语言开发，安装FastDFS需要先将官网下载的源码进行编译，编译依赖gcc环境，如果没有gcc环境，需要安装gcc）</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">$ yum install git gcc gcc-c++ make <span class="hljs-built_in">auto</span>make <span class="hljs-built_in">auto</span>conf libtool pcre pcre-devel zlib zlib-devel openssl-devel wget vim -y<br></code></pre></td></tr></table></figure>
+
+<p>准备工作-Git</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmake">$ yum <span class="hljs-keyword">install</span> git<br></code></pre></td></tr></table></figure>
+
+<p>1.下载镜像</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash">docker search fastdfs</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">docker pull season/fastdfs</span><br></code></pre></td></tr></table></figure>
+
+<p>2.创建文件存储目录</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">mkdir</span> -p /data/fdfs</span><br></code></pre></td></tr></table></figure>
+
+<p>3.安装libfatscommon</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash">git <span class="hljs-built_in">clone</span> https://github.com/happyfish100/libfastcommon.git --depth 1</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">cd</span> libfastcommon/</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">./make.sh &amp;&amp; ./make.sh install <span class="hljs-comment">#编译安装</span></span><br></code></pre></td></tr></table></figure>
+
+<p>4.安装FastDFS</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash">git <span class="hljs-built_in">clone</span> https://github.com/happyfish100/fastdfs.git --depth 1</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">cd</span> fastdfs/</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">./make.sh &amp;&amp; ./make.sh install <span class="hljs-comment">#编译安装</span></span><br></code></pre></td></tr></table></figure>
+
+<p>5.安装fastdfs-nginx-module</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">$ git clone https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/happyfish100/</span>fastdfs-nginx-module.git --depth <span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
+
+<p>6.安装Nginx</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs awk">$ wget http:<span class="hljs-regexp">//</span>nginx.org<span class="hljs-regexp">/download/</span>nginx-<span class="hljs-number">1.15</span>.<span class="hljs-number">4</span>.tar.gz <span class="hljs-comment">#下载nginx压缩包</span><br><br>$ tar -zxvf nginx-<span class="hljs-number">1.15</span>.<span class="hljs-number">4</span>.tar.gz <span class="hljs-comment">#解压</span><br><br>$ cd nginx-<span class="hljs-number">1.15</span>.<span class="hljs-number">4</span>/<br><br><span class="hljs-comment">#添加fastdfs-nginx-module模块</span><br>$ .<span class="hljs-regexp">/configure --add-module=/</span>data<span class="hljs-regexp">/fdfs/</span>fastdfs-nginx-module<span class="hljs-regexp">/src/</span> <br><br>$ make &amp;&amp; make install <span class="hljs-comment">#编译安装</span><br><br>$ cd <span class="hljs-regexp">/usr/</span>local 查看nginx是否安装成功，成功则显示nginx目录<br></code></pre></td></tr></table></figure>
+
+<p>7.创建FastDFS存储目录</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs haskell">$ mkdir -p /<span class="hljs-class"><span class="hljs-keyword">data</span>/fdfs/&#123;<span class="hljs-title">tracker_data</span>,<span class="hljs-title">storage_data</span>,<span class="hljs-title">store_path</span>,<span class="hljs-title">fdfs_conf</span>&#125;</span><br></code></pre></td></tr></table></figure>
+
+<p>8.启动一个临时的tracker 拷贝storage.conf tracker.conf 至&#x2F;var&#x2F;fdfs&#x2F;fdfs_conf</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs awk">docker run  -d --name tracker  --net=host season/fastdfs tracker<br>docker ps <br><br><span class="hljs-regexp">//</span>查询到容器id<br>docker cp 容器ID:<span class="hljs-regexp">/fdfs_conf/</span>tracker.conf <span class="hljs-regexp">/data/</span>fdfs<span class="hljs-regexp">/fdfs_conf/</span><br>docker cp 容器ID:<span class="hljs-regexp">/fdfs_conf/</span>storage.conf <span class="hljs-regexp">/data/</span>fdfs<span class="hljs-regexp">/fdfs_conf/</span><br></code></pre></td></tr></table></figure>
+
+<p>9.单机配置</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs awk">tracker配置<br><br>$ vim <span class="hljs-regexp">/etc/</span>fdfs/tracker.conf<br><span class="hljs-comment">#需要修改的内容如下</span><br>port=<span class="hljs-number">22122</span>                  <span class="hljs-comment"># tracker服务器端口（默认22122,一般不修改）</span><br>base_path=<span class="hljs-regexp">/data/</span>fdfs/storage  <span class="hljs-comment"># 存储日志和数据的根目录</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs awk">storage配置<br><br>$ vim <span class="hljs-regexp">/etc/</span>fdfs/storage.conf<br><span class="hljs-comment">#需要修改的内容如下</span><br>port=<span class="hljs-number">23000</span>  <span class="hljs-comment"># storage服务端口（默认23000,一般不修改）</span><br>base_path=<span class="hljs-regexp">/data/</span>fdfs/storage  <span class="hljs-comment"># 数据和日志文件存储根目录</span><br>store_path0=<span class="hljs-regexp">/data/</span>fdfs/store_path <span class="hljs-comment"># 第一个存储目录</span><br>tracker_server=<span class="hljs-number">192.168</span>.<span class="hljs-number">199.120</span>:<span class="hljs-number">22122</span>  <span class="hljs-comment"># tracker服务器IP和端口</span><br>http.server_port=<span class="hljs-number">80</span>  <span class="hljs-comment"># http访问文件的端口(默认8888,看情况修改,和nginx中保持一致)</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs gradle">client测试<br><br>vim <span class="hljs-regexp">/etc/</span>fdfs/client.conf<br>#需要修改的内容如下<br>base_path=<span class="hljs-regexp">/fastdfs/</span>storage<br>tracker_server=<span class="hljs-number">192.168</span>.<span class="hljs-number">199.120</span>:<span class="hljs-number">22122</span>    #tracker服务器IP和端口<br>#保存后测试,返回ID表示成功 如：group1<span class="hljs-regexp">/M00/</span><span class="hljs-number">00</span><span class="hljs-regexp">/00/</span>xx.tar.gz<br>fdfs_upload_file <span class="hljs-regexp">/etc/</span>fdfs<span class="hljs-regexp">/client.conf /u</span>sr<span class="hljs-regexp">/local/</span>src/nginx-<span class="hljs-number">1.15</span>.<span class="hljs-number">4</span>.tar.gz<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs awk">配置nginx访问<br><br>vim <span class="hljs-regexp">/etc/</span>fdfs/mod_fastdfs.conf<br><span class="hljs-comment">#需要修改的内容如下</span><br>tracker_server=<span class="hljs-number">192.168</span>.<span class="hljs-number">199.120</span>:<span class="hljs-number">22122</span>  <span class="hljs-comment">#tracker服务器IP和端口</span><br>url_have_group_name=true <span class="hljs-comment">#是否使用group_name为前缀</span><br>store_path0=<span class="hljs-regexp">/data/</span>fdfs/store_path<br><br><span class="hljs-comment">#配置nginx.config</span><br>vim <span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/nginx/</span>conf/nginx.conf<br><span class="hljs-comment">#添加如下配置</span><br>user root;              <span class="hljs-comment">##配置访问权限</span><br><br>server &#123;<br>    listen       <span class="hljs-number">80</span>;    <span class="hljs-comment">## 该端口为storage.conf中的http.server_port相同</span><br>    server_name  <span class="hljs-number">192.168</span>.<span class="hljs-number">199.120</span>;<br>    <span class="hljs-comment"># location ~/group[0-9]/ &#123;</span><br>      location ~<span class="hljs-regexp">/kongqi/</span>&#123;<br>        root <span class="hljs-regexp">/data/</span>fdfs<span class="hljs-regexp">/storage_path/</span>data;<br>        ngx_fastdfs_module;<br>    &#125;<br>    error_page   <span class="hljs-number">500</span> <span class="hljs-number">502</span> <span class="hljs-number">503</span> <span class="hljs-number">504</span>  /<span class="hljs-number">50</span>x.html;<br>    location = /<span class="hljs-number">50</span>x.html &#123;<br>    root   html;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>10.分布式部署</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs awk">tracker配置<br><br>vim <span class="hljs-regexp">/etc/</span>fdfs/tracker.conf<br><span class="hljs-comment">#需要修改的内容如下</span><br>port=<span class="hljs-number">22122</span>                  <span class="hljs-comment"># tracker服务器端口（默认22122,一般不修改）</span><br>base_path=<span class="hljs-regexp">/data/</span>fdfs/storage  <span class="hljs-comment"># 存储日志和数据的根目录</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs routeros">storage配置<br><br>vim /etc/fdfs/storage.conf<br><span class="hljs-comment">#需要修改的内容如下</span><br><span class="hljs-attribute">port</span>=23000  # storage服务端口（默认23000,一般不修改）<br><span class="hljs-attribute">base_path</span>=/data/fdfs/storage  # 数据和日志文件存储根目录<br><span class="hljs-attribute">store_path0</span>=/data/fdfs/store_path # 第一个存储目录<br><span class="hljs-attribute">tracker_server</span>=192.168.199.120:22122  # 服务器1<br><span class="hljs-attribute">tracker_server</span>=192.168.199.121:22122  # 服务器2<br><span class="hljs-attribute">tracker_server</span>=192.168.199.122:22122  # 服务器3<br>http.<span class="hljs-attribute">server_port</span>=80  # http访问文件的端口(默认8888,看情况修改,和nginx中保持一致)<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs awk">client测试<br><br>vim <span class="hljs-regexp">/etc/</span>fdfs/client.conf<br><span class="hljs-comment">#需要修改的内容如下</span><br>base_path=<span class="hljs-regexp">/data/</span>fdfs/store_path  <span class="hljs-comment"># 数据和日志文件存储根目录</span><br>tracker_server=<span class="hljs-number">192.168</span>.<span class="hljs-number">199.120</span>:<span class="hljs-number">22122</span>  <span class="hljs-comment"># 服务器1</span><br>tracker_server=<span class="hljs-number">192.168</span>.<span class="hljs-number">199.121</span>:<span class="hljs-number">22122</span>  <span class="hljs-comment"># 服务器2</span><br>tracker_server=<span class="hljs-number">192.168</span>.<span class="hljs-number">199.122</span>:<span class="hljs-number">22122</span>  <span class="hljs-comment"># 服务器3</span><br><span class="hljs-comment">#保存后测试,返回ID表示成功 如：group1/M00/00/00/xx.tar.gz</span><br>fdfs_upload_file <span class="hljs-regexp">/etc/</span>fdfs<span class="hljs-regexp">/client.conf /u</span>sr<span class="hljs-regexp">/local/</span>src/nginx-<span class="hljs-number">1.15</span>.<span class="hljs-number">4</span>.tar.gz<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs awk">配置nginx访问<br><br>vim <span class="hljs-regexp">/etc/</span>fdfs/mod_fastdfs.conf<br><span class="hljs-comment">#需要修改的内容如下</span><br>tracker_server=<span class="hljs-number">192.168</span>.<span class="hljs-number">199.120</span>:<span class="hljs-number">22122</span>  <span class="hljs-comment"># 服务器1</span><br>tracker_server=<span class="hljs-number">192.168</span>.<span class="hljs-number">199.121</span>:<span class="hljs-number">22122</span>  <span class="hljs-comment"># 服务器2</span><br>tracker_server=<span class="hljs-number">192.168</span>.<span class="hljs-number">199.122</span>:<span class="hljs-number">22122</span>  <span class="hljs-comment"># 服务器3</span><br>url_have_group_name=true<br>store_path0=<span class="hljs-regexp">/data/</span>fdfs/store_path <span class="hljs-comment"># 第一个存储目录</span><br><br><span class="hljs-comment">#配置nginx.config</span><br>vim <span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/nginx/</span>conf/nginx.conf<br><span class="hljs-comment">#添加如下配置</span><br>user root;              <span class="hljs-comment">##配置访问权限</span><br><br>server &#123;<br>    listen       <span class="hljs-number">80</span>;    <span class="hljs-comment">## 该端口为storage.conf中的http.server_port相同</span><br>    server_name  <span class="hljs-number">192.168</span>.<span class="hljs-number">199.120</span>;<br>    <span class="hljs-comment"># location ~/group[0-9]/ &#123;</span><br>      location ~<span class="hljs-regexp">/kongqi/</span>&#123;<br>        root <span class="hljs-regexp">/data/</span>fdfs<span class="hljs-regexp">/storage_path/</span>data;<br>        ngx_fastdfs_module;<br>    &#125;<br>    error_page   <span class="hljs-number">500</span> <span class="hljs-number">502</span> <span class="hljs-number">503</span> <span class="hljs-number">504</span>  /<span class="hljs-number">50</span>x.html;<br>    location = /<span class="hljs-number">50</span>x.html &#123;<br>    root   html;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>11.编写配置文件脚本(&#x2F;etc&#x2F;fdfs目录中的所有文件是nginx 整合fastdfs-nginx-module所用到的配置文件)</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-comment">#! /bin/bash</span><br><br>cp <span class="hljs-regexp">/data/</span>fdfs<span class="hljs-regexp">/fastdfs-nginx-module/</span>src<span class="hljs-regexp">/mod_fastdfs.conf /</span>etc/fdfs<br><br>cp -r <span class="hljs-regexp">/data/</span>fdfs<span class="hljs-regexp">/fastdfs/</span>conf<span class="hljs-regexp">/* /</span>etc<span class="hljs-regexp">/fdfs/</span><br><br>cp -r <span class="hljs-regexp">/data/</span>fdfs<span class="hljs-regexp">/fdfs_conf/</span>* <span class="hljs-regexp">/etc/</span>fdfs/<br></code></pre></td></tr></table></figure>
+
+<p>12.docker部署tracker和storage容器</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs awk">运行tracker镜像<br><br>$ docker run -d --name trakcer \<br>  --restart=always \<br>  -v <span class="hljs-regexp">/data/</span>fdfs<span class="hljs-regexp">/fdfs_conf/</span>tracker.conf:<span class="hljs-regexp">/fdfs_conf/</span>tracker.conf \<br>  -v <span class="hljs-regexp">/data/</span>fdfs<span class="hljs-regexp">/tracker_data:/</span>fastdfs<span class="hljs-regexp">/tracker/</span>data \<br>  --net=host season/fastdfs tracker<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs awk">运行storage镜像<br><br>$ docker run -d --name storage \<br>  --restart=always \<br>  -v <span class="hljs-regexp">/data/</span>fdfs<span class="hljs-regexp">/fdfs_conf/</span>storage.conf:<span class="hljs-regexp">/fdfs_conf/</span>storage.conf \<br>  -v <span class="hljs-regexp">/data/</span>fdfs<span class="hljs-regexp">/storage_data:/</span>fastdfs<span class="hljs-regexp">/storage/</span>data \<br>  -v <span class="hljs-regexp">/data/</span>fdfs<span class="hljs-regexp">/store_path:/</span>fastdfs/store_path \<br>  --net=host season/fastdfs storage<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs 1c">Tracker服务器的端口默认是<span class="hljs-number">22122</span>，你可以查看是否启用端口<br><br>$ netstat -aon <span class="hljs-string">| grep 22122</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs shell">查看tracker容器和storage容器的关联<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">docker <span class="hljs-built_in">exec</span> -it storage /bin/bash</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">cd</span> fdfs_conf</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">fdfs_monitor storage.conf</span><br></code></pre></td></tr></table></figure>
+
+<p>13.运行nginx进行端口监听</p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli"><span class="hljs-keyword">cd</span> <span class="hljs-string">/usr/local/nginx/sbin</span><br><br><span class="hljs-string">./nginx</span> <span class="hljs-comment">#启动Nginx</span><br><br><span class="hljs-string">./nginx</span> -s <span class="hljs-keyword">reload</span> <span class="hljs-comment">#重新加载 </span><br><br><span class="hljs-string">./nginx</span> -s stop <span class="hljs-comment">#停止</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br></pre></td><td class="code"><pre><code class="hljs awk">设置nginx开机自启动<br><br>新增shell脚本 vi <span class="hljs-regexp">/etc/</span>rc.d<span class="hljs-regexp">/init.d/</span>nginx<br><br><span class="hljs-comment">#!/bin/sh</span><br><span class="hljs-comment">#</span><br><span class="hljs-comment">#nginx - this script starts and stops the nginx daemin</span><br><span class="hljs-comment">#</span><br><span class="hljs-comment"># chkconfig: - 85 15</span><br><span class="hljs-comment"># description: Nginx is an HTTP(S) server, HTTP(S) reverse \</span><br><span class="hljs-comment"># proxy and IMAP/POP3 proxy server</span><br><span class="hljs-comment"># processname: nginx</span><br><span class="hljs-comment"># config: /usr/local/nginx/conf/nginx.conf</span><br><span class="hljs-comment"># pidfile: /usr/local/nginx/logs/nginx.pid</span><br><span class="hljs-comment"># Source function library.</span><br>. <span class="hljs-regexp">/etc/</span>rc.d<span class="hljs-regexp">/init.d/</span>functions<br><span class="hljs-comment"># Source networking configuration.</span><br>. <span class="hljs-regexp">/etc/</span>sysconfig/network<br><span class="hljs-comment"># Check that networking is up.</span><br>[ <span class="hljs-string">&quot;$NETWORKING&quot;</span> = <span class="hljs-string">&quot;no&quot;</span> ] &amp;&amp; <span class="hljs-keyword">exit</span> <span class="hljs-number">0</span><br>nginx=<span class="hljs-string">&quot;/usr/local/nginx/sbin/nginx&quot;</span><br>prog=$(basename <span class="hljs-variable">$nginx</span>)<br>NGINX_CONF_FILE=<span class="hljs-string">&quot;/usr/local/nginx/conf/nginx.conf&quot;</span><br>lockfile=<span class="hljs-regexp">/var/</span>lock<span class="hljs-regexp">/subsys/</span>nginx<br>start() &#123;<br>[ -x <span class="hljs-variable">$nginx</span> ] || <span class="hljs-keyword">exit</span> <span class="hljs-number">5</span><br>[ -f <span class="hljs-variable">$NGINX_CONF_FILE</span> ] || <span class="hljs-keyword">exit</span> <span class="hljs-number">6</span><br>echo -n $<span class="hljs-string">&quot;Starting $prog: &quot;</span><br>daemon <span class="hljs-variable">$nginx</span> -c <span class="hljs-variable">$NGINX_CONF_FILE</span><br>retval=$?<br>echo<br>[ <span class="hljs-variable">$retval</span> -eq <span class="hljs-number">0</span> ] &amp;&amp; touch <span class="hljs-variable">$lockfile</span><br>return <span class="hljs-variable">$retval</span><br>&#125;<br>stop() &#123;<br>echo -n $<span class="hljs-string">&quot;Stopping $prog: &quot;</span><br>killproc <span class="hljs-variable">$prog</span> -QUIT<br>retval=$?<br>echo<br>[ <span class="hljs-variable">$retval</span> -eq <span class="hljs-number">0</span> ] &amp;&amp; rm -f <span class="hljs-variable">$lockfile</span><br>return <span class="hljs-variable">$retval</span><br>&#125;<br>restart() &#123;<br>configtest || return $?<br>stop<br>start<br>&#125;<br>reload() &#123;<br>configtest || return $?<br>echo -n $<span class="hljs-string">&quot;Reloading $prog: &quot;</span><br>killproc <span class="hljs-variable">$nginx</span> -HUP<br>RETVAL=$?<br>echo<br>&#125;<br>force_reload() &#123;<br>restart<br>&#125;<br>configtest() &#123;<br><span class="hljs-variable">$nginx</span> -t -c <span class="hljs-variable">$NGINX_CONF_FILE</span><br>&#125;<br>rh_status() &#123;<br>status <span class="hljs-variable">$prog</span><br>&#125;<br>rh_status_q() &#123;<br>rh_status &gt;<span class="hljs-regexp">/dev/</span>null <span class="hljs-number">2</span>&gt;&amp;<span class="hljs-number">1</span><br>&#125;<br>case <span class="hljs-string">&quot;$1&quot;</span> <span class="hljs-keyword">in</span><br>start)<br>rh_status_q &amp;&amp; <span class="hljs-keyword">exit</span> <span class="hljs-number">0</span><br><span class="hljs-variable">$1</span><br>;;<br>stop)<br>rh_status_q || <span class="hljs-keyword">exit</span> <span class="hljs-number">0</span><br><span class="hljs-variable">$1</span><br>;;<br>restart|configtest)<br><span class="hljs-variable">$1</span><br>;;<br>reload)<br>rh_status_q || <span class="hljs-keyword">exit</span> <span class="hljs-number">7</span><br><span class="hljs-variable">$1</span><br>;;<br>force-reload)<br>force_reload<br>;;<br>status)<br>rh_status<br>;;<br>condrestart|try-restart)<br>rh_status_q || <span class="hljs-keyword">exit</span> <span class="hljs-number">0</span><br>;;<br>*)<br>echo $<span class="hljs-string">&quot;Usage: $0 &#123;start|stop|status|restart|condrestart|try-restart|reload|force-reload|configtest&#125;&quot;</span><br><span class="hljs-keyword">exit</span> <span class="hljs-number">2</span><br>esac<br><br>加入系统服务并开机自启动<br><br>chmod +x <span class="hljs-regexp">/etc/</span>rc.d<span class="hljs-regexp">/init.d/</span>nginx （设置可执行权限）<br><br>chkconfig --add nginx （添加系统服务）<br><br>chkconfig --level <span class="hljs-number">35</span> nginx on （开机自启动）<br></code></pre></td></tr></table></figure>
+
+<p>14.测试是否成功部署</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">curl http:<span class="hljs-regexp">//</span><span class="hljs-number">192.168</span>.<span class="hljs-number">199.120</span><span class="hljs-regexp">/kongqi/</span>M00<span class="hljs-regexp">/00/</span><span class="hljs-number">00</span>/wKjHeF27C5KAZdUSAAXmEY7V_qc038.jpg<br></code></pre></td></tr></table></figure>
+
+<p>15.多级存储目录配置</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs awk">同时修改此三处的配置<br><br>$ vim <span class="hljs-regexp">/data/</span>fdfs<span class="hljs-regexp">/fdfs_conf/</span>storage.conf<br><br>$ vim vim <span class="hljs-regexp">/etc/</span>fdfs/storage.conf<br><br>$ vim <span class="hljs-regexp">/etc/</span>fdfs/mod_fastdfs.conf<br><br>  store_path_count=<span class="hljs-number">2</span>                 <span class="hljs-comment">#store_path存储路径个数</span><br>  <br>  store_path0=<span class="hljs-regexp">/data/</span>fdfs/store_path  <span class="hljs-comment">#第一个存储目录</span><br>  <br>  store_path1=<span class="hljs-regexp">/data/</span>fdfs/store_path1 <span class="hljs-comment">#第二个存储目录</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://image.focusprogram.top/20191101153906.png"></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs awk">Nginx配置如下：<br><br>        location ~/M00 &#123;<br>           root <span class="hljs-regexp">/data/</span>fdfs<span class="hljs-regexp">/store_path/</span>data;<br>           ngx_fastdfs_module;<br>        &#125;<br><br>        location ~/M01 &#123;<br>           root <span class="hljs-regexp">/data/</span>fdfs<span class="hljs-regexp">/store_path1/</span>data;<br>           ngx_fastdfs_module;<br>        &#125;<br><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://image.focusprogram.top/20191101154417.png"></p>
+<p>16.批量迁移数据出现问题解决问题</p>
+<p><img src="https://image.focusprogram.top/20191106094507.png"></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs awk">$ vim <span class="hljs-regexp">/data/</span>fdfs<span class="hljs-regexp">/fdfs_conf/</span>storage.conf<br><br>  <span class="hljs-comment"># 修改最大连接数</span><br>  <span class="hljs-comment"># max concurrent connections the server supported</span><br>  <span class="hljs-comment"># default value is 256</span><br>  <span class="hljs-comment"># more max_connections means more memory will be used</span><br>  max_connections=<span class="hljs-number">10000</span><br></code></pre></td></tr></table></figure>
+
+<p>17.配置防盗链</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs livecodeserver">$ vim /etc/fdfs/<span class="hljs-keyword">http</span>.conf<br><br>  <span class="hljs-keyword">http</span>.anti_steal.check_token=<span class="hljs-literal">true</span> <span class="hljs-comment">#是否开启防盗链</span><br>  <br>  <span class="hljs-keyword">http</span>.anti_steal.token_ttl=<span class="hljs-number">86400</span> <span class="hljs-comment">#防盗链失效时间（单位/秒）</span><br>  <br>  <span class="hljs-keyword">http</span>.anti_steal.secret_key=FastDFS1234567890 <span class="hljs-comment">#防盗链秘钥</span><br>  <br>  <span class="hljs-keyword">http</span>.anti_steal.token_check_fail=/etc/fdfs/<span class="hljs-number">404.</span>jpg <span class="hljs-comment">#防盗链检查失败时重定向图片</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://image.focusprogram.top/20191107104236.png"></p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">java客户端生成token<br><br>    <span class="hljs-comment">//unix时间戳 以秒为单位</span><br>    <span class="hljs-built_in">int</span> ts = (<span class="hljs-built_in">int</span>) (<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">System</span>.</span></span>current<span class="hljs-constructor">TimeMillis()</span><span class="hljs-operator"> / </span><span class="hljs-number">1000</span>);<br>    String secret_key = <span class="hljs-string">&quot;FastDFS1234567890&quot;</span>;<br>    String token = <span class="hljs-keyword">new</span> <span class="hljs-constructor">String()</span>;<br>    token = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ProtoCommon</span>.</span></span>get<span class="hljs-constructor">Token(<span class="hljs-params">url</span>, <span class="hljs-params">ts</span>, <span class="hljs-params">secret_key</span>)</span>;<br>    StringBuilder sb = <span class="hljs-keyword">new</span> <span class="hljs-constructor">StringBuilder()</span>;<br>    sb.append(<span class="hljs-string">&quot;http://192.168.199.120/&quot;</span>);<br>    sb.append(url);<br>    sb.append(<span class="hljs-string">&quot;?token=&quot;</span>).append(token);<br>    sb.append(<span class="hljs-string">&quot;&amp;ts=&quot;</span>).append(ts);<br></code></pre></td></tr></table></figure>
+<p><img src="https://image.focusprogram.top/20191107104303.png"></p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Devops/" class="category-chain-item">Devops</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Docker/">#Docker</a>
+      
+        <a href="/tags/FastDFS/">#FastDFS</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Docker+Nginx+FastDFS分布式文件系统搭建</div>
+      <div>http://yoursite.com/2020/07/11/Docker-Nginx-FastDFS分布式文件系统搭建/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Mr.Kong</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年7月11日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - Mr.Kong">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/07/11/Lvs-Keepalived-Nginx-FastDFS%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E9%AB%98%E5%8F%AF%E7%94%A8%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/" title="Lvs+Keepalived+Nginx+FastDFS分布式文件系统高可用集群搭建">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Lvs+Keepalived+Nginx+FastDFS分布式文件系统高可用集群搭建</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/07/11/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81-%E5%9F%BA%E4%BA%8EZookeeper%E5%AE%9E%E7%8E%B0/" title="分布式锁-基于Zookeeper实现">
+                        <span class="hidden-mobile">分布式锁-基于Zookeeper实现</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments">
+    
+  <div id="waline"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#waline', function() {
+      Fluid.utils.createCssLink('https://lib.baomitu.com/waline/2.5.1/waline.min.css')
+      Fluid.utils.createScript('https://lib.baomitu.com/waline/2.5.1/waline.min.js', function() {
+        var options = Object.assign(
+          {"serverURL":"https://waline-server-lake-five.vercel.app","path":"window.location.pathname","placeholder":"留下您想说的话吧(*^▽^*)","meta":["nick","mail","link"],"requiredMeta":["nick"],"visitor":true,"lang":"zh-CN","avatar":"robohash","emoji":["//unpkg.com/@waline/emojis@1.0.1/weibo"],"dark":"html[data-user-color-scheme=\"dark\"]","search":true,"recordIP":true,"highlighter":true,"wordLimit":0,"pageSize":10},
+          {
+            el: '#waline',
+            path: window.location.pathname
+          }
+        )
+        Waline.init(options);
+        Fluid.utils.waitElementVisible('#waline .vcontent', () => {
+          var imgSelector = '#waline .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://github.com/FocusProgram" target="_blank" rel="nofollow noopener"><span>Always persistent</span></a> <i class="iconfont icon-love"></i> <a href="https://gitee.com/FocusProgram/" target="_blank" rel="nofollow noopener"><span>Forever love</span></a> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      苏ICP备19063834号-1
+    </a>
+  </span>
+  
+    
+      <span>
+        <a
+          href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=44030602004695"
+          rel="nofollow noopener"
+          class="beian-police"
+          target="_blank"
+        >
+          
+            <span style="visibility: hidden; width: 0">|</span>
+            <img src="/img/police_beian.png" alt="police-icon"/>
+          
+          <span>苏公安网备44030602004695号</span>
+        </a>
+      </span>
+    
+  
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<!-- hexo injector body_end start -->
+  <script defer src="/js/daovoice.js"></script>
+<!-- hexo injector body_end end --></body>
+</html>
